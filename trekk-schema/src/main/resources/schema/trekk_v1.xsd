@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:no:nav:maskinelletrekk:trekk:v1"
+            xmlns="urn:no:nav:maskinelletrekk:trekk:v1"
+            attributeFormDefault="qualified"
+            elementFormDefault="qualified">
+
+    <xsd:element name="Trekk">
+        <xsd:complexType>
+            <xsd:choice>
+                <xsd:element name="request" type="TrekkRequest"/>
+                <xsd:element name="response" type="TrekkResponse"/>
+            </xsd:choice>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="TrekkRequest">
+        <xsd:sequence>
+            <xsd:element name="bruker" type="xsd:string"/>
+            <xsd:element name="periode" type="Periode"/>
+            <xsd:element name="trekkvedtakId" type="xsd:string"/>
+            <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" maxOccurs="1000"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="TrekkResponse">
+        <xsd:sequence>
+            <xsd:element name="trekkvedtakId" type="xsd:string"/>
+            <xsd:element name="beslutning" type="Beslutning"/>
+            <xsd:element name="vedtak" type="Vedtak" maxOccurs="1000"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Periode">
+        <xsd:sequence>
+            <xsd:element name="fom" type="xsd:date"/>
+            <xsd:element name="tom" type="xsd:date"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Oppdragsvedtak">
+        <xsd:sequence>
+            <xsd:element name="sats" type="xsd:decimal"/>
+            <xsd:element name="periode" type="Periode"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Vedtak">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" name="beslutningsdato" type="xsd:date"/>
+            <xsd:element minOccurs="0" name="periodetypeForYtelse" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="uttaksgrad" type="xsd:int"/>
+            <xsd:element minOccurs="0" name="vedtakBruttoBeloep" type="xsd:int"/>
+            <xsd:element minOccurs="0" name="vedtakNettoBeloep" type="xsd:int"/>
+            <xsd:element name="vedtaksperiode" type="Periode"/>
+            <xsd:element name="status" type="xsd:string"/>
+            <xsd:element name="vedtakstype" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="aktivitetsfase" type="xsd:string"/>
+            <xsd:element minOccurs="0" name="dagsats" type="xsd:int"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="Beslutning">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="OS"/>
+            <xsd:enumeration value="ABETAL"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

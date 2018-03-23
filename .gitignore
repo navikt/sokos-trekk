@@ -1,0 +1,10 @@
+*.iml
+*.iws
+*.lck
+*.log
+
+target/
+.idea/
+.classpath/
+.project/
+.settings/

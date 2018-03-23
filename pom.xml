@@ -24,8 +24,6 @@
         <module>trekk-app</module>
         <module>trekk-config</module>
         <module>trekk-schema</module>
-        <!--<module>camel-config</module>-->
-        <!--<module>jms-config</module>-->
     </modules>
 
     <issueManagement>
@@ -50,6 +48,7 @@
         <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <!-- Spring -->
+        <spring.boot.version>2.0.0.RELEASE</spring.boot.version>
         <spring.version>5.0.4.RELEASE</spring.version>
         <!-- Javax -->
         <javax.jms.version>1.1</javax.jms.version>
@@ -57,7 +56,7 @@
         <!-- Apache CXF -->
         <apache.cxf.version>3.1.11</apache.cxf.version>
         <!-- Camel -->
-        <camel.version>2.18.1</camel.version>
+        <camel.version>2.20.2</camel.version>
         <!-- Apache -->
         <commons.lang3.version>3.5</commons.lang3.version>
         <commons-io.version>2.5</commons-io.version>
@@ -73,17 +72,29 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring -->
+            <!-- Spring BOOT -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
-                <version>2.0.0.RELEASE</version>
+                <version>${spring.boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-spring-boot-starter</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+                <version>${spring.boot.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
-                <version>2.0.0.RELEASE</version>
+                <version>${spring.boot.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -121,7 +132,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-spring-javaconfig</artifactId>
+                <artifactId>camel-cxf</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-jaxb</artifactId>
                 <version>${camel.version}</version>
             </dependency>
             <dependency>
@@ -131,12 +147,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-spring</artifactId>
+                <artifactId>camel-spring-javaconfig</artifactId>
                 <version>${camel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-jaxb</artifactId>
+                <artifactId>camel-spring</artifactId>
                 <version>${camel.version}</version>
             </dependency>
             <dependency>
@@ -245,6 +261,15 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
 </project>

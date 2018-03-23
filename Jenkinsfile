@@ -17,7 +17,7 @@ pipeline {
 		stage('test') {
 			steps {
 				sh 'mvn test'
-				junit 'target/surefire-reports/*.xml'
+				junit 'trekk-app/target/surefire-reports/*.xml'
 			}
 		}
 		stage('deploy docker image') {
@@ -81,7 +81,7 @@ pipeline {
 	}
 	post {
         always {
-			archive 'target/*.jar'
+			archive 'trekk-app/target/*.jar'
 			deleteDir()
         }
 

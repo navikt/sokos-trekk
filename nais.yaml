@@ -18,9 +18,9 @@ resources:
       memory: 256Mi
 fasitResources:
   used:
-    - alias: mqGateway01
-      resourceType: queueManager
-    - alias: trekk_channel
-        resourceType: channel
-    - alias: trekk_TREKK_INN
-      resourceType: queue
+  - alias: mqGateway01
+    resourceType: queueManager
+  - alias: trekk_channel
+      resourceType: channel
+  - alias: trekk_TREKK_INN
+    resourceType: queue

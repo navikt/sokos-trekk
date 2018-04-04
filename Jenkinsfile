@@ -48,7 +48,7 @@ pipeline {
    					withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: 'nais-user2', usernameVariable: "NAIS_USERNAME", passwordVariable: "NAIS_PASSWORD"]]) {
 			            def postBody = [
 			                    application: "trekk",
-			                    fasitEnvironment: "q1",
+			                    fasitEnvironment: "t1",
 			                    version    : "1.1.${env.BUILD_ID}",
 			                    fasitUsername   : "${env.NAIS_USERNAME}",
 			                    fasitPassword   : "${env.NAIS_PASSWORD}",

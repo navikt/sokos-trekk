@@ -69,6 +69,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <ytelseskontrakt-v3.version>3.0.1</ytelseskontrakt-v3.version>
+        <wmq.version>7.0</wmq.version>
     </properties>
 
     <dependencyManagement>
@@ -143,6 +144,33 @@
                 <version>${camel.version}</version>
                 <scope>test</scope>
             </dependency>
+
+
+            <dependency>
+                <groupId>com.ibm</groupId>
+                <artifactId>com.ibm.mq</artifactId>
+                <version>${wmq.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.ibm</groupId>
+                <artifactId>com.ibm.mqjms</artifactId>
+                <version>${wmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibm</groupId>
+                <artifactId>dhbcore</artifactId>
+                <version>${wmq.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.ibm.mq</groupId>
+                <artifactId>jmqi</artifactId>
+                <version>${wmq.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+
             <!-- Javax -->
             <dependency>
                 <groupId>javax.jms</groupId>
@@ -223,6 +251,11 @@
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient_hotspot</artifactId>
             <version>0.0.26</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

@@ -39,12 +39,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf</artifactId>
@@ -70,7 +68,22 @@
             <artifactId>camel-test-spring</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.ibm</groupId>
+            <artifactId>com.ibm.mq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm</groupId>
+            <artifactId>com.ibm.mqjms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm</groupId>
+            <artifactId>dhbcore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.mq</groupId>
+            <artifactId>jmqi</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

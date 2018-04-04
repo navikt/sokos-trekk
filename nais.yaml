@@ -5,10 +5,10 @@ replicas:
 healthcheck:
   liveness:
     path: /isAlive
-    initialDelay: 50
+    initialDelay: 120
   readiness:
     path: /isReady
-    initialDelay: 50
+    initialDelay: 120
 resources:
     limits:
       cpu: 1

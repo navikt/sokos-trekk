@@ -12,13 +12,13 @@ public class HelsesjekkController {
 
     @ResponseBody
     @RequestMapping(value = "isAlive", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity isAlive() {
-        return new ResponseEntity<String>("Alive", HttpStatus.OK);
+    public ResponseEntity<String> isAlive() {
+        return new ResponseEntity<>("Alive", HttpStatus.OK);
     }
 
     @ResponseBody
     @RequestMapping(value = "isReady", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity isReady() {
-        return new ResponseEntity<String>("Ready", HttpStatus.OK);
+    public ResponseEntity<String> isReady() {
+        return new ResponseEntity<>("Ready", HttpStatus.OK);
     }
 }

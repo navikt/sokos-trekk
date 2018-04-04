@@ -1,2 +1,17 @@
+applicationName: '@project.artifactId@'
+applicationVersion: '@project.version@'
+bootstrapVersion: '@bootstrap.version@'
+info:
+  app:
+    name: '@project.artifactId@'
+    description: '@project.description@'
+    version: '@project.version@'
 server:
   port: 8080
+logging:
+  config: classpath:logback-spring.xml
+
+management:
+  security:
+    enabled: false
+

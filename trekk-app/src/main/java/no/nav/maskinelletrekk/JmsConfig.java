@@ -7,6 +7,7 @@ import com.ibm.msg.client.wmq.v6.base.internal.MQC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -14,6 +15,11 @@ import javax.jms.Queue;
 
 @Configuration
 public class JmsConfig {
+
+    @Value("${srvappserver.username}")
+    private String queueUsername;
+    @Value("${srvappserver.password:}")
+    private String queuePassword;
 
     @Bean
     public Queue trekkInnQueue(@Value("${TREKK_TREKK_INN_QUEUENAME}") String trekkInnQueueName) throws JMSException {
@@ -31,6 +37,11 @@ public class JmsConfig {
         connectionFactory.setCCSID(1208);
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_ENCODING, MQC.MQENC_NATIVE);
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_CHARACTER_SET, 1208);
-        return connectionFactory;
+
+        UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
+        adapter.setTargetConnectionFactory(connectionFactory);
+        adapter.setUsername(queueUsername);
+        adapter.setPassword(queuePassword);
+        return adapter;
     }
 }

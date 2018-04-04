@@ -15,3 +15,5 @@ management:
   security:
     enabled: false
 
+srvappserver:
+  username: srvappserver

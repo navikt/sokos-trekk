@@ -16,7 +16,7 @@ import javax.jms.Queue;
 public class JmsConfig {
 
     @Bean
-    public Queue trekkInnQueue(@Value("${TREKK_TREKK_INN}") String trekkInnQueueName) throws JMSException {
+    public Queue trekkInnQueue(@Value("${TREKK_TREKK_INN_QUEUENAME}") String trekkInnQueueName) throws JMSException {
         return new MQQueue(trekkInnQueueName);
     }
 

@@ -1,15 +1,29 @@
 applicationName: '@project.artifactId@'
 applicationVersion: '@project.version@'
 bootstrapVersion: '@bootstrap.version@'
+
 info:
   app:
     name: '@project.artifactId@'
     description: '@project.description@'
     version: '@project.version@'
+
+trekk:
+  jms:
+    concurrentConsumers: 1
+    transactionTimeout: 300
+
 server:
   port: 8080
+
 logging:
   config: classpath:logback-spring.xml
+
+endpoints:
+  enabled: false
+  prometheus:
+    enabled: true
+    sensitive: false
 
 management:
   security:

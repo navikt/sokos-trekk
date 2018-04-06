@@ -4,6 +4,8 @@ import com.ibm.mq.jms.MQQueue;
 import com.ibm.mq.jms.MQXAConnectionFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
 import com.ibm.msg.client.wmq.v6.base.internal.MQC;
+import org.apache.camel.component.jms.JmsConfiguration;
+import org.apache.camel.component.jms.JmsEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,14 +18,55 @@ import javax.jms.Queue;
 @Configuration
 public class JmsConfig {
 
+    @Value("${trekk.jms.concurrentConsumers}")
+    private Integer concurrentConsumers;
+
+    @Value("${trekk.jms.transactionTimeout}")
+    private Integer transactionTimeout;
+
     @Value("${srvappserver.username}")
-    private String queueUsername;
+    private String qmUsername;
+
     @Value("${srvappserver.password:}")
-    private String queuePassword;
+    private String qmPassword;
 
     @Bean
     public Queue trekkInnQueue(@Value("${TREKK_TREKK_INN_QUEUENAME}") String trekkInnQueueName) throws JMSException {
         return new MQQueue(trekkInnQueueName);
+    }
+
+    @Bean
+    public Queue trekkReplyQueue(@Value("${TREKK_TREKK_REPLY_QUEUENAME}") String trekkReplyQueueName) throws JMSException {
+        MQQueue mqQueue = new MQQueue(trekkReplyQueueName);
+        mqQueue.setTargetClient(1);
+        return mqQueue;
+    }
+
+    @Bean("trekkInn")
+    public JmsEndpoint trekkInnEndpoint(Queue trekkInnQueue,
+                                        ConnectionFactory connectionFactory) throws JMSException {
+        JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkInnQueue);
+        jmsEndpoint.setConnectionFactory(connectionFactory);
+        return jmsEndpoint;
+    }
+
+    @Bean("trekkReply")
+    public JmsEndpoint trekkReplyEndpoint(Queue trekkReplyQueue,
+                                        ConnectionFactory connectionFactory) throws JMSException {
+        JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkReplyQueue);
+        jmsEndpoint.setConnectionFactory(connectionFactory);
+        return jmsEndpoint;
+    }
+
+    @Bean
+    public JmsConfiguration jmsConfiguration(ConnectionFactory connectionFactory) {
+        JmsConfiguration jmsConfiguration = new JmsConfiguration();
+        jmsConfiguration.setConnectionFactory(connectionFactory);
+        jmsConfiguration.setTransacted(true);
+        jmsConfiguration.setTransactionTimeout(transactionTimeout);
+        jmsConfiguration.setConcurrentConsumers(concurrentConsumers);
+
+        return jmsConfiguration;
     }
 
     @Bean
@@ -40,8 +83,9 @@ public class JmsConfig {
 
         UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
         adapter.setTargetConnectionFactory(connectionFactory);
-        adapter.setUsername(queueUsername);
-        adapter.setPassword(queuePassword);
+        adapter.setUsername(qmUsername);
+        adapter.setPassword(qmPassword);
+
         return adapter;
     }
 }

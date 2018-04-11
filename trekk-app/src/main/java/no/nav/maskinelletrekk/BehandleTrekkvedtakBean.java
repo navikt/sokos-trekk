@@ -2,7 +2,7 @@ package no.nav.maskinelletrekk;
 
 import no.nav.maskinelletrekk.trekk.v1.ObjectFactory;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
-import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
+import no.nav.maskinelletrekk.trekk.v1.TrekkRequestListe;
 import org.apache.camel.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +24,9 @@ public class BehandleTrekkvedtakBean {
     }
 
     @Handler
-    public Trekk marshal(TrekkRequest request) {
-        LOGGER.info("Behandler trekkvedtak med ID {}", request.getTrekkvedtakId());
+    public Trekk marshal(Trekk request) {
+        TrekkRequestListe trekkRequestListe = request.getTrekkRequestListe();
+        LOGGER.info("Behandler trekkvedtak med ID {}", trekkRequestListe.getTrekkRequest().get(0).getTrekkvedtakId());
         return new ObjectFactory().createTrekk();
     }
 

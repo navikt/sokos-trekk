@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+def mvnHome, mvn, scannerHome // tools
 
 pipeline {
 	agent any
@@ -9,14 +10,19 @@ pipeline {
 		LDAP_URL="ldapgw.test.local"
 	}
 	stages {
+        stage('initialize') {
+            mvnHome = tool 'Maven'
+            mvn = "${mvnHome}/bin/mvn"
+            scannerHome = tool 'SonarQube'
+        }
 		stage('build') {
 			steps {
-				sh 'mvn -B -DskipTests clean package'
+				sh '${mvn} -B -DskipTests clean package'
 			}
 		}
 		stage('test') {
 			steps {
-				sh 'mvn test'
+				sh '${mvn} test'
 				junit 'trekk-app/target/surefire-reports/*.xml'
 			}
 		}
@@ -78,6 +84,15 @@ pipeline {
 				}
 			}
 		}
+        stage('sonar') {
+            sh "echo 'sonar.branch=${BRANCH_NAME}' >> sonar-project.properties"
+            withSonarQubeEnv('Default') {
+                sh "${scannerHome}/bin/sonar-scanner"
+            }
+        }
+        stage('clean up') {
+            sh "${mvn} clean"
+        }
 	}
 	post {
         always {

@@ -35,7 +35,7 @@ public class TrekkRoute extends SpringRouteBuilder {
         from("ref:trekkInn")
                 .routeId("behandleTrekk")
                 .convertBodyTo(String.class, "UTF-8")
-                .log(INFO, LOGGER, "Melding lest fra kø (trekk_inn): ${body}")
+                .log(INFO, LOGGER, "Melding lest fra kø: ${body}")
                 .to("direct:validateAndUnmarshal")
                 .bean(kallArena)
                 .marshal(trekkFormat)
@@ -45,8 +45,7 @@ public class TrekkRoute extends SpringRouteBuilder {
                 .routeId("ValidateAndUnmarshal")
                 .to("validator:schema/trekk_v1.xsd")
                 .unmarshal(trekkFormat)
-                .validate(bodyAs(Trekk.class).isNotNull())
-                .setBody(simple("${body.request}"));
-
+                .validate(bodyAs(Trekk.class).isNotNull());
     }
+
 }

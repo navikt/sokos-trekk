@@ -84,6 +84,11 @@
             <groupId>com.ibm.mq</groupId>
             <artifactId>jmqi</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.tjenester.fim</groupId>
+            <artifactId>nav-fim-ytelseskontrakt-v3-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+        </dependency>
     </dependencies>
 
     <build>

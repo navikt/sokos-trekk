@@ -3,9 +3,6 @@ def mvnHome, mvn, scannerHome // tools
 
 pipeline {
 	agent any
-	tools {
-		maven 'default'
-	}
 	environment {
 		LDAP_URL="ldapgw.test.local"
 	}

@@ -1,26 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
-<request>
-    <bruker>B123456</bruker>
-    <periode>
-        <fom>2008-09-29</fom>
-        <tom>2018-09-19</tom>
-    </periode>
-    <trekkvedtakId>15000014</trekkvedtakId>
-    <!--1 to 1000 repetitions:-->
-    <oppdragsvedtak>
-        <sats>1234.50</sats>
-        <periode>
-            <fom>2016-08-01</fom>
-            <tom>2018-05-01</tom>
-        </periode>
-    </oppdragsvedtak>
-    <oppdragsvedtak>
-        <sats>120.00</sats>
-        <periode>
-            <fom>2011-08-01</fom>
-            <tom>2015-08-01</tom>
-        </periode>
-    </oppdragsvedtak>
-</request>
+    <!--You have a CHOICE of the next 2 items at this level-->
+    <trekkRequestListe>
+        <!--1 to 1000 repetitions:-->
+        <trekkRequest>
+            <bruker>12345678901</bruker>
+            <periode>
+                <fom>2008-09-29</fom>
+                <tom>2014-09-19</tom>
+            </periode>
+            <trekkvedtakId>3</trekkvedtakId>
+            <!--1 to 1000 repetitions:-->
+            <oppdragsvedtak>
+                <sats>1234.50</sats>
+                <periode>
+                    <fom>2016-08-01</fom>
+                    <tom>2018-05-01</tom>
+                </periode>
+            </oppdragsvedtak>
+            <oppdragsvedtak>
+                <sats>120.00</sats>
+                <periode>
+                    <fom>2011-08-01</fom>
+                    <tom>2015-08-01</tom>
+                </periode>
+            </oppdragsvedtak>
+        </trekkRequest>
+        <trekkRequest>
+            <bruker>10987654321</bruker>
+            <periode>
+                <fom>2008-09-29</fom>
+                <tom>2014-09-19</tom>
+            </periode>
+            <trekkvedtakId>3</trekkvedtakId>
+            <!--1 to 1000 repetitions:-->
+            <oppdragsvedtak>
+                <sats>1000.00</sats>
+                <periode>
+                    <fom>2006-08-19+02:00</fom>
+                    <tom>2009-05-16</tom>
+                </periode>
+            </oppdragsvedtak>
+        </trekkRequest>
+    </trekkRequestListe>
 </trekk>

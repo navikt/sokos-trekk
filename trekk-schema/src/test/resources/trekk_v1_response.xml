@@ -1,26 +1,42 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
-    <response>
-        <trekkvedtakId>15000014</trekkvedtakId>
-        <beslutning>ABETAL</beslutning>
+    <trekkResponseListe>
         <!--1 to 1000 repetitions:-->
-        <vedtak>
-            <vedtaksperiode>
-                <fom>2016-08-01</fom>
-                <tom>2018-05-01</tom>
-            </vedtaksperiode>
-            <status>GODKJ</status>
-            <!--Optional:-->
-            <dagsats>1000</dagsats>
-        </vedtak>
-        <vedtak>
-            <vedtaksperiode>
-                <fom>2011-08-01</fom>
-                <tom>2015-08-01</tom>
-            </vedtaksperiode>
-            <status>REGIS</status>
-            <!--Optional:-->
-            <dagsats>120</dagsats>
-        </vedtak>
-    </response>
+        <trekkResponse>
+            <trekkvedtakId>3</trekkvedtakId>
+            <beslutning>ABETAL</beslutning>
+            <!--1 to 1000 repetitions:-->
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2016-08-01</fom>
+                    <tom>2018-05-01</tom>
+                </vedtaksperiode>
+                <status>GODKJ</status>
+                <!--Optional:-->
+                <dagsats>1000</dagsats>
+            </vedtak>
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2011-08-01</fom>
+                    <tom>2015-08-01</tom>
+                </vedtaksperiode>
+                <status>REGIS</status>
+                <!--Optional:-->
+                <dagsats>120</dagsats>
+            </vedtak>
+        </trekkResponse>
+        <trekkResponse>
+            <trekkvedtakId>4</trekkvedtakId>
+            <beslutning>OS</beslutning>
+            <!--1 to 1000 repetitions:-->
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2002-11-05+01:00</fom>
+                    <tom>2002-06-24+02:00</tom>
+                </vedtaksperiode>
+                <status>REGIS</status>
+                <!--Optional:-->
+                <dagsats>42</dagsats>
+            </vedtak>
+        </trekkResponse>
+    </trekkResponseListe>
 </trekk>

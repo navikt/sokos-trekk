@@ -36,6 +36,7 @@ pipeline {
 			steps {
 				script {
 					withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
+                        sh 'echo uname=$NEXUS_USERNAME pwd=$NEXUS_PASSWORD'
 						sh "nais validate"
 						sh "nais upload --app trekk -v 1.1.${env.BUILD_ID}"
 					}

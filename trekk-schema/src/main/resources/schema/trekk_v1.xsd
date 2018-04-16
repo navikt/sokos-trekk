@@ -22,7 +22,7 @@
                         <xsd:element name="bruker" type="xsd:string"/>
                         <xsd:element name="periode" type="Periode"/>
                         <xsd:element name="trekkvedtakId" type="xsd:int"/>
-                        <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" maxOccurs="1000"/>
+                        <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" minOccurs="0" maxOccurs="1000"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -37,7 +37,7 @@
                     <xsd:sequence>
                         <xsd:element name="trekkvedtakId" type="xsd:int"/>
                         <xsd:element name="beslutning" type="Beslutning"/>
-                        <xsd:element name="vedtak" type="Vedtak" maxOccurs="1000"/>
+                        <xsd:element name="vedtak" type="Vedtak" minOccurs="0" maxOccurs="1000"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

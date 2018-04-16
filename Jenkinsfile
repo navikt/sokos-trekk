@@ -81,7 +81,7 @@ pipeline {
 	}
 	post {
         always {
-            junit 'varsel-web/target/surefire-reports/*.xml'
+            junit 'trekk-app/target/surefire-reports/*.xml'
 			archive 'trekk-app/target/*.jar'
 			deleteDir()
             script {

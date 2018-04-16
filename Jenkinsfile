@@ -53,7 +53,7 @@ pipeline {
 			                    fasitUsername   : "${env.NAIS_USERNAME}",
 			                    fasitPassword   : "${env.NAIS_PASSWORD}",
 			                    zone       : "fss",
-			                    namespace  : "default"
+			                    namespace  : "t1"
 			            ]
 			            def naisdPayload = groovy.json.JsonOutput.toJson(postBody)
 

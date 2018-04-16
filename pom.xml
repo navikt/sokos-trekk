@@ -265,6 +265,13 @@
         </dependency>
     </dependencies>
 
+    <scm>
+        <url>http://stash.devillo.no/scm/oko/trekk.git</url>
+        <connection>scm:git:ssh://git@stash.devillo.no:7999/oko/trekk.git</connection>
+        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/oko/trekk.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <distributionManagement>
         <repository>
             <id>m2internal</id>

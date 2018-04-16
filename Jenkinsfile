@@ -36,7 +36,6 @@ pipeline {
 			steps {
 				script {
 					withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
-                        sh 'echo uname=$NEXUS_USERNAME pwd=$NEXUS_PASSWORD'
 						sh "nais validate"
 						sh "nais upload --app trekk -v 1.1.${env.BUILD_ID}"
 					}
@@ -46,7 +45,7 @@ pipeline {
 		stage('deploy to nais') {
 			steps {
 				script {
-   					withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: 'nais-user2', usernameVariable: "NAIS_USERNAME", passwordVariable: "NAIS_PASSWORD"]]) {
+   					withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: 'nais-user', usernameVariable: "NAIS_USERNAME", passwordVariable: "NAIS_PASSWORD"]]) {
 			            def postBody = [
 			                    application: "trekk",
 			                    fasitEnvironment: "t1",
@@ -82,8 +81,13 @@ pipeline {
 	}
 	post {
         always {
+            junit 'varsel-web/target/surefire-reports/*.xml'
 			archive 'trekk-app/target/*.jar'
 			deleteDir()
+            script {
+                // clean up Docker builds
+                sh "docker system prune -af"
+            }
         }
 
     }

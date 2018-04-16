@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>[%t, %d, %-5p, %C:%L] - %.-100000m%n</pattern>
-        </encoder>
-    </appender>
+    <springProfile name="default">
+        <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        </appender>
 
-    <logger name="org.apache.cxf.common.logging" level="WARN" additivity="false"/>
+        <root level="WARN">
+            <appender-ref ref="stdout_json"/>
+        </root>
 
-    <root level="WARN">
-        <appender-ref ref="CONSOLE"/>
-    </root>
+        <logger name="no.nav.maskinelletrekk.trekk" level="INFO" additivity="false">
+            <appender-ref ref="stdout_json"/>
+        </logger>
 
-    <logger name="no.nav.maskinelletrekk" level="INFO"/>
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="org.apache.camel" level="INFO"/>
-    <logger name="org.ehcache" level="DEBUG"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.camel" level="INFO"/>
+        <logger name="org.apache.cxf.common.logging" level="ERROR"/>
+        <logger name="org.apache.wss4j.common.crypto" level="ERROR"/>
+    </springProfile>
+    <springProfile name="u1">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>[%t, %d, %-5p, %C:%L] - %.-100000m%n</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="org.apache.cxf.common.logging" level="WARN" additivity="false"/>
+
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+        <logger name="no.nav.maskinelletrekk" level="INFO"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.camel" level="INFO"/>
+        <logger name="org.ehcache" level="DEBUG"/>
+    </springProfile>
 </configuration>

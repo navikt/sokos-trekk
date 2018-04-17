@@ -8,41 +8,28 @@
     <xsd:element name="trekk">
         <xsd:complexType>
             <xsd:choice>
-                <xsd:element name="trekkRequestListe" type="TrekkRequestListe"/>
-                <xsd:element name="trekkResponseListe" type="TrekkResponseListe"/>
+                <xsd:element name="trekkRequest" type="TrekkRequest" maxOccurs="1000"/>
+                <xsd:element name="trekkResponse" type="TrekkResponse" maxOccurs="1000"/>
             </xsd:choice>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:complexType name="TrekkRequestListe">
+    <xsd:complexType name="TrekkRequest">
         <xsd:sequence>
-            <xsd:element name="trekkRequest" maxOccurs="1000">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="bruker" type="xsd:string"/>
-                        <xsd:element name="periode" type="Periode"/>
-                        <xsd:element name="trekkvedtakId" type="xsd:int"/>
-                        <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" minOccurs="0" maxOccurs="1000"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
-
+            <xsd:element name="bruker" type="xsd:string"/>
+            <xsd:element name="periode" type="Periode"/>
+            <xsd:element name="trekkvedtakId" type="xsd:int"/>
+            <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" minOccurs="0" maxOccurs="1000"/>
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="TrekkResponseListe">
+    <xsd:complexType name="TrekkResponse">
         <xsd:sequence>
-            <xsd:element name="trekkResponse" maxOccurs="1000">
-                <xsd:complexType>
-                    <xsd:sequence>
-                        <xsd:element name="trekkvedtakId" type="xsd:int"/>
-                        <xsd:element name="beslutning" type="Beslutning"/>
-                        <xsd:element name="totalSatsOS" type="xsd:decimal" />
-                        <xsd:element name="totalSatsArena" type="xsd:decimal" />
-                        <xsd:element name="vedtak" type="Vedtak" minOccurs="0" maxOccurs="1000"/>
-                    </xsd:sequence>
-                </xsd:complexType>
-            </xsd:element>
+            <xsd:element name="trekkvedtakId" type="xsd:int"/>
+            <xsd:element name="beslutning" type="Beslutning"/>
+            <xsd:element name="totalSatsOS" type="xsd:decimal" />
+            <xsd:element name="totalSatsArena" type="xsd:decimal" />
+            <xsd:element name="vedtak" type="Vedtak" minOccurs="0" maxOccurs="1000"/>
         </xsd:sequence>
     </xsd:complexType>
 

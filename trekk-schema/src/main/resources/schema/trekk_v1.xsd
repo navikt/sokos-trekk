@@ -37,6 +37,8 @@
                     <xsd:sequence>
                         <xsd:element name="trekkvedtakId" type="xsd:int"/>
                         <xsd:element name="beslutning" type="Beslutning"/>
+                        <xsd:element name="totalSatsOS" type="xsd:decimal" />
+                        <xsd:element name="totalSatsArena" type="xsd:decimal" />
                         <xsd:element name="vedtak" type="Vedtak" minOccurs="0" maxOccurs="1000"/>
                     </xsd:sequence>
                 </xsd:complexType>

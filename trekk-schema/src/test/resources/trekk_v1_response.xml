@@ -11,7 +11,8 @@
                 <fom>2016-08-01</fom>
                 <tom>2018-05-01</tom>
             </vedtaksperiode>
-            <status>GODKJ</status>
+            <tema>DAG</tema>
+            <rettighetType>DAGO</rettighetType>
             <!--Optional:-->
             <dagsats>1000</dagsats>
         </vedtak>
@@ -20,7 +21,8 @@
                 <fom>2011-08-01</fom>
                 <tom>2015-08-01</tom>
             </vedtaksperiode>
-            <status>REGIS</status>
+            <tema>DAG</tema>
+            <rettighetType>LONN</rettighetType>
             <!--Optional:-->
             <dagsats>120</dagsats>
         </vedtak>
@@ -36,7 +38,8 @@
                 <fom>2002-11-05+01:00</fom>
                 <tom>2002-06-24+02:00</tom>
             </vedtaksperiode>
-            <status>REGIS</status>
+            <tema>AAP</tema>
+            <rettighetType>AAP</rettighetType>
             <!--Optional:-->
             <dagsats>42</dagsats>
         </vedtak>

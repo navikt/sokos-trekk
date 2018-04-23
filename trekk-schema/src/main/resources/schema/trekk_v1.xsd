@@ -50,8 +50,9 @@
     <xsd:complexType name="Vedtak">
         <xsd:sequence>
             <xsd:element name="vedtaksperiode" type="Periode"/>
-            <xsd:element name="status" type="xsd:string"/>
-            <xsd:element minOccurs="0" name="dagsats" type="xsd:int"/>
+            <xsd:element name="tema" type="xsd:string"/>
+            <xsd:element name="rettighetType" type="xsd:string"/>
+            <xsd:element name="dagsats" type="xsd:decimal" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
 

@@ -43,6 +43,7 @@
     <xsd:complexType name="Oppdragsvedtak">
         <xsd:sequence>
             <xsd:element name="sats" type="xsd:decimal"/>
+            <xsd:element name="satstype" type="Satstype"/>
             <xsd:element name="periode" type="Periode"/>
         </xsd:sequence>
     </xsd:complexType>
@@ -55,6 +56,13 @@
             <xsd:element name="dagsats" type="xsd:decimal" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
+
+    <xsd:simpleType name="Satstype">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="DAG"/>
+            <xsd:enumeration value="MND"/>
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:simpleType name="Beslutning">
         <xsd:restriction base="xsd:string">

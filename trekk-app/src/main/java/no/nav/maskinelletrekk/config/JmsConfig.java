@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk;
+package no.nav.maskinelletrekk.config;
 
 import com.ibm.mq.jms.MQQueue;
 import com.ibm.mq.jms.MQXAConnectionFactory;

@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk;
+package no.nav.maskinelletrekk.helsesjekk;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

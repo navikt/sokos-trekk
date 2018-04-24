@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk;
+package no.nav.maskinelletrekk.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

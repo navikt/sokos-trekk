@@ -12,6 +12,9 @@ trekk:
   jms:
     concurrentConsumers: 1
     transactionTimeout: 300
+  aggregator:
+    completionTimeout: 5000 #millisekunder
+    completionSize: 3
 
 server:
   port: 8080

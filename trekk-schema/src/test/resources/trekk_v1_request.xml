@@ -3,15 +3,12 @@
     <!--1 to 1000 repetitions:-->
     <trekkRequest>
         <bruker>12345678901</bruker>
-        <periode>
-            <fom>2008-09-29</fom>
-            <tom>2014-09-19</tom>
-        </periode>
+        <antallDager>60</antallDager>
         <trekkvedtakId>3</trekkvedtakId>
         <!--1 to 1000 repetitions:-->
         <oppdragsvedtak>
             <sats>1234.50</sats>
-            <satstype>DAG</satstype>
+            <typeSats>DAG</typeSats>
             <periode>
                 <fom>2016-08-01</fom>
                 <tom>2018-05-01</tom>
@@ -19,7 +16,7 @@
         </oppdragsvedtak>
         <oppdragsvedtak>
             <sats>120.00</sats>
-            <satstype>DAG</satstype>
+            <typeSats>DAG</typeSats>
             <periode>
                 <fom>2011-08-01</fom>
                 <tom>2015-08-01</tom>
@@ -28,15 +25,12 @@
     </trekkRequest>
     <trekkRequest>
         <bruker>10987654321</bruker>
-        <periode>
-            <fom>2008-09-29</fom>
-            <tom>2014-09-19</tom>
-        </periode>
+        <antallDager>60</antallDager>
         <trekkvedtakId>3</trekkvedtakId>
         <!--1 to 1000 repetitions:-->
         <oppdragsvedtak>
             <sats>10000.00</sats>
-            <satstype>MND</satstype>
+            <typeSats>MND</typeSats>
             <periode>
                 <fom>2006-08-19+02:00</fom>
                 <tom>2009-05-16</tom>

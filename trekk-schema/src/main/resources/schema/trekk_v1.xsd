@@ -17,7 +17,7 @@
     <xsd:complexType name="TrekkRequest">
         <xsd:sequence>
             <xsd:element name="bruker" type="xsd:string"/>
-            <xsd:element name="periode" type="Periode"/>
+            <xsd:element name="antallDager" type="xsd:int"/>
             <xsd:element name="trekkvedtakId" type="xsd:int"/>
             <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" minOccurs="0" maxOccurs="1000"/>
         </xsd:sequence>
@@ -33,17 +33,10 @@
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="Periode">
-        <xsd:sequence>
-            <xsd:element name="fom" type="xsd:date"/>
-            <xsd:element name="tom" type="xsd:date"/>
-        </xsd:sequence>
-    </xsd:complexType>
-
     <xsd:complexType name="Oppdragsvedtak">
         <xsd:sequence>
             <xsd:element name="sats" type="xsd:decimal"/>
-            <xsd:element name="satstype" type="Satstype"/>
+            <xsd:element name="typeSats" type="TypeSats"/>
             <xsd:element name="periode" type="Periode"/>
         </xsd:sequence>
     </xsd:complexType>
@@ -57,7 +50,14 @@
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:simpleType name="Satstype">
+    <xsd:complexType name="Periode">
+        <xsd:sequence>
+            <xsd:element name="fom" type="xsd:date"/>
+            <xsd:element name="tom" type="xsd:date"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="TypeSats">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="DAG"/>
             <xsd:enumeration value="MND"/>

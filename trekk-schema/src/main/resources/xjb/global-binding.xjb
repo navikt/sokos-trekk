@@ -7,7 +7,7 @@
                jaxb:version="2.1">
     <jaxb:globalBindings>
         <jaxb:serializable uid="-1" />
-        <xjc:javaType adapter="no.nav.maskinelletrekk.trekk.LocalDateAdapter"
+        <xjc:javaType adapter="no.nav.maskinelletrekk.trekk.v1.adapter.LocalDateAdapter"
                       name="java.time.LocalDate" xmlType="xsd:date"/>
     </jaxb:globalBindings>
 </jaxb:bindings>

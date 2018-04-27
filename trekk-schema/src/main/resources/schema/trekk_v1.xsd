@@ -29,7 +29,7 @@
             <xsd:element name="beslutning" type="Beslutning"/>
             <xsd:element name="totalSatsOS" type="xsd:decimal" />
             <xsd:element name="totalSatsArena" type="xsd:decimal" />
-            <xsd:element name="vedtak" type="Vedtak" minOccurs="0" maxOccurs="1000"/>
+            <xsd:element name="vedtak" type="ArenaVedtak" minOccurs="0" maxOccurs="1000"/>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -41,7 +41,7 @@
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="Vedtak">
+    <xsd:complexType name="ArenaVedtak">
         <xsd:sequence>
             <xsd:element name="vedtaksperiode" type="Periode"/>
             <xsd:element name="tema" type="xsd:string"/>
@@ -68,6 +68,7 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="OS"/>
             <xsd:enumeration value="ABETAL"/>
+            <xsd:enumeration value="INGEN"/>
         </xsd:restriction>
     </xsd:simpleType>
 

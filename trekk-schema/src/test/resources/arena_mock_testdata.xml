@@ -1,0 +1,46 @@
+<urn:ArenaMockData xmlns:urn="urn:no:nav:maskinelletrekk:arenaMock:v1">
+  <!--1 to 1000 repetitions:-->
+  <urn:arenaData>
+    <!--Zero or more repetitions:-->
+    <urn:personYtelseListe>
+      <urn:ident>12345678901</urn:ident>
+      <!--1 or more repetitions:-->
+      <urn:sakListe>
+        <urn:fagsystemSakId>321</urn:fagsystemSakId>
+        <urn:tema>AAP</urn:tema>
+        <!--1 or more repetitions:-->
+        <urn:vedtakListe>
+          <urn:vedtaksperiode>
+            <urn:fom>2007-10-26</urn:fom>
+            <urn:tom>2004-02-14</urn:tom>
+          </urn:vedtaksperiode>
+          <urn:rettighetstype>DAGO</urn:rettighetstype>
+          <urn:dagsats>10000</urn:dagsats>
+        </urn:vedtakListe>
+      </urn:sakListe>
+    </urn:personYtelseListe>
+  </urn:arenaData>
+
+  <urn:arenaData>
+    <!--Zero or more repetitions:-->
+    <urn:personYtelseListe>
+      <urn:ident>10987654321</urn:ident>
+      <!--1 or more repetitions:-->
+      <urn:sakListe>
+        <urn:fagsystemSakId>123</urn:fagsystemSakId>
+        <urn:tema>AAP</urn:tema>
+        <!--1 or more repetitions:-->
+        <urn:vedtakListe>
+          <urn:vedtaksperiode>
+            <urn:fom>2007-10-26</urn:fom>
+            <urn:tom>2004-02-14</urn:tom>
+          </urn:vedtaksperiode>
+          <urn:rettighetstype>DAGO</urn:rettighetstype>
+          <urn:dagsats>100</urn:dagsats>
+        </urn:vedtakListe>
+      </urn:sakListe>
+    </urn:personYtelseListe>
+  </urn:arenaData>
+
+
+</urn:ArenaMockData>

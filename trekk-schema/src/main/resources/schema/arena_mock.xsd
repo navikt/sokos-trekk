@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="urn:no:nav:maskinelletrekk:arenaMock:v1"
+            xmlns="urn:no:nav:maskinelletrekk:arenaMock:v1"
+            attributeFormDefault="qualified"
+            elementFormDefault="qualified">
+
+    <xsd:element name="ArenaMockData">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="arenaData" type="FinnYtelseVedtakListeResponse" maxOccurs="1000"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="FinnYtelseVedtakListeResponse">
+        <xsd:sequence>
+            <xsd:element name="personYtelseListe" type="PersonYtelse" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="PersonYtelse">
+        <xsd:sequence>
+            <xsd:element name="ident" type="xsd:string"/>
+            <xsd:element name="sakListe" type="Sak" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Sak">
+        <xsd:sequence>
+            <xsd:element name="fagsystemSakId" type="xsd:string"/>
+            <xsd:element name="tema" type="Tema"/>
+            <xsd:element name="vedtakListe" type="Vedtak" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Vedtak">
+        <xsd:sequence>
+            <xsd:element name="vedtaksperiode" type="Periode"/>
+            <xsd:element name="rettighetstype" type="Rettighetstype"/>
+            <xsd:element name="dagsats" type="xsd:double"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+     <xsd:complexType name="Periode">
+        <xsd:sequence>
+            <xsd:element name="fom" type="xsd:date"/>
+            <xsd:element name="tom" type="xsd:date"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="Tema">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="AAP"/> <!-- arbeidsavklaringspenger -->
+            <xsd:enumeration value="DAG"/> <!-- dagpenger -->
+            <xsd:enumeration value="IND"/> <!-- individstønad -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Rettighetstype">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="AAP" /> <!-- Arbeidsavklaringspenger -->
+            <xsd:enumeration value="DAGO"/> <!-- Ordinære dagpenger -->
+            <xsd:enumeration value="LONN"/> <!-- Lønnsgarantimidler - dagpenger -->
+            <xsd:enumeration value="PERM"/> <!-- Dagpenger under permitteringer -->
+            <xsd:enumeration value="FISK"/> <!-- Dagp. v/perm fra fiskeindustri -->
+            <xsd:enumeration value="BASI"/> <!-- Tiltakspenger (basisytelse før 2014) -->
+            <xsd:enumeration value="BTIL"/> <!-- Barnetillegg -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

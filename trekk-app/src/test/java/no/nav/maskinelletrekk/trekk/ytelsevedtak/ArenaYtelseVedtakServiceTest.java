@@ -1,10 +1,10 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
+import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TypeSats;
-import no.nav.maskinelletrekk.trekk.v1.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.builder.OppdragsvedtakBuilder;
 import no.nav.maskinelletrekk.trekk.v1.builder.TrekkRequestBuilder;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;

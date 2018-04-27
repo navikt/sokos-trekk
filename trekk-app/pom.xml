@@ -68,6 +68,8 @@
             <artifactId>camel-test-spring</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- IBM MQ -->
         <dependency>
             <groupId>com.ibm</groupId>
             <artifactId>com.ibm.mq</artifactId>

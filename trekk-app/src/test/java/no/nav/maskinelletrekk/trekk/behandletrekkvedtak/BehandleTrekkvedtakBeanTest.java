@@ -1,10 +1,10 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
-import no.nav.maskinelletrekk.trekk.v1.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.builder.ArenaVedtakBuilder;
 import no.nav.maskinelletrekk.trekk.ytelsevedtak.YtelseVedtakService;
 import org.junit.Before;

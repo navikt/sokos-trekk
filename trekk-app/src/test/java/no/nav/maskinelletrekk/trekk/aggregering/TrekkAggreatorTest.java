@@ -1,8 +1,8 @@
-package no.nav.maskinelletrekk.aggregering;
+package no.nav.maskinelletrekk.trekk.aggregering;
 
-import no.nav.maskinelletrekk.TrekkBuilder;
-import no.nav.maskinelletrekk.TrekkRequestBuilder;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
+import no.nav.maskinelletrekk.trekk.v1.builder.TrekkBuilder;
+import no.nav.maskinelletrekk.trekk.v1.builder.TrekkRequestBuilder;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class TrekkAggreatorTest {
     private Message newMessage;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         oldExchange = mock(Exchange.class);
         newExchange = mock(Exchange.class);
         oldMessage = mock(Message.class);
@@ -48,7 +48,7 @@ public class TrekkAggreatorTest {
         Trekk oldTrekk = TrekkBuilder.create().addTrekkRequest(
                 TrekkRequestBuilder.create()
                         .bruker("b1234567")
-                        .periode(LocalDate.now(), LocalDate.now())
+                        .antallDager(60)
                         .trekkvedtakId(12)
                         .addOppdragsvedtak(new BigDecimal("123.10"), LocalDate.now(), LocalDate.now())
                         .build()
@@ -57,7 +57,7 @@ public class TrekkAggreatorTest {
         Trekk newTrekk = TrekkBuilder.create().addTrekkRequest(
                 TrekkRequestBuilder.create()
                         .bruker("c1234568")
-                        .periode(LocalDate.now(), LocalDate.now())
+                        .antallDager(60)
                         .trekkvedtakId(13)
                         .addOppdragsvedtak(new BigDecimal("223.10"), LocalDate.now(), LocalDate.now())
                         .build()

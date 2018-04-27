@@ -1,6 +1,6 @@
-package no.nav.maskinelletrekk;
+package no.nav.maskinelletrekk.trekk.v1;
 
-import no.nav.maskinelletrekk.behandletrekkvedtak.BehandleTrekkvedtakBean;
+import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.BehandleTrekkvedtakBean;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

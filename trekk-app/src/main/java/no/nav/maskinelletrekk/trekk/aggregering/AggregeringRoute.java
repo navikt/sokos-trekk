@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk.aggregering;
+package no.nav.maskinelletrekk.trekk.aggregering;
 
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import org.apache.camel.LoggingLevel;
@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import static no.nav.maskinelletrekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
+import java.time.format.DateTimeParseException;
+
+import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
+import static org.apache.camel.LoggingLevel.ERROR;
 
 @Service
 public class AggregeringRoute extends SpringRouteBuilder {
@@ -37,11 +40,12 @@ public class AggregeringRoute extends SpringRouteBuilder {
     }
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
 
         LOGGER.info("Aggregator parametere: completionTimeout: {} completionSize: {}", completionTimeout, completionSize);
 
         errorHandler(defaultErrorHandler().useOriginalMessage());
+        onException(DateTimeParseException.class).log(ERROR, LOGGER, "Parsing av dato i request XML feilet");
 
         from(TREKK_INN_QUEUE)
                 .routeId("aggreger_meldinger")

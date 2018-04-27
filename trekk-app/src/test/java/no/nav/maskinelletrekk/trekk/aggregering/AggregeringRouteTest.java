@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk.aggregering;
+package no.nav.maskinelletrekk.trekk.aggregering;
 
 import org.junit.Before;
 import org.junit.Test;

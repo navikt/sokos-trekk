@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk.behandletrekkvedtak;
+package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;

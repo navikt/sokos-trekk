@@ -1,0 +1,12 @@
+<trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
+    <trekkRequest>
+        <bruker>12345678901</bruker>
+        <antallDager>60</antallDager>
+        <trekkvedtakId>22</trekkvedtakId>
+    </trekkRequest>
+    <trekkRequest>
+        <bruker>10987654321</bruker>
+        <antallDager>60</antallDager>
+        <trekkvedtakId>33</trekkvedtakId>
+    </trekkRequest>
+</trekk>

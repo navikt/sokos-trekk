@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk.helsesjekk;
+package no.nav.maskinelletrekk.trekk.helsesjekk;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;

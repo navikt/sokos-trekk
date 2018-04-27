@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk.aggregering;
+package no.nav.maskinelletrekk.trekk.aggregering;
 
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import org.apache.camel.Exchange;

@@ -25,7 +25,7 @@ pipeline {
 				script {
 					checkout scm
 					docker.withRegistry('https://docker.adeo.no:5000/') {
-						def image = docker.build("okonomi/trekk:1.1.${env.BUILD_ID}")
+						def image = docker.build("okonomi/trekk:1.1.${env.BUILD_ID}-T")
 						image.push()
 						image.push 'latest'
 					}
@@ -37,7 +37,7 @@ pipeline {
 				script {
 					withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
 						sh "nais validate"
-						sh "nais upload --app trekk -v 1.1.${env.BUILD_ID}"
+						sh "nais upload --app trekk -v 1.1.${env.BUILD_ID}-T"
 					}
 				}
 			}
@@ -49,7 +49,7 @@ pipeline {
 			            def postBody = [
 			                    application: "trekk",
 			                    fasitEnvironment: "t1",
-			                    version    : "1.1.${env.BUILD_ID}",
+			                    version    : "1.1.${env.BUILD_ID}-T",
 			                    fasitUsername   : "${env.NAIS_USERNAME}",
 			                    fasitPassword   : "${env.NAIS_PASSWORD}",
 			                    zone       : "fss",

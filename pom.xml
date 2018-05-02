@@ -69,7 +69,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <ytelseskontrakt-v3.version>3.0.1</ytelseskontrakt-v3.version>
-        <ytelseVedtak-v1.version>1.0.0-SNAPSHOT</ytelseVedtak-v1.version>
+        <ytelseVedtak-v1.version>1.0.1-SNAPSHOT</ytelseVedtak-v1.version>
         <wmq.version>7.0</wmq.version>
     </properties>
 

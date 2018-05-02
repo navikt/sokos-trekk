@@ -41,7 +41,7 @@ public class UploadMockDataController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/upload/mock2")
+    @RequestMapping(method = RequestMethod.POST, value = "/upload/mockdata")
     public ResponseEntity<?> uploadData(@RequestBody String input) {
 
         LOGGER.info("Mottar mock data: {}", input);

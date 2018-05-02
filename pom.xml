@@ -23,7 +23,6 @@
 
     <modules>
         <module>trekk-app</module>
-        <module>trekk-config</module>
         <module>trekk-schema</module>
     </modules>
 
@@ -298,6 +297,23 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven.release.version}</version>
+                <configuration>
+                    <preparationGoals>clean install</preparationGoals>
+                    <pushChanges>true</pushChanges>
+                    <localCheckout>true</localCheckout>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-plugin</artifactId>
+                        <version>${scm.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
         <pluginManagement>

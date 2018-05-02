@@ -8,48 +8,42 @@
     <xsd:element name="ArenaMockData">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name="arenaData" type="FinnYtelseVedtakListeResponse" maxOccurs="1000"/>
+                <xsd:element name="personYtelseListe" type="PersonYtelse" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:complexType name="FinnYtelseVedtakListeResponse">
-        <xsd:sequence>
-            <xsd:element name="personYtelseListe" type="PersonYtelse" minOccurs="0" maxOccurs="unbounded"/>
-        </xsd:sequence>
-    </xsd:complexType>
-
     <xsd:complexType name="PersonYtelse">
         <xsd:sequence>
             <xsd:element name="ident" type="xsd:string"/>
-            <xsd:element name="sakListe" type="Sak" maxOccurs="unbounded"/>
+            <xsd:element name="sak" type="MockSak" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="Sak">
+    <xsd:complexType name="MockSak">
         <xsd:sequence>
             <xsd:element name="fagsystemSakId" type="xsd:string"/>
-            <xsd:element name="tema" type="Tema"/>
-            <xsd:element name="vedtakListe" type="Vedtak" maxOccurs="unbounded"/>
+            <xsd:element name="tema" type="MockTema"/>
+            <xsd:element name="vedtak" type="MockVedtak" maxOccurs="unbounded"/>
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="Vedtak">
+    <xsd:complexType name="MockVedtak">
         <xsd:sequence>
-            <xsd:element name="vedtaksperiode" type="Periode"/>
-            <xsd:element name="rettighetstype" type="Rettighetstype"/>
+            <xsd:element name="vedtaksperiode" type="MockPeriode"/>
+            <xsd:element name="rettighetstype" type="MockRettighetstype"/>
             <xsd:element name="dagsats" type="xsd:double"/>
         </xsd:sequence>
     </xsd:complexType>
 
-     <xsd:complexType name="Periode">
+     <xsd:complexType name="MockPeriode">
         <xsd:sequence>
             <xsd:element name="fom" type="xsd:date"/>
             <xsd:element name="tom" type="xsd:date"/>
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:simpleType name="Tema">
+    <xsd:simpleType name="MockTema">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="AAP"/> <!-- arbeidsavklaringspenger -->
             <xsd:enumeration value="DAG"/> <!-- dagpenger -->
@@ -57,7 +51,7 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:simpleType name="Rettighetstype">
+    <xsd:simpleType name="MockRettighetstype">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="AAP" /> <!-- Arbeidsavklaringspenger -->
             <xsd:enumeration value="DAGO"/> <!-- Ordinære dagpenger -->

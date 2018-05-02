@@ -46,6 +46,7 @@
                     </xjbSources>
                     <sources>
                         <source>src/main/resources/schema/trekk_v1.xsd</source>
+                        <source>src/main/resources/schema/arena_mock.xsd</source>
                     </sources>
                 </configuration>
             </plugin>

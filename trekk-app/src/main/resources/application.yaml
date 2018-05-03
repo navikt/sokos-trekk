@@ -18,6 +18,7 @@ trekk:
 
 server:
   port: 8080
+  use-forward-headers: true
 
 logging:
   config: classpath:logback-spring.xml

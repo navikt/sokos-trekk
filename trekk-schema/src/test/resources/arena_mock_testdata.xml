@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
-  <!--You have a CHOICE of the next 2 items at this level-->
-  <!--1 to 1000 repetitions:-->
-  <trekkRequest>
-    <bruker>12345678901</bruker>
-    <antallDager>60</antallDager>
-    <trekkvedtakId>3</trekkvedtakId>
-    <!--1 to 1000 repetitions:-->
-    <oppdragsvedtak>
-      <sats>1234.50</sats>
-      <typeSats>DAG</typeSats>
-      <periode>
-        <fom>2016-08-01</fom>
-        <tom>2018-05-01</tom>
-      </periode>
-    </oppdragsvedtak>
-    <oppdragsvedtak>
-      <sats>120.00</sats>
-      <typeSats>DAG</typeSats>
-      <periode>
-        <fom>2011-08-01</fom>
-        <tom>2015-08-01</tom>
-      </periode>
-    </oppdragsvedtak>
-  </trekkRequest>
-  <trekkRequest>
-    <bruker>10987654321</bruker>
-    <antallDager>60</antallDager>
-    <trekkvedtakId>4</trekkvedtakId>
-    <!--1 to 1000 repetitions:-->
-    <oppdragsvedtak>
-      <sats>10000.00</sats>
-      <typeSats>MND</typeSats>
-      <periode>
-        <fom>2006-08-19+02:00</fom>
-        <tom>2009-05-16</tom>
-      </periode>
-    </oppdragsvedtak>
-  </trekkRequest>
-</trekk>
+<ArenaMockData xmlns="urn:no:nav:maskinelletrekk:arenaMock:v1">
+    <!--Zero or more repetitions:-->
+    <personYtelseListe>
+        <ident>12345678901</ident>
+        <!--1 or more repetitions:-->
+        <sak>
+            <fagsystemSakId>321</fagsystemSakId>
+            <tema>DAG</tema>
+            <!--1 or more repetitions:-->
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2007-10-26</fom>
+                    <tom>2004-02-14</tom>
+                </vedtaksperiode>
+                <rettighetstype>DAGO</rettighetstype>
+                <dagsats>-75767.17</dagsats>
+            </vedtak>
+        </sak>
+    </personYtelseListe>
+    <personYtelseListe>
+        <ident>10987654321</ident>
+        <!--1 or more repetitions:-->
+        <sak>
+            <fagsystemSakId>123</fagsystemSakId>
+            <tema>AAP</tema>
+            <!--1 or more repetitions:-->
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2007-10-26</fom>
+                    <tom>2004-02-14</tom>
+                </vedtaksperiode>
+                <rettighetstype>DAGO</rettighetstype>
+                <dagsats>100</dagsats>
+            </vedtak>
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2007-10-26</fom>
+                    <tom>2004-02-14</tom>
+                </vedtaksperiode>
+                <rettighetstype>DAGO</rettighetstype>
+                <dagsats>100</dagsats>
+            </vedtak>
+        </sak>
+    </personYtelseListe>
+</ArenaMockData>

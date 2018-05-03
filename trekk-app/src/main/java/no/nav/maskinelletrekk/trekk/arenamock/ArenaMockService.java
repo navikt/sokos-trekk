@@ -18,6 +18,7 @@ public class ArenaMockService implements YtelseVedtakService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArenaMockService.class);
 
+    private String mockDataXml;
     private Map<String, List<ArenaVedtak>> mockDataMap;
 
     @Override
@@ -25,16 +26,32 @@ public class ArenaMockService implements YtelseVedtakService {
         Set<String> fnrList = trekkRequestListe.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
 
         Map<String, List<ArenaVedtak>> vedtakMap = new HashMap<>();
-
-        for (String s : fnrList) {
-            if (mockDataMap.containsKey(s)) {
-                vedtakMap.put(s, mockDataMap.get(s));
+        if (mockDataMap != null) {
+            for (String s : fnrList) {
+                if (mockDataMap.containsKey(s)) {
+                    vedtakMap.put(s, mockDataMap.get(s));
+                }
             }
+
+        } else {
+            LOGGER.error("Mangler testdata!");
         }
         return vedtakMap;
     }
 
-    void setMockDataMap(Map<String, List<ArenaVedtak>> mockDataMap) {
+    public String getMockDataXml() {
+        return mockDataXml;
+    }
+
+    public void setMockDataXml(String mockDataXml) {
+        this.mockDataXml = mockDataXml;
+    }
+
+    public Map<String, List<ArenaVedtak>> getMockDataMap() {
+        return mockDataMap;
+    }
+
+    public void setMockDataMap(Map<String, List<ArenaVedtak>> mockDataMap) {
         this.mockDataMap = mockDataMap;
     }
 }

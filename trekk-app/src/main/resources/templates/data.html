@@ -1,0 +1,53 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="/app.css"/>
+    <title>ArenaMock</title>
+</head>
+<body>
+<h1>Testdata</h1>
+
+<h2>Last opp nye testdata</h2>
+<form action="/arenamock/data" method="post" enctype="multipart/form-data">
+    <textarea name="input" th:text="${xml}" title="Testdata"></textarea>
+    <p class="error" th:text="${feilmelding}"></p>
+    <input name="submit" type="submit" value="Last opp"/>
+</form>
+<h2>Eksisterende data</h2>
+<table border="1">
+    <tr th:each="instance : ${testdata}">
+        <td>Bruker: <span th:text="${instance.key}"></span></td>
+        <td>
+            <table border="1">
+                <tr th:each="data: ${instance.value}">
+                    <td>
+                        <strong>Vedtak</strong>
+                        <table>
+                            <tr>
+                                <td>Tema:</td>
+                                <td th:text="${data.tema}"/>
+                            </tr>
+                            <tr>
+                                <td>Rettighetstype:</td>
+                                <td th:text="${data.rettighetType}"/>
+                            </tr>
+                            <tr>
+                                <td>Dagsats:</td>
+                                <td th:text="${data.dagsats}"/>
+                            </tr>
+                            <tr>
+                                <td>Periode.fom:</td>
+                                <td th:text="${data.vedtaksperiode.fom}"/>
+                            </tr>
+                            <tr>
+                                <td>Periode.tom:</td>
+                                <td th:text="${data.vedtaksperiode.tom}"/>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

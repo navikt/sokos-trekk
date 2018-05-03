@@ -22,8 +22,8 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VedtakBeregning.class);
 
+    public static final int SUM_SCALE = 2;
     private static final double MND_FAKTOR = 21.67;
-    private static final int SUM_SCALE = 2;
 
     private Map<String, List<ArenaVedtak>> ytelseskontraktMap;
 
@@ -92,13 +92,15 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
                     }
                     return sats;
                 })
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(SUM_SCALE, ROUND_HALF_UP);
     }
 
     private BigDecimal kalkulerSumArena(List<ArenaVedtak> arenaVedtakList) {
         return arenaVedtakList.stream()
                 .map(ArenaVedtak::getDagsats)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(SUM_SCALE, ROUND_HALF_UP);
     }
 
 }

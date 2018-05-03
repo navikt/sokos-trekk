@@ -52,8 +52,8 @@
 
     <xsd:complexType name="Periode">
         <xsd:sequence>
-            <xsd:element name="fom" type="xsd:date"/>
-            <xsd:element name="tom" type="xsd:date"/>
+            <xsd:element name="fom" type="xsd:date" minOccurs="0"/>
+            <xsd:element name="tom" type="xsd:date" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
 

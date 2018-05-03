@@ -12,13 +12,21 @@ public class DateUtil {
     private DateUtil() {
     }
 
-    public static XMLGregorianCalendar toXmlGregorianCalendar(LocalDate fomDato) throws DatatypeConfigurationException {
-        GregorianCalendar gcal = GregorianCalendar.from(fomDato.atStartOfDay(ZoneId.systemDefault()));
-        return DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+    public static XMLGregorianCalendar toXmlGregorianCalendar(LocalDate dato) throws DatatypeConfigurationException {
+        XMLGregorianCalendar cal = null;
+        if (dato != null) {
+            GregorianCalendar gcal = GregorianCalendar.from(dato.atStartOfDay(ZoneId.systemDefault()));
+            cal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
+        }
+        return cal;
     }
 
     static LocalDate toLocalDate(XMLGregorianCalendar dato) {
-        return dato.toGregorianCalendar().toZonedDateTime().toLocalDate();
+        LocalDate date = null;
+        if (dato != null) {
+            date = dato.toGregorianCalendar().toZonedDateTime().toLocalDate();
+        }
+        return date;
     }
 
 }

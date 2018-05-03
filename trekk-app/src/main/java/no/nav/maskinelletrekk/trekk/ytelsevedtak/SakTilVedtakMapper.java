@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
+import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.VedtakBeregning.SUM_SCALE;
 import static no.nav.maskinelletrekk.trekk.ytelsevedtak.DateUtil.toLocalDate;
 
 @Component
@@ -24,7 +26,7 @@ public class SakTilVedtakMapper implements Function<Sak, Stream<? extends ArenaV
 
     private Function<Vedtak, ArenaVedtak> mapVedtak(String tema) {
         return vedtak -> ArenaVedtakBuilder.create()
-                .dagsats(BigDecimal.valueOf(vedtak.getDagsats()))
+                .dagsats(BigDecimal.valueOf(vedtak.getDagsats()).setScale(SUM_SCALE, ROUND_HALF_UP))
                 .rettighetType(vedtak.getRettighetstype().getKodeverksRef())
                 .tema(tema)
                 .vedtaksperiode(PeriodeBuilder.create()

@@ -23,7 +23,6 @@
 
     <modules>
         <module>trekk-app</module>
-        <module>trekk-config</module>
         <module>trekk-schema</module>
     </modules>
 

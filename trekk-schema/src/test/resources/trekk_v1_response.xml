@@ -4,7 +4,7 @@
     <trekkResponse>
         <trekkvedtakId>3</trekkvedtakId>
         <beslutning>ABETAL</beslutning>
-        <totalSatsOS>1200.00</totalSatsOS>
+        <totalSatsOS>1199.00</totalSatsOS>
         <totalSatsArena>1200.00</totalSatsArena>
         <!--1 to 1000 repetitions:-->
         <vedtak>

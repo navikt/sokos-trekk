@@ -59,7 +59,7 @@ public class ArenaMockController {
             return "redirect:data";
         }
         ytelseVedtakService.setMockDataXml(input);
-        Map<String, List<ArenaVedtak>> listMap = mockData.getPersonYtelseListe().stream()
+        Map<String, List<ArenaVedtak>> listMap = mockData.getPersonYtelse().stream()
                 .collect(Collectors.toMap(PersonYtelse::getIdent, this::opprettArenaVedtakListe));
         ytelseVedtakService.setMockDataMap(listMap);
         return "redirect:data";

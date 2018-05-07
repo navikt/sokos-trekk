@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ArenaMockData xmlns="urn:no:nav:maskinelletrekk:arenaMock:v1">
     <!--Zero or more repetitions:-->
-    <personYtelseListe>
+    <personYtelse>
         <ident>12345678901</ident>
         <!--1 or more repetitions:-->
         <sak>
@@ -10,37 +10,37 @@
             <!--1 or more repetitions:-->
             <vedtak>
                 <vedtaksperiode>
-                    <fom>2007-10-26</fom>
-                    <tom>2004-02-14</tom>
+                    <fom>2017-10-01</fom>
+                    <tom>2018-09-30</tom>
                 </vedtaksperiode>
-                <rettighetstype>DAGO</rettighetstype>
-                <dagsats>-75767.17</dagsats>
+                <rettighetstype>PERM</rettighetstype>
+                <dagsats>1000.00</dagsats>
             </vedtak>
         </sak>
-    </personYtelseListe>
-    <personYtelseListe>
+    </personYtelse>
+    <personYtelse>
         <ident>10987654321</ident>
         <!--1 or more repetitions:-->
         <sak>
             <fagsystemSakId>123</fagsystemSakId>
-            <tema>AAP</tema>
+            <tema>DAG</tema>
             <!--1 or more repetitions:-->
             <vedtak>
                 <vedtaksperiode>
-                    <fom>2007-10-26</fom>
-                    <tom>2004-02-14</tom>
+                    <fom>2017-05-01</fom>
+                    <tom>2019-01-31</tom>
                 </vedtaksperiode>
                 <rettighetstype>DAGO</rettighetstype>
-                <dagsats>100</dagsats>
+                <dagsats>750</dagsats>
             </vedtak>
             <vedtak>
                 <vedtaksperiode>
-                    <fom>2007-10-26</fom>
-                    <tom>2004-02-14</tom>
+                    <fom>2018-01-01</fom>
+                    <tom>2019-12-31</tom>
                 </vedtaksperiode>
-                <rettighetstype>DAGO</rettighetstype>
-                <dagsats>100</dagsats>
+                <rettighetstype>BTIL</rettighetstype>
+                <dagsats>380</dagsats>
             </vedtak>
         </sak>
-    </personYtelseListe>
+    </personYtelse>
 </ArenaMockData>

@@ -8,11 +8,11 @@
         <trekkvedtakId>3</trekkvedtakId>
         <!--1 to 1000 repetitions:-->
         <oppdragsvedtak>
-            <sats>1234.50</sats>
+            <sats>1002.00</sats>
             <typeSats>DAG</typeSats>
             <periode>
-                <fom>2016-08-01</fom>
-                <tom>2018-05-01</tom>
+                <fom>2017-01-01</fom>
+                <tom>2019-12-31</tom>
             </periode>
         </oppdragsvedtak>
         <oppdragsvedtak>
@@ -27,7 +27,7 @@
     <trekkRequest>
         <bruker>10987654321</bruker>
         <antallDager>60</antallDager>
-        <trekkvedtakId>3</trekkvedtakId>
+        <trekkvedtakId>4</trekkvedtakId>
         <!--1 to 1000 repetitions:-->
         <oppdragsvedtak>
             <sats>10000.00</sats>

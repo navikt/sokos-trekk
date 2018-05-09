@@ -69,6 +69,9 @@ public final class TrekkRequestBuilder {
         trekkRequest.setBruker(bruker);
         trekkRequest.setAntallDager(antallDager);
         trekkRequest.setTrekkvedtakId(trekkvedtakId);
+        if (oppdragsvedtakList == null) {
+            oppdragsvedtakList = new ArrayList<>();
+        }
         trekkRequest.getOppdragsvedtak().addAll(oppdragsvedtakList);
         return trekkRequest;
     }

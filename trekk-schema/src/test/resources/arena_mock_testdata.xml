@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ArenaMockData xmlns="urn:no:nav:maskinelletrekk:arenaMock:v1">
+    <kjoreDato>2018-01-01</kjoreDato>
     <!--Zero or more repetitions:-->
     <personYtelse>
         <ident>12345678901</ident>

@@ -8,6 +8,7 @@
     <xsd:element name="ArenaMockData">
         <xsd:complexType>
             <xsd:sequence>
+                <xsd:element name="kjoreDato" type="xsd:date" minOccurs="0"/>
                 <xsd:element name="personYtelse" type="PersonYtelse" maxOccurs="unbounded"/>
             </xsd:sequence>
         </xsd:complexType>

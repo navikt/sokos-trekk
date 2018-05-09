@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArenaMockData xmlns="urn:no:nav:maskinelletrekk:arenaMock:v1">
+    <kjoreDato>2018-01-01</kjoreDato>
+    <!--1 or more repetitions:-->
+    <personYtelse>
+        <ident>13245678901</ident>
+        <!--1 or more repetitions:-->
+        <sak>
+            <fagsystemSakId>1</fagsystemSakId>
+            <tema>AAP</tema>
+            <!--1 or more repetitions:-->
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2016-01-01</fom>
+                    <tom>2016-12-31</tom>
+                </vedtaksperiode>
+                <rettighetstype>AAP</rettighetstype>
+                <dagsats>12</dagsats>
+            </vedtak>
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2016-01-01</fom>
+                    <tom>2019-12-31</tom>
+                </vedtaksperiode>
+                <rettighetstype>AAP</rettighetstype>
+                <dagsats>13</dagsats>
+            </vedtak>
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2016-01-01</fom>
+                    <tom>2018-01-31</tom>
+                </vedtaksperiode>
+                <rettighetstype>AAP</rettighetstype>
+                <dagsats>14</dagsats>
+            </vedtak>
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2018-01-01</fom>
+                    <tom>2018-10-31</tom>
+                </vedtaksperiode>
+                <rettighetstype>AAP</rettighetstype>
+                <dagsats>15</dagsats>
+            </vedtak>
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2018-01-01</fom>
+                    <tom>2018-01-31</tom>
+                </vedtaksperiode>
+                <rettighetstype>AAP</rettighetstype>
+                <dagsats>16</dagsats>
+            </vedtak>
+            <vedtak>
+                <vedtaksperiode>
+                    <fom>2016-01-01</fom>
+                    <tom>2016-12-31</tom>
+                </vedtaksperiode>
+                <rettighetstype>AAP</rettighetstype>
+                <dagsats>17</dagsats>
+            </vedtak>
+        </sak>
+    </personYtelse>
+</ArenaMockData>

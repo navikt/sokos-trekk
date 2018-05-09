@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 public class ArenaMockServiceTest {
 
     private static final String BRUKER = "13245678901";
@@ -37,8 +39,11 @@ public class ArenaMockServiceTest {
         Map<String, List<ArenaVedtak>> map = service.hentYtelseskontrakt(Collections.singletonList(request));
 
         List<ArenaVedtak> arenaVedtakList = map.get(BRUKER);
-        Assert.assertNotNull(arenaVedtakList);
-
+        Assert.assertThat(arenaVedtakList.size(), equalTo(4));
+        Assert.assertThat(arenaVedtakList.get(0).getDagsats().doubleValue(), equalTo(13.0));
+        Assert.assertThat(arenaVedtakList.get(1).getDagsats().doubleValue(), equalTo(14.0));
+        Assert.assertThat(arenaVedtakList.get(2).getDagsats().doubleValue(), equalTo(15.0));
+        Assert.assertThat(arenaVedtakList.get(3).getDagsats().doubleValue(), equalTo(16.0));
     }
 
     private Map<String, List<ArenaVedtak>> stubArenaMockData() {

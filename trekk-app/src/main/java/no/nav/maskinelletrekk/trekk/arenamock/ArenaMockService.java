@@ -57,7 +57,7 @@ public class ArenaMockService implements YtelseVedtakService {
                 .tom(kjoreDato.plusDays(antallDager)).build();
         return erVedtakDatoInnenforRequestPeriode(periode.getTom(), requestPeriode)
                 || erVedtakDatoInnenforRequestPeriode(periode.getFom(), requestPeriode)
-                || erVedtakPeriodeErStorreEnnRequestPeriode(periode.getFom(), periode.getTom(), requestPeriode);
+                || erVedtakPeriodeStorreEnnRequestPeriode(periode.getFom(), periode.getTom(), requestPeriode);
     }
 
     private boolean erVedtakDatoInnenforRequestPeriode(LocalDate dato, Periode requestPeriode) {
@@ -65,7 +65,7 @@ public class ArenaMockService implements YtelseVedtakService {
                 && (dato.isBefore(requestPeriode.getTom()) || dato.isEqual(requestPeriode.getTom()));
     }
 
-    private boolean erVedtakPeriodeErStorreEnnRequestPeriode(LocalDate fom, LocalDate tom, Periode requestPeriode) {
+    private boolean erVedtakPeriodeStorreEnnRequestPeriode(LocalDate fom, LocalDate tom, Periode requestPeriode) {
         return fom.isBefore(requestPeriode.getFom())
                 && tom.isAfter(requestPeriode.getFom());
     }

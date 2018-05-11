@@ -13,15 +13,15 @@
     <input name="submit" type="submit" value="Last opp"/>
 </form>
 <h2>Eksisterende data</h2>
-<table border="1">
+<table class="arenaTable">
     <tr th:each="instance : ${testdata}">
         <td>Bruker: <span th:text="${instance.key}"></span></td>
         <td>
-            <table border="1">
+            <table class="vedtakTable">
                 <tr th:each="data: ${instance.value}">
                     <td>
                         <strong>Vedtak</strong>
-                        <table>
+                        <table class="vedtakData">
                             <tr>
                                 <td>Tema:</td>
                                 <td th:text="${data.tema}"/>

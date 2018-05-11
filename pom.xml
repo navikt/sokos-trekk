@@ -68,7 +68,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <ytelseskontrakt-v3.version>3.0.1</ytelseskontrakt-v3.version>
-        <ytelseVedtak-v1.version>1.0.0-SNAPSHOT</ytelseVedtak-v1.version>
+        <ytelseVedtak-v1.version>1.0.1</ytelseVedtak-v1.version>
         <wmq.version>7.0</wmq.version>
     </properties>
 
@@ -193,7 +193,6 @@
                 <version>${ytelseVedtak-v1.version}</version>
                 <classifier>jaxws</classifier>
             </dependency>
-
             <!-- no.nav.felles -->
             <dependency>
                 <groupId>no.nav.sbl.felles</groupId>
@@ -234,12 +233,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-test</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

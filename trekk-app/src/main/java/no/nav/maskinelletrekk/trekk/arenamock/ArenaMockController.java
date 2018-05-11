@@ -6,6 +6,7 @@ import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,9 @@ public class ArenaMockController {
 
     private ArenaMockDataMapper arenaMockDataMapper;
 
+    @Value("${FASIT_ENVIRONMENT_NAME}")
+    private String fasitEnv;
+
     @Autowired
     public ArenaMockController(ArenaMockService ytelseVedtakService,
                                ArenaMockDataMapper arenaMockDataMapper) {
@@ -49,6 +53,7 @@ public class ArenaMockController {
     public String visData(Model model) {
         model.addAttribute("testdata", ytelseVedtakService.getMockDataMap());
         model.addAttribute("xml", ytelseVedtakService.getMockDataXml());
+        model.addAttribute("fasitEnv", fasitEnv);
         return "data";
     }
 

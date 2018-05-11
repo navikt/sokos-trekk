@@ -30,3 +30,13 @@ fasitResources:
     resourceType: queue
   - alias: trekk_TREKK_REPLY
     resourceType: queue
+  - alias: srvtrekk
+    resourceType: credential
+    propertyMap:
+      username: SRV_TREKK_USERNAME
+      password: SRV_TREKK_PASSWORD
+  - alias: srvtrekk
+    resourceType: certificate
+      keystore: SRV_TREKK_CERT_KEYSTORE
+      keystorealias: SRV_TREKK_CERT_KEYSTOREALIAS
+      password: SRV_TREKK_CERT_PASSWORD

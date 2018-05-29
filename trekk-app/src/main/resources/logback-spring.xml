@@ -25,7 +25,7 @@
             </encoder>
         </appender>
 
-        <logger name="org.apache.cxf.common.logging" level="WARN" additivity="false"/>
+        <logger name="org.apache.cxf.common.logging" level="DEBUG" additivity="false"/>
 
         <root level="WARN">
             <appender-ref ref="CONSOLE"/>
@@ -33,6 +33,7 @@
 
         <logger name="no.nav.maskinelletrekk" level="INFO"/>
         <logger name="org.springframework" level="INFO"/>
+        <logger name="org.apache.cxf" level="DEBUG"/>
         <logger name="org.apache.camel" level="INFO"/>
         <logger name="org.ehcache" level="DEBUG"/>
     </springProfile>

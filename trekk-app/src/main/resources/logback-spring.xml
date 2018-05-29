@@ -15,7 +15,8 @@
 
         <logger name="org.springframework" level="INFO"/>
         <logger name="org.apache.camel" level="INFO"/>
-        <logger name="org.apache.cxf.common.logging" level="ERROR"/>
+        <logger name="org.apache.cxf" level="DEBUG"/>
+        <logger name="org.apache.cxf.common.logging" level="DEBUG"/>
         <logger name="org.apache.wss4j.common.crypto" level="ERROR"/>
     </springProfile>
     <springProfile name="u1">

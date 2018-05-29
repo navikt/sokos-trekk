@@ -48,12 +48,12 @@ pipeline {
    					withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: 'nais-user', usernameVariable: "NAIS_USERNAME", passwordVariable: "NAIS_PASSWORD"]]) {
 			            def postBody = [
 			                    application: "trekk",
-			                    fasitEnvironment: "t1",
+			                    fasitEnvironment: "t8",
 			                    version    : "1.1.${env.BUILD_ID}",
 			                    fasitUsername   : "${env.NAIS_USERNAME}",
 			                    fasitPassword   : "${env.NAIS_PASSWORD}",
 			                    zone       : "fss",
-			                    namespace  : "default"
+			                    namespace  : "t8"
 			            ]
 			            def naisdPayload = groovy.json.JsonOutput.toJson(postBody)
 

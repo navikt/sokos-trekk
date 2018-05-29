@@ -150,7 +150,39 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- CXF -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-client</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-management</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-security</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf.services.sts</groupId>
+                <artifactId>cxf-services-sts-core</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
 
+            <!-- IBM MQ -->
             <dependency>
                 <groupId>com.ibm</groupId>
                 <artifactId>com.ibm.mq</artifactId>

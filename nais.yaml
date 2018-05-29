@@ -32,11 +32,13 @@ fasitResources:
     resourceType: queue
   - alias: srvtrekk
     resourceType: credential
-    propertyMap:
-      username: SRV_TREKK_USERNAME
-      password: SRV_TREKK_PASSWORD
   - alias: srvtrekk
     resourceType: certificate
-      keystore: SRV_TREKK_CERT_KEYSTORE
-      keystorealias: SRV_TREKK_CERT_KEYSTOREALIAS
-      password: SRV_TREKK_CERT_PASSWORD
+    propertyMap:
+      keystore: SRVTREKK_CERT_KEYSTORE
+      keystorealias: SRVTREKK_CERT_KEYSTOREALIAS
+      password: SRVTREKK_CERT_PASSWORD
+  - alias: securityTokenService
+    resourceType: baseurl
+  - alias: virksomhet:YtelseVedtak_v1
+    resourceType: soapService

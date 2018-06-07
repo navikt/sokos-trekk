@@ -15,8 +15,8 @@
 
         <logger name="org.springframework" level="INFO"/>
         <logger name="org.apache.camel" level="INFO"/>
-        <logger name="org.apache.cxf" level="DEBUG"/>
-        <logger name="org.apache.cxf.common.logging" level="DEBUG"/>
+        <logger name="org.apache.cxf" level="ERROR"/>
+        <logger name="org.apache.cxf.common.logging" level="ERROR"/>
         <logger name="org.apache.wss4j.common.crypto" level="ERROR"/>
     </springProfile>
     <springProfile name="u1">
@@ -26,7 +26,7 @@
             </encoder>
         </appender>
 
-        <logger name="org.apache.cxf.common.logging" level="DEBUG" additivity="false"/>
+        <logger name="org.apache.cxf.common.logging" level="WARN" additivity="false"/>
 
         <root level="WARN">
             <appender-ref ref="CONSOLE"/>
@@ -34,7 +34,7 @@
 
         <logger name="no.nav.maskinelletrekk" level="INFO"/>
         <logger name="org.springframework" level="INFO"/>
-        <logger name="org.apache.cxf" level="DEBUG"/>
+        <logger name="org.apache.cxf" level="WARN"/>
         <logger name="org.apache.camel" level="INFO"/>
         <logger name="org.ehcache" level="DEBUG"/>
     </springProfile>

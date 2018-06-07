@@ -8,6 +8,7 @@ import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Periode;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Person;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.PersonYtelse;
+import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Tema;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeRequest;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeResponse;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import java.io.StringWriter;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,7 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(List<TrekkRequest> trekkRequestListe) {
         FinnYtelseVedtakListeRequest request = new FinnYtelseVedtakListeRequest();
         request.getPersonListe().addAll(opprettPersonListe(trekkRequestListe));
+        request.getTemaListe().addAll(getTema("AAP", "DAG", "IND"));
         return request;
     }
 
@@ -111,5 +114,15 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         } catch (DatatypeConfigurationException e) {
             throw new FeilVedOpprettelseAvRequestException("Feil ved parsing av dato", e);
         }
+    }
+
+    private Set<Tema> getTema(String... temanavn) {
+        Set<Tema> temaList = new HashSet<>();
+        for (String s : temanavn) {
+            Tema aap = new Tema();
+            aap.setKodeverksRef(s);
+            temaList.add(aap);
+        }
+        return temaList;
     }
 }

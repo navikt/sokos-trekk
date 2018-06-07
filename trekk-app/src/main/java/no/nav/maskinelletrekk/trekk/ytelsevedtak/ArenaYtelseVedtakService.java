@@ -119,9 +119,10 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private Set<Tema> getTema(String... temanavn) {
         Set<Tema> temaList = new HashSet<>();
         for (String s : temanavn) {
-            Tema aap = new Tema();
-            aap.setKodeverksRef(s);
-            temaList.add(aap);
+            Tema tema = new Tema();
+            tema.setValue(s);
+//            tema.setKodeverksRef(s);
+            temaList.add(tema);
         }
         return temaList;
     }

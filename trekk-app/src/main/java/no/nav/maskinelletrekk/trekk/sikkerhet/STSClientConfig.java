@@ -26,9 +26,7 @@ import static java.util.Collections.singletonList;
 public class STSClientConfig {
 
     private String location;
-
     private String username;
-
     private String password;
 
     private static final String STS_REQUEST_SAML_POLICY = "classpath:policy/requestSamlPolicyNoTransportBinding.xml";
@@ -98,7 +96,6 @@ public class STSClientConfig {
     private static void setClientEndpointPolicy(Client client, Policy policy) {
         Endpoint endpoint = client.getEndpoint();
         EndpointInfo endpointInfo = endpoint.getEndpointInfo();
-
         PolicyEngine policyEngine = client.getBus().getExtension(PolicyEngine.class);
         SoapMessage message = new SoapMessage(Soap12.getInstance());
         EndpointPolicy endpointPolicy = policyEngine.getClientEndpointPolicy(endpointInfo, null, message);

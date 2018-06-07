@@ -59,6 +59,9 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         JAXB.marshal(request, ws);
         LOGGER.info("Sender xml til Arena: {}", ws.toString());
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
+        StringWriter ws2 = new StringWriter();
+        JAXB.marshal(response, ws2);
+        LOGGER.info("Mottat melding fra arena: {}", ws2.toString());
 
         return response.getPersonYtelseListe().stream()
                 .collect(toMap(PersonYtelse::getIdent, this::opprettArenaVedtakListe));
@@ -121,7 +124,6 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         for (String s : temanavn) {
             Tema tema = new Tema();
             tema.setValue(s);
-//            tema.setKodeverksRef(s);
             temaList.add(tema);
         }
         return temaList;

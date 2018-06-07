@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
+import java.io.StringWriter;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -50,10 +52,13 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     @Override
     public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(List<TrekkRequest> trekkRequestListe) {
-        FinnYtelseVedtakListeResponse responseFraArena = kallArenaYtelseVedtakService(
-                opprettFinnYtelseVedtakListeRequest(trekkRequestListe));
+        FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(trekkRequestListe);
+        StringWriter ws = new StringWriter();
+        JAXB.marshal(request, ws);
+        LOGGER.info("Sender xml til Arena: {}", ws.toString());
+        FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
 
-        return responseFraArena.getPersonYtelseListe().stream()
+        return response.getPersonYtelseListe().stream()
                 .collect(toMap(PersonYtelse::getIdent, this::opprettArenaVedtakListe));
     }
 

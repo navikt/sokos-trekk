@@ -28,6 +28,8 @@ fasitResources:
     resourceType: channel
   - alias: trekk_TREKK_INN
     resourceType: queue
+  - alias: trekk_TREKK_INN_BOQ
+    resourceType: queue
   - alias: trekk_TREKK_REPLY
     resourceType: queue
   - alias: srvtrekk

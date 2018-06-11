@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import static org.apache.camel.LoggingLevel.ERROR;
 import static org.apache.camel.LoggingLevel.INFO;
 
 @Service
@@ -34,7 +35,12 @@ public class TrekkRoute extends SpringRouteBuilder {
     @Override
     public void configure() {
 
-        errorHandler(defaultErrorHandler().useOriginalMessage());
+        onException(Throwable.class)
+                .handled(true)
+                .useOriginalMessage()
+                .marshal(TREKK_FORMAT)
+                .log(ERROR, LOGGER, "Legger melding på backout-queue ${body}")
+                .to("ref:trekkInnBoq");
 
         from(BEHANDLE_TREKK_ROUTE)
                 .routeId(BEHANDLE_TREKK_ROUTE_ID)

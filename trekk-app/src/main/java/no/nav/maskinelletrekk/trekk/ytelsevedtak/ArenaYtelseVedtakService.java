@@ -55,9 +55,9 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     @Override
     public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(List<TrekkRequest> trekkRequestListe) {
         FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(trekkRequestListe);
-        loggSoapMelding(request);
+        loggSoapRequest(request);
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
-        loggSoapMelding(response);
+        loggSoapResponse(response);
 
         return response.getPersonYtelseListe().stream()
                 .collect(toMap(PersonYtelse::getIdent, this::opprettArenaVedtakListe));
@@ -125,9 +125,15 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         return temaList;
     }
 
-    private void loggSoapMelding(Object request) {
+    private void loggSoapResponse(Object request) {
         StringWriter ws = new StringWriter();
         JAXB.marshal(request, ws);
-        LOGGER.info("Sender xml til Arena: {}", ws.toString());
+        LOGGER.info("Mottatt melding fra Arena: {}", ws.toString());
+    }
+
+    private void loggSoapRequest(Object request) {
+        StringWriter ws = new StringWriter();
+        JAXB.marshal(request, ws);
+        LOGGER.info("Sender melding til Arena: {}", ws.toString());
     }
 }

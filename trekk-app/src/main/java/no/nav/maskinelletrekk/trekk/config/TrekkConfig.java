@@ -20,10 +20,9 @@ import java.time.Clock;
 @Configuration
 public class TrekkConfig {
 
-
-
     @Bean
     public Clock clock() {
         return Clock.systemDefaultZone();
     }
+
 }

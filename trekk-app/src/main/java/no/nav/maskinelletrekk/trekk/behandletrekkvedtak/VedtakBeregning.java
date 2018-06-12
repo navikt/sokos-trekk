@@ -37,7 +37,7 @@ public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkRes
         TrekkRequest trekkRequest = trekkRequestOgPeriode.getTrekkRequest();
         List<Oppdragsvedtak> oppdragVedtakList = trekkRequest.getOppdragsvedtak();
 
-        LOGGER.info("Beregner trekkvedtak: trekkvedtakId:{}, bruker:{}",
+        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}, bruker:{}]",
                 trekkRequest.getTrekkvedtakId(),
                 trekkRequest.getBruker());
 
@@ -72,20 +72,24 @@ public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkRes
                 .build();
     }
 
-    private List<ArenaVedtak> finnArenaYtelsesvedtakForBruker(TrekkRequestOgPeriode trekkRequest) {
+    private List<ArenaVedtak> finnArenaYtelsesvedtakForBruker(TrekkRequestOgPeriode trekkRequestOgPeriode) {
         List<ArenaVedtak> arenaVedtakList = new ArrayList<>();
-        String bruker = trekkRequest.getTrekkRequest().getBruker();
+
+        int trekkvedtakId = trekkRequestOgPeriode.getTrekkRequest().getTrekkvedtakId();
+        String bruker = trekkRequestOgPeriode.getTrekkRequest().getBruker();
+
         if (arenaVedtakMap.containsKey(bruker)) {
             for (ArenaVedtak arenaVedtak : arenaVedtakMap.get(bruker)) {
                 Periode requestPeriode = new Periode();
-                requestPeriode.setFom(trekkRequest.getFom());
-                requestPeriode.setTom(trekkRequest.getTom());
+                requestPeriode.setFom(trekkRequestOgPeriode.getFom());
+                requestPeriode.setTom(trekkRequestOgPeriode.getTom());
                 if (PeriodeSjekk.erInnenforPeriode(arenaVedtak.getVedtaksperiode(), requestPeriode)) {
                     arenaVedtakList.add(arenaVedtak);
                 }
             }
         }
-        LOGGER.info("Funnet {} arena-vedtak for bruker {}", arenaVedtakList.size(), bruker);
+        LOGGER.info("Funnet {} Arena-vedtak for trekkvedtak[trekkvedtakId: {}, bruker {}]",
+                arenaVedtakList.size(), trekkvedtakId, bruker);
         return arenaVedtakList;
     }
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.aggregerteMeldingerFraOSCounter;
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilOSCounter;
 import static org.apache.camel.LoggingLevel.ERROR;
@@ -46,11 +47,11 @@ public class TrekkRoute extends SpringRouteBuilder {
 
         from(BEHANDLE_TREKK_ROUTE)
                 .routeId(BEHANDLE_TREKK_ROUTE_ID)
-                .process(exchange -> aggregerteMeldingerFraOSCounter.inc())
+                .process(exchange -> aggregerteMeldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt aggregert melding fra OS").inc())
                 .bean(behandleTrekkvedtak)
                 .marshal(TREKK_FORMAT)
                 .log(INFO, LOGGER, "Legger melding på reply-kø: ${body}")
-                .process(exchange -> meldingerTilOSCounter.inc())
+                .process(exchange -> meldingerTilOSCounter.labels(PROCESS_TREKK, "Sender melding til OS").inc())
                 .to(TREKK_REPLY_QUEUE);
     }
 

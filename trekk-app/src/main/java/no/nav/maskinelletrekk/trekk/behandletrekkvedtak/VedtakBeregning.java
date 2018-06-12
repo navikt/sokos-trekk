@@ -3,6 +3,7 @@ package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.Oppdragsvedtak;
+import no.nav.maskinelletrekk.trekk.v1.Periode;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
 import no.nav.maskinelletrekk.trekk.v1.TypeSats;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.function.Function;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
-public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
+public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkResponse> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VedtakBeregning.class);
 
@@ -32,13 +34,14 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     }
 
     @Override
-    public TrekkResponse apply(TrekkRequest request) {
+    public TrekkResponse apply(TrekkRequestOgPeriode trekkRequestOgPeriode) {
+        TrekkRequest request = trekkRequestOgPeriode.getTrekkRequest();
         List<Oppdragsvedtak> oppdragVedtakList = request.getOppdragsvedtak();
 
         LOGGER.info("Beregner trekkvedtak: trekkvedtakId:{}, bruker:{}",
                 request.getTrekkvedtakId(),
                 request.getBruker());
-        List<ArenaVedtak> arenaVedtakList = finnYtelsesvedtakForBruker(request.getBruker());
+        List<ArenaVedtak> arenaVedtakList = finnYtelsesvedtakForBruker(trekkRequestOgPeriode);
 
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
         BigDecimal sumOs = kalkulerSumOppdrag(oppdragVedtakList);
@@ -69,8 +72,38 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
                 .build();
     }
 
-    private List<ArenaVedtak> finnYtelsesvedtakForBruker(String fnr) {
-        return ytelseskontraktMap.getOrDefault(fnr, new ArrayList<>());
+    private List<ArenaVedtak> finnYtelsesvedtakForBruker(TrekkRequestOgPeriode trekkRequest) {
+        List<ArenaVedtak> arenaVedtakList = new ArrayList<>();
+        String bruker = trekkRequest.getTrekkRequest().getBruker();
+        LOGGER.info("Finner vedtak for bruker {}", bruker);
+        if (ytelseskontraktMap.containsKey(bruker)) {
+            for (ArenaVedtak arenaVedtak : ytelseskontraktMap.get(bruker)) {
+                Periode requestPeriode = new Periode();
+                requestPeriode.setFom(trekkRequest.getFom());
+                requestPeriode.setTom(trekkRequest.getTom());
+                if (erInnenforPeriode(arenaVedtak.getVedtaksperiode(), requestPeriode)) {
+                    arenaVedtakList.add(arenaVedtak);
+                }
+            }
+        }
+        return arenaVedtakList;
+    }
+
+    private boolean erInnenforPeriode(Periode arenaVedtaksPeriode, Periode requestPeriode) {
+        return arenaVedtaksPeriode.getTom() == null && arenaVedtaksPeriode.getFom().isBefore(requestPeriode.getTom())
+                || erVedtakPeriodeStorreEnnRequestPeriode(arenaVedtaksPeriode.getFom(), arenaVedtaksPeriode.getTom(), requestPeriode)
+                || erVedtakDatoInnenforRequestPeriode(arenaVedtaksPeriode.getTom(), requestPeriode)
+                || erVedtakDatoInnenforRequestPeriode(arenaVedtaksPeriode.getFom(), requestPeriode);
+    }
+
+    private boolean erVedtakDatoInnenforRequestPeriode(LocalDate dato, Periode requestPeriode) {
+        return (dato.isAfter(requestPeriode.getFom()) || dato.isEqual(requestPeriode.getFom()))
+                && (dato.isBefore(requestPeriode.getTom()) || dato.isEqual(requestPeriode.getTom()));
+    }
+
+    private boolean erVedtakPeriodeStorreEnnRequestPeriode(LocalDate fom, LocalDate tom, Periode requestPeriode) {
+        return fom.isBefore(requestPeriode.getFom())
+                && (tom.isAfter(requestPeriode.getFom()));
     }
 
     private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, int numArena, int numOs) {

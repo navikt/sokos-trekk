@@ -35,10 +35,13 @@ public class BehandleTrekkvedtakBean {
         List<TrekkRequest> trekkRequestList = trekkRequest.getTrekkRequest();
         LOGGER.info("Starter behandling av {} trekkvedtak.", trekkRequestList.size());
 
-        Map<String, List<ArenaVedtak>> ytelseskontraktMap = ytelseVedtakService.hentYtelseskontrakt(trekkRequestList);
+        List<TrekkRequestOgPeriode> trekkRequestOgPeriodeList = trekkRequestList.stream()
+                .map(TrekkRequestOgPeriode::new)
+                .collect(Collectors.toList());
+        Map<String, List<ArenaVedtak>> ytelseskontraktMap = ytelseVedtakService.hentYtelseskontrakt(trekkRequestOgPeriodeList);
 
         VedtakBeregning vedtakBeregning = new VedtakBeregning(ytelseskontraktMap);
-        List<TrekkResponse> trekkResponseList = trekkRequestList.stream()
+        List<TrekkResponse> trekkResponseList = trekkRequestOgPeriodeList.stream()
                 .map(vedtakBeregning)
                 .collect(Collectors.toList());
 

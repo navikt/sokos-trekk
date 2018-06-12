@@ -1,7 +1,7 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
+import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRequestOgPeriode;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
-import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeUgyldigInput;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;
@@ -21,7 +21,8 @@ import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
 import java.io.StringWriter;
 import java.time.Clock;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -38,7 +39,6 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private YtelseVedtakV1 ytelseVedtakService;
     private SakTilVedtakMapper sakTilVedtakMapper;
-    private Clock clock;
 
     @Autowired
     public ArenaYtelseVedtakService(YtelseVedtakV1 ytelseVedtakService,
@@ -46,18 +46,16 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
                                     Clock clock) {
         Assert.notNull(ytelseVedtakService, "ytelseVedtakService must not be null");
         Assert.notNull(sakTilVedtakMapper, "sakTilVedtakMapper must not be null");
-        Assert.notNull(clock, "clock must not be null");
         this.ytelseVedtakService = ytelseVedtakService;
         this.sakTilVedtakMapper = sakTilVedtakMapper;
-        this.clock = clock;
     }
 
     @Override
-    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(List<TrekkRequest> trekkRequestListe) {
+    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(List<TrekkRequestOgPeriode> trekkRequestListe) {
         FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(trekkRequestListe);
-        loggSoapRequest(request);
+        loggSoapResponse("Sender melding til Arena: {}", request);
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
-        loggSoapResponse(response);
+        loggSoapResponse("Mottatt melding fra Arena: {}", response);
 
         return response.getPersonYtelseListe().stream()
                 .collect(toMap(PersonYtelse::getIdent, this::opprettArenaVedtakListe));
@@ -80,33 +78,49 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         return response;
     }
 
-    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(List<TrekkRequest> trekkRequestListe) {
+    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(List<TrekkRequestOgPeriode> trekkRequestListe) {
         FinnYtelseVedtakListeRequest request = new FinnYtelseVedtakListeRequest();
-        request.getPersonListe().addAll(opprettPersonListe(trekkRequestListe));
-        request.getTemaListe().addAll(getTema("AAP", "DAG", "IND"));
+        request.getPersonListe().addAll(opprettPersonListe(mergeRequests(trekkRequestListe)));
+        request.getTemaListe().addAll(opprettTema("AAP", "DAG", "IND"));
         return request;
     }
 
-    private Set<Person> opprettPersonListe(List<TrekkRequest> trekkRequestListe) {
+    private List<TrekkRequestOgPeriode> mergeRequests(List<TrekkRequestOgPeriode> trekkRequestListe) {
+        Map<String, TrekkRequestOgPeriode> trekkRequestOgPeriodeMap = new HashMap<>();
+        for (TrekkRequestOgPeriode nyRequest : trekkRequestListe) {
+            String fnr = nyRequest.getTrekkRequest().getBruker();
+            if (trekkRequestOgPeriodeMap.containsKey(fnr)) {
+                TrekkRequestOgPeriode eksisterendeRequest = trekkRequestOgPeriodeMap.get(fnr);
+                if (nyRequest.getFom().isBefore(eksisterendeRequest.getFom())) {
+                    eksisterendeRequest.setFom(nyRequest.getFom());
+                }
+                if (nyRequest.getTom().isAfter(eksisterendeRequest.getTom())) {
+                    eksisterendeRequest.setTom(nyRequest.getTom());
+                }
+            } else {
+                trekkRequestOgPeriodeMap.put(fnr, nyRequest);
+            }
+        }
+        return new ArrayList<>(trekkRequestOgPeriodeMap.values());
+    }
+
+    private Set<Person> opprettPersonListe(List<TrekkRequestOgPeriode> trekkRequestListe) {
         return trekkRequestListe.stream()
                 .peek(request -> LOGGER.info("Legger til TrekkRequest " +
                                 "[trekkVedtakId: {}, bruker: {}] i request til Arena",
-                        request.getTrekkvedtakId(), request.getBruker()))
+                        request.getTrekkRequest().getTrekkvedtakId(), request.getTrekkRequest().getBruker()))
                 .map(this::opprettPerson)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private Person opprettPerson(TrekkRequest trekkRequest) {
+    private Person opprettPerson(TrekkRequestOgPeriode trekkRequest) {
         try {
-            int antallDager = trekkRequest.getAntallDager();
-            LocalDate now = LocalDate.now(clock);
-
             Periode periode = new Periode();
-            periode.setFom(DateUtil.toXmlGregorianCalendar(now));
-            periode.setTom(DateUtil.toXmlGregorianCalendar(now.plusDays(antallDager)));
+            periode.setFom(DateUtil.toXmlGregorianCalendar(trekkRequest.getFom()));
+            periode.setTom(DateUtil.toXmlGregorianCalendar(trekkRequest.getTom()));
 
             Person person = new Person();
-            person.setIdent(trekkRequest.getBruker());
+            person.setIdent(trekkRequest.getTrekkRequest().getBruker());
             person.setPeriode(periode);
 
             return person;
@@ -115,7 +129,7 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         }
     }
 
-    private Set<Tema> getTema(String... temanavn) {
+    private Set<Tema> opprettTema(String... temanavn) {
         Set<Tema> temaList = new HashSet<>();
         for (String s : temanavn) {
             Tema tema = new Tema();
@@ -125,15 +139,10 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         return temaList;
     }
 
-    private void loggSoapResponse(Object request) {
+    private void loggSoapResponse(String format, Object request) {
         StringWriter ws = new StringWriter();
         JAXB.marshal(request, ws);
-        LOGGER.info("Mottatt melding fra Arena: {}", ws.toString());
+        LOGGER.info(format, ws.toString());
     }
 
-    private void loggSoapRequest(Object request) {
-        StringWriter ws = new StringWriter();
-        JAXB.marshal(request, ws);
-        LOGGER.info("Sender melding til Arena: {}", ws.toString());
-    }
 }

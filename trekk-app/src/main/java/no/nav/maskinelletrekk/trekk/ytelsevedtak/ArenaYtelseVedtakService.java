@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFraArenaCounter;
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilArenaCounter;
 
@@ -74,9 +73,9 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private FinnYtelseVedtakListeResponse kallArenaYtelseVedtakService(FinnYtelseVedtakListeRequest request) {
         FinnYtelseVedtakListeResponse response;
         try {
-            meldingerTilArenaCounter.labels(PROCESS_TREKK, "Sender melding til ARENA").inc();
+            meldingerTilArenaCounter.inc();
             response = ytelseVedtakService.finnYtelseVedtakListe(request);
-            meldingerFraArenaCounter.labels(PROCESS_TREKK, "Mottatt melding fra ARENA").inc();
+            meldingerFraArenaCounter.inc();
         } catch (FinnYtelseVedtakListeUgyldigInput | FinnYtelseVedtakListeSikkerhetsbegrensning e) {
             throw new WebserviceFailException("Kall mot Arena feilet", e);
         }

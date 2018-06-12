@@ -80,12 +80,12 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(List<TrekkRequestOgPeriode> trekkRequestListe) {
         FinnYtelseVedtakListeRequest request = new FinnYtelseVedtakListeRequest();
-        request.getPersonListe().addAll(opprettPersonListe(mergeRequests(trekkRequestListe)));
+        request.getPersonListe().addAll(opprettPersonListe(fjernDuplikaterOgAggregerPerioder(trekkRequestListe)));
         request.getTemaListe().addAll(opprettTema("AAP", "DAG", "IND"));
         return request;
     }
 
-    private List<TrekkRequestOgPeriode> mergeRequests(List<TrekkRequestOgPeriode> trekkRequestListe) {
+    private List<TrekkRequestOgPeriode> fjernDuplikaterOgAggregerPerioder(List<TrekkRequestOgPeriode> trekkRequestListe) {
         Map<String, TrekkRequestOgPeriode> trekkRequestOgPeriodeMap = new HashMap<>();
         for (TrekkRequestOgPeriode nyRequest : trekkRequestListe) {
             String fnr = nyRequest.getTrekkRequest().getBruker();
@@ -116,8 +116,8 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private Person opprettPerson(TrekkRequestOgPeriode trekkRequest) {
         try {
             Periode periode = new Periode();
-            periode.setFom(DateUtil.toXmlGregorianCalendar(trekkRequest.getFom()));
-            periode.setTom(DateUtil.toXmlGregorianCalendar(trekkRequest.getTom()));
+            periode.setFom(DateMapper.toXmlGregorianCalendar(trekkRequest.getFom()));
+            periode.setTom(DateMapper.toXmlGregorianCalendar(trekkRequest.getTom()));
 
             Person person = new Person();
             person.setIdent(trekkRequest.getTrekkRequest().getBruker());

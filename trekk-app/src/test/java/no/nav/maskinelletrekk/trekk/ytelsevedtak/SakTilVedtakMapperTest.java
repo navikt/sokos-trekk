@@ -122,8 +122,8 @@ public class SakTilVedtakMapperTest {
 
     private Periode opprettPeriode(LocalDate fom, LocalDate tom) throws DatatypeConfigurationException {
         Periode periode = new Periode();
-        periode.setFom(DateUtil.toXmlGregorianCalendar(fom));
-        periode.setTom(DateUtil.toXmlGregorianCalendar(tom));
+        periode.setFom(DateMapper.toXmlGregorianCalendar(fom));
+        periode.setTom(DateMapper.toXmlGregorianCalendar(tom));
         return periode;
     }
 

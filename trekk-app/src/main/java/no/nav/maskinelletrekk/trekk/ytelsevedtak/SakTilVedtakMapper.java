@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.VedtakBeregning.SUM_SCALE;
-import static no.nav.maskinelletrekk.trekk.ytelsevedtak.DateUtil.toLocalDate;
+import static no.nav.maskinelletrekk.trekk.ytelsevedtak.DateMapper.toLocalDate;
 
 @Component
 public class SakTilVedtakMapper implements Function<Sak, Stream<? extends ArenaVedtak>> {

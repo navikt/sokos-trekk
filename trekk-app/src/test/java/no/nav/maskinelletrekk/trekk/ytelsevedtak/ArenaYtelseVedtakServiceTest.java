@@ -99,12 +99,12 @@ public class ArenaYtelseVedtakServiceTest {
         rettighetstype.setKodeverksRef(RETTIGHETSTYPE_1);
 
         Periode periode1 = new Periode();
-        periode1.setFom(DateUtil.toXmlGregorianCalendar(FOM_PERIODE_1));
-        periode1.setTom(DateUtil.toXmlGregorianCalendar(TOM_PERIODE_1));
+        periode1.setFom(DateMapper.toXmlGregorianCalendar(FOM_PERIODE_1));
+        periode1.setTom(DateMapper.toXmlGregorianCalendar(TOM_PERIODE_1));
 
         Periode periode2 = new Periode();
-        periode2.setFom(DateUtil.toXmlGregorianCalendar(FOM_PERIODE_2));
-        periode2.setTom(DateUtil.toXmlGregorianCalendar(TOM_PERIODE_2));
+        periode2.setFom(DateMapper.toXmlGregorianCalendar(FOM_PERIODE_2));
+        periode2.setTom(DateMapper.toXmlGregorianCalendar(TOM_PERIODE_2));
 
 
         Vedtak vedtaket = new Vedtak();
@@ -183,8 +183,8 @@ public class ArenaYtelseVedtakServiceTest {
 
         Person person1 = requestCaptor.getValue().getPersonListe().get(0);
         assertThat(person1.getIdent(), equalTo(PERSON_IDENT_1));
-//        assertThat(person1.getPeriode().getFom(), equalTo(DateUtil.toXmlGregorianCalendar(LocalDateTime.ofInstant(NOW, DEFAULT_ZONE).toLocalDate())));
-//        assertThat(person1.getPeriode().getTom(), equalTo(DateUtil.toXmlGregorianCalendar(LocalDateTime.ofInstant(NOW, DEFAULT_ZONE).plusDays(ANTALL_DAGER_1).toLocalDate())));
+//        assertThat(person1.getPeriode().getFom(), equalTo(DateMapper.toXmlGregorianCalendar(LocalDateTime.ofInstant(NOW, DEFAULT_ZONE).toLocalDate())));
+//        assertThat(person1.getPeriode().getTom(), equalTo(DateMapper.toXmlGregorianCalendar(LocalDateTime.ofInstant(NOW, DEFAULT_ZONE).plusDays(ANTALL_DAGER_1).toLocalDate())));
     }
 
     @Test

@@ -14,6 +14,8 @@ import org.springframework.util.Assert;
 import java.time.format.DateTimeParseException;
 
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
+import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
+import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFraOSCounter;
 import static org.apache.camel.LoggingLevel.ERROR;
 
 @Service
@@ -52,6 +54,7 @@ public class AggregeringRoute extends SpringRouteBuilder {
                 .routeId(AGGREGERING_ROUTE_ID)
                 .log(LoggingLevel.INFO, LOGGER, "Mottatt melding fra OS ${body}")
                 .to(VALIDATE_AND_UNMARSHAL_ROUTE)
+                .process(exchange -> meldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt melding fra OS").inc())
                 .aggregate(constant(true), trekkAggregator)
                 .completionTimeout(completionTimeout)
                 .completionSize(completionSize)

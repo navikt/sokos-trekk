@@ -13,8 +13,8 @@ trekk:
     concurrentConsumers: 1
     transactionTimeout: 300
   aggregator:
-    completionTimeout: 10000 #millisekunder
-    completionSize: 20
+    completionTimeout: 5000 #millisekunder
+    completionSize: 10
 
 server:
   port: 8080

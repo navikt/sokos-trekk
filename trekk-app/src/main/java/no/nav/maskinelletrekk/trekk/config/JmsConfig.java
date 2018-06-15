@@ -36,7 +36,7 @@ public class JmsConfig {
     @Value("${TREKK_TREKK_INN_BOQ_QUEUENAME}")
     private String trekkInnBoqQueueName;
 
-    @Value("${TREKK_TREKK_REPLY_QUEUENAME}")
+    @Value("${OB04_TREKK_REPLY_QUEUENAME}")
     private String trekkReplyQueueName;
 
     @Bean

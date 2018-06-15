@@ -30,7 +30,7 @@ fasitResources:
     resourceType: queue
   - alias: trekk_TREKK_INN_BOQ
     resourceType: queue
-  - alias: trekk_TREKK_REPLY
+  - alias: OB04_TREKK_REPLY
     resourceType: queue
   - alias: srvtrekk
     resourceType: credential

@@ -24,4 +24,5 @@ public class TrekkConfig {
     public Clock clock() {
         return Clock.systemDefaultZone();
     }
+
 }

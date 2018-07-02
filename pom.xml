@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>no.nav.maskinelle-trekk</groupId>
@@ -12,7 +14,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.6.RELEASE</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <prerequisites>
@@ -52,9 +54,9 @@
         <javax.jms.version>1.1</javax.jms.version>
         <javax.inject.version>1</javax.inject.version>
         <!-- Apache CXF -->
-        <apache.cxf.version>3.1.11</apache.cxf.version>
+        <apache.cxf.version>3.2.1</apache.cxf.version>
         <!-- Camel -->
-        <camel.version>2.20.2</camel.version>
+        <camel.version>2.18.1</camel.version>
         <!-- Apache -->
         <commons.lang3.version>3.5</commons.lang3.version>
         <commons-io.version>2.5</commons-io.version>
@@ -66,7 +68,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <ytelseskontrakt-v3.version>3.0.1</ytelseskontrakt-v3.version>
-        <ytelseVedtak-v1.version>1.0.1-SNAPSHOT</ytelseVedtak-v1.version>
+        <ytelseVedtak-v1.version>1.0.1</ytelseVedtak-v1.version>
         <wmq.version>7.0</wmq.version>
     </properties>
 
@@ -153,7 +155,39 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- CXF -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-client</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-management</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-security</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf.services.sts</groupId>
+                <artifactId>cxf-services-sts-core</artifactId>
+                <version>${apache.cxf.version}</version>
+            </dependency>
 
+            <!-- IBM MQ -->
             <dependency>
                 <groupId>com.ibm</groupId>
                 <artifactId>com.ibm.mq</artifactId>
@@ -230,12 +264,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-test</artifactId>-->
-            <!--<version>${spring.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -293,23 +321,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven.release.version}</version>
-                <configuration>
-                    <preparationGoals>clean install</preparationGoals>
-                    <pushChanges>true</pushChanges>
-                    <localCheckout>true</localCheckout>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-scm-plugin</artifactId>
-                        <version>${scm.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
         <pluginManagement>

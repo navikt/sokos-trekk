@@ -7,9 +7,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.GregorianCalendar;
 
-public class DateUtil {
+public class DateMapper {
 
-    private DateUtil() {
+    private DateMapper() {
     }
 
     public static XMLGregorianCalendar toXmlGregorianCalendar(LocalDate dato) throws DatatypeConfigurationException {

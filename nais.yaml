@@ -28,5 +28,19 @@ fasitResources:
     resourceType: channel
   - alias: trekk_TREKK_INN
     resourceType: queue
-  - alias: trekk_TREKK_REPLY
+  - alias: trekk_TREKK_INN_BOQ
     resourceType: queue
+  - alias: OB04_TREKK_REPLY
+    resourceType: queue
+  - alias: srvtrekk
+    resourceType: credential
+  - alias: srvtrekk
+    resourceType: certificate
+    propertyMap:
+      keystore: SRVTREKK_CERT_KEYSTORE
+      keystorealias: SRVTREKK_CERT_KEYSTOREALIAS
+      password: SRVTREKK_CERT_PASSWORD
+  - alias: securityTokenService
+    resourceType: baseurl
+  - alias: virksomhet:YtelseVedtak_v1
+    resourceType: soapService

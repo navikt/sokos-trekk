@@ -33,12 +33,20 @@ public class JmsConfig {
     @Value("${TREKK_TREKK_INN_QUEUENAME}")
     private String trekkInnQueueName;
 
-    @Value("${TREKK_TREKK_REPLY_QUEUENAME}")
+    @Value("${TREKK_TREKK_INN_BOQ_QUEUENAME}")
+    private String trekkInnBoqQueueName;
+
+    @Value("${OB04_TREKK_REPLY_QUEUENAME}")
     private String trekkReplyQueueName;
 
     @Bean
     public Queue trekkInnQueue() throws JMSException {
         return new MQQueue(trekkInnQueueName);
+    }
+
+    @Bean
+    public Queue trekkInnBoqQueue() throws JMSException {
+        return new MQQueue(trekkInnBoqQueueName);
     }
 
     @Bean
@@ -55,6 +63,15 @@ public class JmsConfig {
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;
     }
+
+    @Bean("trekkInnBoq")
+    public JmsEndpoint trekkInnBoqEndpoint(Queue trekkInnBoqQueue,
+                                        JmsConfiguration jmsConfiguration) throws JMSException {
+        JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkInnBoqQueue);
+        jmsEndpoint.setConfiguration(jmsConfiguration);
+        return jmsEndpoint;
+    }
+
 
     @Bean("trekkReply")
     public JmsEndpoint trekkReplyEndpoint(Queue trekkReplyQueue,

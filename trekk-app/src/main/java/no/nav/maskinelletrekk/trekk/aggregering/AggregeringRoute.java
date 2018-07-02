@@ -14,6 +14,8 @@ import org.springframework.util.Assert;
 import java.time.format.DateTimeParseException;
 
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
+import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
+import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFraOSCounter;
 import static org.apache.camel.LoggingLevel.ERROR;
 
 @Service
@@ -21,6 +23,7 @@ public class AggregeringRoute extends SpringRouteBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AggregeringRoute.class);
 
+    static final String AGGREGERING_ROUTE_ID = "aggreger_meldinger";
     private static final String VALIDATE_AND_UNMARSHAL_ROUTE = "direct:validateAndUnmarshal";
     private static final String VALIDATE_AND_UNMARSHAL_ROUTE_ID = "ValidateAndUnmarshal";
     private static final String TREKK_INN_QUEUE = "ref:trekkInn";
@@ -48,9 +51,10 @@ public class AggregeringRoute extends SpringRouteBuilder {
         onException(DateTimeParseException.class).log(ERROR, LOGGER, "Parsing av dato i request XML feilet");
 
         from(TREKK_INN_QUEUE)
-                .routeId("aggreger_meldinger")
+                .routeId(AGGREGERING_ROUTE_ID)
                 .log(LoggingLevel.INFO, LOGGER, "Mottatt melding fra OS ${body}")
                 .to(VALIDATE_AND_UNMARSHAL_ROUTE)
+                .process(exchange -> meldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt melding fra OS").inc())
                 .aggregate(constant(true), trekkAggregator)
                 .completionTimeout(completionTimeout)
                 .completionSize(completionSize)
@@ -62,5 +66,7 @@ public class AggregeringRoute extends SpringRouteBuilder {
                 .unmarshal(TREKK_FORMAT)
                 .validate(bodyAs(Trekk.class).isNotNull());
     }
+
+
 
 }

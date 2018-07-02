@@ -14,7 +14,7 @@ trekk:
     transactionTimeout: 300
   aggregator:
     completionTimeout: 5000 #millisekunder
-    completionSize: 3
+    completionSize: 10
 
 server:
   port: 8080

@@ -3,6 +3,7 @@ package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.Oppdragsvedtak;
+import no.nav.maskinelletrekk.trekk.v1.Periode;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
 import no.nav.maskinelletrekk.trekk.v1.TypeSats;
@@ -18,33 +19,35 @@ import java.util.function.Function;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 
-public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
+public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkResponse> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VedtakBeregning.class);
 
     public static final int SUM_SCALE = 2;
     private static final double MND_FAKTOR = 21.67;
 
-    private Map<String, List<ArenaVedtak>> ytelseskontraktMap;
+    private Map<String, List<ArenaVedtak>> arenaVedtakMap;
 
-    VedtakBeregning(Map<String, List<ArenaVedtak>> ytelseskontraktMap) {
-        this.ytelseskontraktMap = ytelseskontraktMap;
+    VedtakBeregning(Map<String, List<ArenaVedtak>> arenaVedtakMap) {
+        this.arenaVedtakMap = arenaVedtakMap;
     }
 
     @Override
-    public TrekkResponse apply(TrekkRequest request) {
-        List<Oppdragsvedtak> oppdragVedtakList = request.getOppdragsvedtak();
+    public TrekkResponse apply(TrekkRequestOgPeriode trekkRequestOgPeriode) {
+        TrekkRequest trekkRequest = trekkRequestOgPeriode.getTrekkRequest();
+        List<Oppdragsvedtak> oppdragVedtakList = trekkRequest.getOppdragsvedtak();
 
-        LOGGER.info("Beregner trekkvedtak: trekkvedtakId:{}, bruker:{}",
-                request.getTrekkvedtakId(),
-                request.getBruker());
-        List<ArenaVedtak> arenaVedtakList = finnYtelsesvedtakForBruker(request.getBruker());
+        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}, bruker:{}]",
+                trekkRequest.getTrekkvedtakId(),
+                trekkRequest.getBruker());
+
+        List<ArenaVedtak> arenaVedtakList = finnArenaYtelsesvedtakForBruker(trekkRequestOgPeriode);
 
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
         BigDecimal sumOs = kalkulerSumOppdrag(oppdragVedtakList);
         int antallVedtakOS = oppdragVedtakList.size();
         int antallVedtakArena = arenaVedtakList.size();
-        Beslutning besluttning = beslutt(sumArena, sumOs, antallVedtakArena, antallVedtakOS);
+        Beslutning beslutning = beslutt(sumArena, sumOs, antallVedtakArena, antallVedtakOS);
 
         LOGGER.info("Beslutning[trekkVedtakId:{}, bruker:{}]: " +
                         "sumOS:{}, " +
@@ -52,25 +55,42 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
                         "sumArena:{}, " +
                         "antallVedtakArena:{}, " +
                         "beslutning:{}",
-                request.getTrekkvedtakId(),
-                request.getBruker(),
+                trekkRequest.getTrekkvedtakId(),
+                trekkRequest.getBruker(),
                 sumOs,
                 antallVedtakOS,
                 sumArena,
                 antallVedtakArena,
-                besluttning);
+                beslutning);
 
         return TrekkResponseBuilder.create()
-                .trekkvedtakId(request.getTrekkvedtakId())
+                .trekkvedtakId(trekkRequest.getTrekkvedtakId())
                 .totalSatsArena(sumArena)
                 .totalSatsOS(sumOs)
-                .beslutning(besluttning)
+                .beslutning(beslutning)
                 .vedtak(arenaVedtakList)
                 .build();
     }
 
-    private List<ArenaVedtak> finnYtelsesvedtakForBruker(String fnr) {
-        return ytelseskontraktMap.getOrDefault(fnr, new ArrayList<>());
+    private List<ArenaVedtak> finnArenaYtelsesvedtakForBruker(TrekkRequestOgPeriode trekkRequestOgPeriode) {
+        List<ArenaVedtak> arenaVedtakList = new ArrayList<>();
+
+        int trekkvedtakId = trekkRequestOgPeriode.getTrekkRequest().getTrekkvedtakId();
+        String bruker = trekkRequestOgPeriode.getTrekkRequest().getBruker();
+
+        if (arenaVedtakMap.containsKey(bruker)) {
+            for (ArenaVedtak arenaVedtak : arenaVedtakMap.get(bruker)) {
+                Periode requestPeriode = new Periode();
+                requestPeriode.setFom(trekkRequestOgPeriode.getFom());
+                requestPeriode.setTom(trekkRequestOgPeriode.getTom());
+                if (PeriodeSjekk.erInnenforPeriode(arenaVedtak.getVedtaksperiode(), requestPeriode)) {
+                    arenaVedtakList.add(arenaVedtak);
+                }
+            }
+        }
+        LOGGER.info("Funnet {} Arena-vedtak for trekkvedtak[trekkvedtakId: {}, bruker {}]",
+                arenaVedtakList.size(), trekkvedtakId, bruker);
+        return arenaVedtakList;
     }
 
     private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, int numArena, int numOs) {

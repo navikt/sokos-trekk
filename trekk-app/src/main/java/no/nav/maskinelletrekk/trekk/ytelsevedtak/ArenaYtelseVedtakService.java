@@ -14,15 +14,12 @@ import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakList
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
 import java.io.StringWriter;
 import java.time.Clock;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,7 +32,7 @@ import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFraArenaCounter;
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilArenaCounter;
 
-@Service
+//@Service
 public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArenaYtelseVedtakService.class);
@@ -85,28 +82,9 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(List<TrekkRequestOgPeriode> trekkRequestListe) {
         FinnYtelseVedtakListeRequest request = new FinnYtelseVedtakListeRequest();
-        request.getPersonListe().addAll(opprettPersonListe(fjernDuplikaterOgAggregerPerioder(trekkRequestListe)));
+        request.getPersonListe().addAll(opprettPersonListe(trekkRequestListe));
         request.getTemaListe().addAll(opprettTema("AAP", "DAG", "IND"));
         return request;
-    }
-
-    private List<TrekkRequestOgPeriode> fjernDuplikaterOgAggregerPerioder(List<TrekkRequestOgPeriode> trekkRequestListe) {
-        Map<String, TrekkRequestOgPeriode> trekkRequestOgPeriodeMap = new HashMap<>();
-        for (TrekkRequestOgPeriode nyRequest : trekkRequestListe) {
-            String fnr = nyRequest.getTrekkRequest().getBruker();
-            if (trekkRequestOgPeriodeMap.containsKey(fnr)) {
-                TrekkRequestOgPeriode eksisterendeRequest = trekkRequestOgPeriodeMap.get(fnr);
-                if (nyRequest.getFom().isBefore(eksisterendeRequest.getFom())) {
-                    eksisterendeRequest.setFom(nyRequest.getFom());
-                }
-                if (nyRequest.getTom().isAfter(eksisterendeRequest.getTom())) {
-                    eksisterendeRequest.setTom(nyRequest.getTom());
-                }
-            } else {
-                trekkRequestOgPeriodeMap.put(fnr, nyRequest);
-            }
-        }
-        return new ArrayList<>(trekkRequestOgPeriodeMap.values());
     }
 
     private Set<Person> opprettPersonListe(List<TrekkRequestOgPeriode> trekkRequestListe) {

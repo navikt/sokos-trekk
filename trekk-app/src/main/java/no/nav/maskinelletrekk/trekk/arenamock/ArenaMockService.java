@@ -1,5 +1,6 @@
 package no.nav.maskinelletrekk.trekk.arenamock;
 
+import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRequestOgPeriode;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Periode;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ArenaMockService implements YtelseVedtakService {
@@ -25,10 +27,12 @@ public class ArenaMockService implements YtelseVedtakService {
     private Map<String, List<ArenaVedtak>> mockDataMap;
 
     @Override
-    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(List<TrekkRequest> trekkRequestListe) {
+    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(List<TrekkRequestOgPeriode> trekkRequestListe) {
         Map<String, List<ArenaVedtak>> vedtakMap = new HashMap<>();
         if (mockDataMap != null) {
-            for (TrekkRequest trekkRequest : trekkRequestListe) {
+            for (TrekkRequest trekkRequest : trekkRequestListe.stream()
+                    .map(TrekkRequestOgPeriode::getTrekkRequest)
+                    .collect(Collectors.toList())) {
                 String fnr = trekkRequest.getBruker();
                 int antallDager = trekkRequest.getAntallDager();
                 if (mockDataMap.containsKey(fnr)) {

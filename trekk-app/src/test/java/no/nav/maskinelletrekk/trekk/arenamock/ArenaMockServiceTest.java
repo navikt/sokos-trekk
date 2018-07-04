@@ -2,6 +2,7 @@ package no.nav.maskinelletrekk.trekk.arenamock;
 
 import no.nav.maskinelletrekk.arenamock.v1.ArenaMockData;
 import no.nav.maskinelletrekk.arenamock.v1.PersonYtelse;
+import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRequestOgPeriode;
 import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
@@ -36,7 +37,7 @@ public class ArenaMockServiceTest {
                 .antallDager(60)
                 .bruker(BRUKER)
                 .build();
-        Map<String, List<ArenaVedtak>> map = service.hentYtelseskontrakt(Collections.singletonList(request));
+        Map<String, List<ArenaVedtak>> map = service.hentYtelseskontrakt(Collections.singletonList(new TrekkRequestOgPeriode(request)));
 
         List<ArenaVedtak> arenaVedtakList = map.get(BRUKER);
         Assert.assertThat(arenaVedtakList.size(), equalTo(4));

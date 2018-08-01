@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
+    <typeKjoring>P</typeKjoring>
     <trekkRequest>
         <bruker>12345678901</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>22</trekkvedtakId>
+        <abetal>J</abetal>
         <oppdragsvedtak>
             <sats>1234.50</sats>
             <typeSats>DAG</typeSats>
@@ -25,6 +27,7 @@
         <bruker>10987654321</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>33</trekkvedtakId>
+        <abetal>J</abetal>
         <oppdragsvedtak>
             <sats>10000.00</sats>
             <typeSats>MND</typeSats>

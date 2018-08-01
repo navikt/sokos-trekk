@@ -1,5 +1,6 @@
 package no.nav.maskinelletrekk.trekk.v1.builder;
 
+import no.nav.maskinelletrekk.trekk.v1.Abetal;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
@@ -13,6 +14,7 @@ public final class TrekkResponseBuilder {
 
     private int trekkvedtakId;
     private Beslutning beslutning;
+    private Abetal abetal;
     private BigDecimal totalSatsOS;
     private BigDecimal totalSatsArena;
     private List<ArenaVedtak> vedtak = new ArrayList<>();
@@ -31,6 +33,11 @@ public final class TrekkResponseBuilder {
 
     public TrekkResponseBuilder beslutning(Beslutning beslutning) {
         this.beslutning = beslutning;
+        return this;
+    }
+
+    public TrekkResponseBuilder abetal(Abetal abetal) {
+        this.abetal = abetal;
         return this;
     }
 
@@ -58,6 +65,7 @@ public final class TrekkResponseBuilder {
         TrekkResponse trekkResponse = new TrekkResponse();
         trekkResponse.setTrekkvedtakId(trekkvedtakId);
         trekkResponse.setBeslutning(beslutning);
+        trekkResponse.setAbetal(abetal);
         trekkResponse.setTotalSatsOS(totalSatsOS);
         trekkResponse.setTotalSatsArena(totalSatsArena);
         trekkResponse.getVedtak().addAll(vedtak);

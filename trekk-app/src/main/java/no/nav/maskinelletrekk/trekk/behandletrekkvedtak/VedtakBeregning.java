@@ -68,6 +68,7 @@ public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkRes
                 .totalSatsArena(sumArena)
                 .totalSatsOS(sumOs)
                 .beslutning(beslutning)
+                .abetal(trekkRequest.getAbetal())
                 .vedtak(arenaVedtakList)
                 .build();
     }

@@ -34,6 +34,7 @@ public class BehandleTrekkvedtakBean {
 
     @Handler
     public Trekk behandleTrekkvedtak(Trekk trekkRequest) {
+        String typeKjoring = trekkRequest.getTypeKjoring();
         List<TrekkRequest> trekkRequestList = trekkRequest.getTrekkRequest();
         LOGGER.info("Starter behandling av {} trekkvedtak.", trekkRequestList.size());
 
@@ -48,11 +49,12 @@ public class BehandleTrekkvedtakBean {
                 .map(vedtakBeregning)
                 .collect(Collectors.toList());
 
-        return opprettTrekkResponse(trekkResponseList);
+        return opprettTrekkResponse(typeKjoring, trekkResponseList);
     }
 
-    private Trekk opprettTrekkResponse(List<TrekkResponse> trekkResponseList) {
+    private Trekk opprettTrekkResponse(String typeKjoring, List<TrekkResponse> trekkResponseList) {
         Trekk trekk = new ObjectFactory().createTrekk();
+        trekk.setTypeKjoring(typeKjoring);
         trekk.getTrekkResponse().addAll(trekkResponseList);
         return trekk;
     }

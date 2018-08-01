@@ -4,6 +4,7 @@ import no.nav.maskinelletrekk.trekk.v1.ObjectFactory;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class TrekkBuilder {
 
+    private String typeKjoring;
     private List<TrekkRequest> trekkRequestList;
     private List<TrekkResponse> trekkResponseList;
 
@@ -19,6 +21,11 @@ public class TrekkBuilder {
 
     public static TrekkBuilder create() {
         return new TrekkBuilder();
+    }
+
+    public TrekkBuilder typeKjoring(String typeKjoring) {
+        this.typeKjoring = typeKjoring;
+        return this;
     }
 
     public TrekkBuilder addTrekkRequest(TrekkRequest... requests) {
@@ -40,6 +47,7 @@ public class TrekkBuilder {
     public Trekk build() {
         ObjectFactory factory = new ObjectFactory();
         Trekk trekk = factory.createTrekk();
+        trekk.setTypeKjoring(StringUtils.trimToEmpty(typeKjoring));
         if (trekkRequestList != null && trekkResponseList == null) {
             trekk.getTrekkRequest().addAll(trekkRequestList);
         } else if (trekkResponseList != null) {

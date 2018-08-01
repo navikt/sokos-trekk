@@ -7,10 +7,13 @@
 
     <xsd:element name="trekk">
         <xsd:complexType>
-            <xsd:choice>
-                <xsd:element name="trekkRequest" type="TrekkRequest" maxOccurs="1000"/>
-                <xsd:element name="trekkResponse" type="TrekkResponse" maxOccurs="1000"/>
-            </xsd:choice>
+            <xsd:sequence>
+                <xsd:element name="typeKjoring" type="TypeKjoring"/>
+                <xsd:choice>
+                    <xsd:element name="trekkRequest" type="TrekkRequest" maxOccurs="1000"/>
+                    <xsd:element name="trekkResponse" type="TrekkResponse" maxOccurs="1000"/>
+                </xsd:choice>
+            </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
 
@@ -19,6 +22,7 @@
             <xsd:element name="bruker" type="xsd:string"/>
             <xsd:element name="antallDager" type="xsd:int"/>
             <xsd:element name="trekkvedtakId" type="xsd:int"/>
+            <xsd:element name="abetal" type="Abetal"/>
             <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" minOccurs="0" maxOccurs="1000"/>
         </xsd:sequence>
     </xsd:complexType>
@@ -27,6 +31,7 @@
         <xsd:sequence>
             <xsd:element name="trekkvedtakId" type="xsd:int"/>
             <xsd:element name="beslutning" type="Beslutning"/>
+            <xsd:element name="abetal" type="Abetal"/>
             <xsd:element name="totalSatsOS" type="xsd:decimal" />
             <xsd:element name="totalSatsArena" type="xsd:decimal" />
             <xsd:element name="vedtak" type="ArenaVedtak" minOccurs="0" maxOccurs="1000"/>
@@ -69,6 +74,20 @@
             <xsd:enumeration value="OS"/>
             <xsd:enumeration value="ABETAL"/>
             <xsd:enumeration value="INGEN"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="TypeKjoring">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Abetal">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="J"/>
+            <xsd:enumeration value="N"/>
+            <xsd:enumeration value="M"/>
         </xsd:restriction>
     </xsd:simpleType>
 

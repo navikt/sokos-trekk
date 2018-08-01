@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
+    <typeKjoring>P</typeKjoring>
     <!--1 to 1000 repetitions:-->
     <trekkResponse>
         <trekkvedtakId>3</trekkvedtakId>
         <beslutning>ABETAL</beslutning>
+        <abetal>J</abetal>
         <totalSatsOS>1199.00</totalSatsOS>
         <totalSatsArena>1200.00</totalSatsArena>
         <!--1 to 1000 repetitions:-->
@@ -31,6 +33,7 @@
     <trekkResponse>
         <trekkvedtakId>4</trekkvedtakId>
         <beslutning>OS</beslutning>
+        <abetal>J</abetal>
         <totalSatsOS>42.00</totalSatsOS>
         <totalSatsArena>42.00</totalSatsArena>
         <!--1 to 1000 repetitions:-->

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
-<!--You have a CHOICE of the next 2 items at this level-->
+    <typeKjoring>P</typeKjoring>
+    <!--You have a CHOICE of the next 2 items at this level-->
     <!--1 to 1000 repetitions:-->
     <trekkRequest>
         <bruker>12345678901</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>3</trekkvedtakId>
+        <abetal>J</abetal>
         <!--1 to 1000 repetitions:-->
         <oppdragsvedtak>
             <sats>1002.00</sats>
@@ -28,6 +30,7 @@
         <bruker>10987654321</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>4</trekkvedtakId>
+        <abetal>J</abetal>
         <!--1 to 1000 repetitions:-->
         <oppdragsvedtak>
             <sats>10000.00</sats>

@@ -5,6 +5,7 @@
         <bruker>12345678901</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>22</trekkvedtakId>
+        <trekkalt>LOPD</trekkalt>
         <abetal>J</abetal>
         <oppdragsvedtak>
             <sats>1234.50</sats>
@@ -27,6 +28,7 @@
         <bruker>10987654321</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>33</trekkvedtakId>
+        <trekkalt>LOPM</trekkalt>
         <abetal>J</abetal>
         <oppdragsvedtak>
             <sats>10000.00</sats>

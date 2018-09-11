@@ -22,6 +22,7 @@
             <xsd:element name="bruker" type="xsd:string"/>
             <xsd:element name="antallDager" type="xsd:int"/>
             <xsd:element name="trekkvedtakId" type="xsd:int"/>
+            <xsd:element name="trekkalt" type="Trekkalternativ"/>
             <xsd:element name="abetal" type="Abetal"/>
             <xsd:element name="oppdragsvedtak" type="Oppdragsvedtak" minOccurs="0" maxOccurs="1000"/>
         </xsd:sequence>
@@ -73,11 +74,13 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="OS"/>
             <xsd:enumeration value="ABETAL"/>
+            <xsd:enumeration value="BEGGE"/>
             <xsd:enumeration value="INGEN"/>
         </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="TypeKjoring">
+        <!-- P for Periodisk kontroll. Blank (" ") for innlesing av nytt trekk -->
         <xsd:restriction base="xsd:string">
             <xsd:maxLength value="1"/>
         </xsd:restriction>
@@ -85,9 +88,20 @@
 
     <xsd:simpleType name="Abetal">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="J"/>
-            <xsd:enumeration value="N"/>
-            <xsd:enumeration value="M"/>
+            <xsd:enumeration value="J"/> <!-- Trekket er effekturet Abetal -->
+            <xsd:enumeration value="N"/> <!-- Trekket er effekturet OS -->
+            <xsd:enumeration value="M"/> <!-- Nytt trekk -->
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Trekkalternativ">
+        <xsd:restriction  base="xsd:string">
+            <xsd:enumeration value="LOPD"/>
+            <xsd:enumeration value="LOPM"/>
+            <xsd:enumeration value="LOPP"/>
+            <xsd:enumeration value="SALD"/>
+            <xsd:enumeration value="SALM"/>
+            <xsd:enumeration value="SALP"/>
         </xsd:restriction>
     </xsd:simpleType>
 

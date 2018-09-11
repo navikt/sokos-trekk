@@ -5,12 +5,14 @@
         <bruker>12345678901</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>22</trekkvedtakId>
+        <trekkalt>LOPD</trekkalt>
         <abetal>J</abetal>
     </trekkRequest>
     <trekkRequest>
         <bruker>10987654321</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>33</trekkvedtakId>
+        <trekkalt>LOPD</trekkalt>
         <abetal>J</abetal>
     </trekkRequest>
 </trekk>

@@ -1,24 +1,20 @@
 package no.nav.maskinelletrekk.trekk.v1.builder;
 
 import no.nav.maskinelletrekk.trekk.v1.ObjectFactory;
-import no.nav.maskinelletrekk.trekk.v1.Oppdragsvedtak;
-import no.nav.maskinelletrekk.trekk.v1.Periode;
+import no.nav.maskinelletrekk.trekk.v1.System;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
+import no.nav.maskinelletrekk.trekk.v1.Trekkalternativ;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public final class TrekkRequestBuilder {
 
     private String bruker;
     private int antallDager;
     private int trekkvedtakId;
-    private List<Oppdragsvedtak> oppdragsvedtakList;
-
-    private ObjectFactory of = new ObjectFactory();
+    private Trekkalternativ trekkalt;
+    private System system;
+    private BigDecimal totalSatsOS;
 
     private TrekkRequestBuilder() {
     }
@@ -42,25 +38,17 @@ public final class TrekkRequestBuilder {
         return this;
     }
 
-    public TrekkRequestBuilder oppdragsvedtak(Oppdragsvedtak... oppdragsvedtakList) {
-        if (this.oppdragsvedtakList == null) {
-            this.oppdragsvedtakList = new ArrayList<>();
-        }
-        this.oppdragsvedtakList.addAll(Arrays.asList(oppdragsvedtakList));
+    public TrekkRequestBuilder trekkalt(Trekkalternativ trekkalt) {
+        this.trekkalt = trekkalt;
         return this;
     }
 
-    public TrekkRequestBuilder addOppdragsvedtak(BigDecimal value, LocalDate fom, LocalDate tom) {
-        if (oppdragsvedtakList == null) {
-            oppdragsvedtakList = new ArrayList<>();
-        }
-        Oppdragsvedtak oppdragsvedtak = of.createOppdragsvedtak();
-        oppdragsvedtak.setSats(value);
-        Periode per = of.createPeriode();
-        per.setFom(fom);
-        per.setTom(tom);
-        oppdragsvedtak.setPeriode(per);
-        oppdragsvedtakList.add(oppdragsvedtak);
+    public TrekkRequestBuilder system(System system) {
+        this.system = system;
+        return this;
+    }
+    public TrekkRequestBuilder totalSatsOS(BigDecimal totalSatsOS) {
+        this.totalSatsOS = totalSatsOS;
         return this;
     }
 
@@ -69,10 +57,9 @@ public final class TrekkRequestBuilder {
         trekkRequest.setBruker(bruker);
         trekkRequest.setAntallDager(antallDager);
         trekkRequest.setTrekkvedtakId(trekkvedtakId);
-        if (oppdragsvedtakList == null) {
-            oppdragsvedtakList = new ArrayList<>();
-        }
-        trekkRequest.getOppdragsvedtak().addAll(oppdragsvedtakList);
+        trekkRequest.setTrekkalt(trekkalt);
+        trekkRequest.setSystem(system);
+        trekkRequest.setTotalSatsOS(totalSatsOS);
         return trekkRequest;
     }
 

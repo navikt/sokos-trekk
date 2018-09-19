@@ -1,44 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
-    <typeKjoring>P</typeKjoring>
-    <!--You have a CHOICE of the next 2 items at this level-->
+    <typeKjoring>INNL</typeKjoring>
     <!--1 to 1000 repetitions:-->
     <trekkRequest>
         <bruker>12345678901</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>3</trekkvedtakId>
-        <abetal>J</abetal>
-        <!--1 to 1000 repetitions:-->
-        <oppdragsvedtak>
-            <sats>1002.00</sats>
-            <typeSats>DAG</typeSats>
-            <periode>
-                <fom>2017-01-01</fom>
-                <tom>2019-12-31</tom>
-            </periode>
-        </oppdragsvedtak>
-        <oppdragsvedtak>
-            <sats>120.00</sats>
-            <typeSats>DAG</typeSats>
-            <periode>
-                <fom>2011-08-01</fom>
-                <tom>2015-08-01</tom>
-            </periode>
-        </oppdragsvedtak>
+        <trekkalt>LOPD</trekkalt>
+        <system>J</system>
+        <totalSatsOS>100.00</totalSatsOS>
     </trekkRequest>
     <trekkRequest>
         <bruker>10987654321</bruker>
         <antallDager>60</antallDager>
         <trekkvedtakId>4</trekkvedtakId>
-        <abetal>J</abetal>
-        <!--1 to 1000 repetitions:-->
-        <oppdragsvedtak>
-            <sats>10000.00</sats>
-            <typeSats>MND</typeSats>
-            <periode>
-                <fom>2006-08-19+02:00</fom>
-                <tom>2009-05-16</tom>
-            </periode>
-        </oppdragsvedtak>
+        <trekkalt>SALD</trekkalt>
+        <system>J</system>
+        <totalSatsOS>100.00</totalSatsOS>
     </trekkRequest>
 </trekk>

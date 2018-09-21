@@ -4,15 +4,18 @@
     <!--1 to 1000 repetitions:-->
     <trekkRequest>
         <bruker>12345678901</bruker>
-        <antallDager>60</antallDager>
         <trekkvedtakId>3</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
         <system>J</system>
         <totalSatsOS>100.00</totalSatsOS>
+        <osParams>
+            <msgId>12345678</msgId>
+            <partnerRef>4234231253</partnerRef>
+            <ediLoggId>AB123JH234</ediLoggId>
+        </osParams>
     </trekkRequest>
     <trekkRequest>
         <bruker>10987654321</bruker>
-        <antallDager>60</antallDager>
         <trekkvedtakId>4</trekkvedtakId>
         <trekkalt>SALD</trekkalt>
         <system>J</system>

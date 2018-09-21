@@ -20,11 +20,11 @@
     <xsd:complexType name="TrekkRequest">
         <xsd:sequence>
             <xsd:element name="bruker" type="xsd:string"/>
-            <xsd:element name="antallDager" type="xsd:int"/>
             <xsd:element name="trekkvedtakId" type="xsd:int"/>
             <xsd:element name="trekkalt" type="Trekkalternativ"/>
             <xsd:element name="system" type="System"/>
             <xsd:element name="totalSatsOS" type="xsd:decimal" />
+            <xsd:element name="osParams" type="OsParams" minOccurs="0" />
         </xsd:sequence>
     </xsd:complexType>
 
@@ -35,6 +35,7 @@
             <xsd:element name="system" type="System"/>
             <xsd:element name="totalSatsOS" type="xsd:decimal" />
             <xsd:element name="totalSatsArena" type="xsd:decimal" />
+            <xsd:element name="osParams" type="OsParams" minOccurs="0" />
             <xsd:element name="vedtak" type="ArenaVedtak" minOccurs="0" maxOccurs="1000"/>
         </xsd:sequence>
     </xsd:complexType>
@@ -90,5 +91,14 @@
             <xsd:enumeration value="SALP"/>
         </xsd:restriction>
     </xsd:simpleType>
+
+    <xsd:complexType name="OsParams">
+        <xsd:sequence>
+            <xsd:element name="msgId" type="xsd:string" minOccurs="0" />
+            <xsd:element name="partnerRef" type="xsd:string" minOccurs="0" />
+            <xsd:element name="ediLoggId" type="xsd:string" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+
 
 </xsd:schema>

@@ -8,6 +8,11 @@
         <system>J</system>
         <totalSatsOS>1199.00</totalSatsOS>
         <totalSatsArena>1200.00</totalSatsArena>
+        <osParams>
+            <msgId>12345678</msgId>
+            <partnerRef>4234231253</partnerRef>
+            <ediLoggId>AB123JH234</ediLoggId>
+        </osParams>
         <!--1 to 1000 repetitions:-->
         <vedtak>
             <vedtaksperiode>

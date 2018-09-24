@@ -39,6 +39,9 @@ public class JmsConfig {
     @Value("${OB04_TREKK_REPLY_QUEUENAME}")
     private String trekkReplyQueueName;
 
+    @Value("${OB04_TREKK_REPLY_BTC_QUEUENAME}")
+    private String trekkReplyBtcQueueName;
+
     @Bean
     public Queue trekkInnQueue() throws JMSException {
         return new MQQueue(trekkInnQueueName);
@@ -52,6 +55,13 @@ public class JmsConfig {
     @Bean
     public Queue trekkReplyQueue() throws JMSException {
         MQQueue mqQueue = new MQQueue(trekkReplyQueueName);
+        mqQueue.setTargetClient(1);
+        return mqQueue;
+    }
+
+    @Bean
+    public Queue trekkReplyBtcQueue() throws JMSException {
+        MQQueue mqQueue = new MQQueue(trekkReplyBtcQueueName);
         mqQueue.setTargetClient(1);
         return mqQueue;
     }
@@ -80,6 +90,15 @@ public class JmsConfig {
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;
     }
+
+    @Bean("trekkReplyBtc")
+    public JmsEndpoint trekkReplyBtcEndpoint(Queue trekkReplyBtcQueue,
+                                          JmsConfiguration jmsConfiguration) throws JMSException {
+        JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkReplyBtcQueue);
+        jmsEndpoint.setConfiguration(jmsConfiguration);
+        return jmsEndpoint;
+    }
+
 
     @Bean
     public ConnectionFactory wmqConnectionFactory(GatewayAlias gateway, ChannelAlias channel) throws JMSException {

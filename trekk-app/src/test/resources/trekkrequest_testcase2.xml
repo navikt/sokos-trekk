@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
-    <typeKjoring>P</typeKjoring>
+    <typeKjoring>PERI</typeKjoring>
     <trekkRequest>
         <bruker>12345678901</bruker>
-        <antallDager>60</antallDager>
         <trekkvedtakId>22</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
-        <abetal>J</abetal>
+        <system>J</system>
+        <totalSatsOS>0</totalSatsOS>
     </trekkRequest>
     <trekkRequest>
         <bruker>10987654321</bruker>
-        <antallDager>60</antallDager>
         <trekkvedtakId>33</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
-        <abetal>J</abetal>
+        <system>J</system>
+        <totalSatsOS>0</totalSatsOS>
     </trekkRequest>
 </trekk>

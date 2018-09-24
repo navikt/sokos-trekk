@@ -5,8 +5,6 @@ import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
-import no.nav.maskinelletrekk.trekk.v1.TypeSats;
-import no.nav.maskinelletrekk.trekk.v1.builder.OppdragsvedtakBuilder;
 import no.nav.maskinelletrekk.trekk.v1.builder.TrekkRequestBuilder;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Periode;
@@ -28,7 +26,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -62,8 +59,6 @@ public class ArenaYtelseVedtakServiceTest {
     private static final LocalDate TOM_PERIODE_1 = LocalDate.of(2018, 1, 31);
     private static final LocalDate FOM_PERIODE_2 = LocalDate.of(2018, 2, 1);
     private static final LocalDate TOM_PERIODE_2 = LocalDate.of(2018, 2, 28);
-    private static final int ANTALL_DAGER_1 = 60;
-    private static final int ANTALL_DAGER_2 = 50;
     private static final Instant NOW = Instant.parse("2017-12-03T10:15:30.00Z");
     private static final ZoneId DEFAULT_ZONE = ZoneId.systemDefault();
     private static final String TREKK_V1_REQUEST_XML = "trekkrequest_testcase1.xml";
@@ -128,38 +123,12 @@ public class ArenaYtelseVedtakServiceTest {
 
         List<TrekkRequestOgPeriode> trekkRequestList = Stream.of(
                 TrekkRequestBuilder.create()
-                        .antallDager(ANTALL_DAGER_1)
                         .bruker(PERSON_IDENT_1)
                         .trekkvedtakId(TREKKVEDTAK_ID_1)
-                        .oppdragsvedtak(
-                                OppdragsvedtakBuilder.create()
-                                        .sats(BigDecimal.valueOf(DAGSATS_1))
-                                        .typeSats(TypeSats.DAG)
-                                        .periode(FOM_PERIODE_1, TOM_PERIODE_1)
-                                        .build(),
-                                OppdragsvedtakBuilder.create()
-                                        .sats(BigDecimal.valueOf(DAGSATS_2))
-                                        .typeSats(TypeSats.MND)
-                                        .periode(FOM_PERIODE_2, TOM_PERIODE_2)
-                                        .build()
-                        )
                         .build(),
                 TrekkRequestBuilder.create()
-                        .antallDager(ANTALL_DAGER_2)
                         .bruker(PERSON_IDENT_2)
                         .trekkvedtakId(TREKKVEDTAK_ID_2)
-                        .oppdragsvedtak(
-                                OppdragsvedtakBuilder.create()
-                                        .sats(BigDecimal.valueOf(DAGSATS_1))
-                                        .typeSats(TypeSats.DAG)
-                                        .periode(FOM_PERIODE_1, TOM_PERIODE_1)
-                                        .build(),
-                                OppdragsvedtakBuilder.create()
-                                        .sats(BigDecimal.valueOf(DAGSATS_2))
-                                        .typeSats(TypeSats.MND)
-                                        .periode(FOM_PERIODE_2, TOM_PERIODE_2)
-                                        .build()
-                        )
                         .build()
         ).map(TrekkRequestOgPeriode::new).collect(Collectors.toList());
 

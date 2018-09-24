@@ -5,6 +5,7 @@ import no.nav.maskinelletrekk.trekk.v1.ObjectFactory;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
+import no.nav.maskinelletrekk.trekk.v1.TypeKjoring;
 import no.nav.maskinelletrekk.trekk.ytelsevedtak.YtelseVedtakService;
 import org.apache.camel.Handler;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class BehandleTrekkvedtakBean {
 
     @Handler
     public Trekk behandleTrekkvedtak(Trekk trekkRequest) {
-        String typeKjoring = trekkRequest.getTypeKjoring();
+        TypeKjoring typeKjoring = trekkRequest.getTypeKjoring();
         List<TrekkRequest> trekkRequestList = trekkRequest.getTrekkRequest();
         LOGGER.info("Starter behandling av {} trekkvedtak.", trekkRequestList.size());
 
@@ -52,7 +53,7 @@ public class BehandleTrekkvedtakBean {
         return opprettTrekkResponse(typeKjoring, trekkResponseList);
     }
 
-    private Trekk opprettTrekkResponse(String typeKjoring, List<TrekkResponse> trekkResponseList) {
+    private Trekk opprettTrekkResponse(TypeKjoring typeKjoring, List<TrekkResponse> trekkResponseList) {
         Trekk trekk = new ObjectFactory().createTrekk();
         trekk.setTypeKjoring(typeKjoring);
         trekk.getTrekkResponse().addAll(trekkResponseList);
@@ -77,5 +78,7 @@ public class BehandleTrekkvedtakBean {
         }
         return new ArrayList<>(trekkRequestOgPeriodeMap.values());
     }
+
+
 
 }

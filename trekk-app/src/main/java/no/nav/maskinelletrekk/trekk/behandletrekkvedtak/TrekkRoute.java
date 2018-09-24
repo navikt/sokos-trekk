@@ -21,6 +21,7 @@ public class TrekkRoute extends SpringRouteBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrekkRoute.class);
 
     private static final String TREKK_REPLY_QUEUE = "ref:trekkReply";
+    private static final String TREKK_REPLY_BTC_QUEUE = "ref:trekkReplyBtc";
 
     public static final String BEHANDLE_TREKK_ROUTE = "direct:behandleTrekk";
     private static final String BEHANDLE_TREKK_ROUTE_ID = "behandleTrekk";

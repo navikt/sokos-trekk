@@ -72,8 +72,6 @@ public class BehandleTrekkvedtakBeanTest {
         assertThat(trekk.getTrekkResponse().size(), equalTo(2));
     }
 
-//herme
-
     @Test
     public void skalReturnereBesluttningIngenVedIngenVedtakFraOSOgIngenVedtakFraArena() throws Exception {
 
@@ -90,7 +88,6 @@ public class BehandleTrekkvedtakBeanTest {
         assertThat(trekkResponse2.getBeslutning(), equalTo(Beslutning.INGEN));
         assertThat(trekk.getTrekkResponse().size(), equalTo(2));
     }
-
 
     private Map<String, List<ArenaVedtak>> opprettSvar(String fnr, BigDecimal ...dagsatser) {
 

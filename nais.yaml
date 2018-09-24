@@ -32,6 +32,8 @@ fasitResources:
     resourceType: queue
   - alias: OB04_TREKK_REPLY
     resourceType: queue
+  - alias: OB04_TREKK_REPLY_BTC
+    resourceType: queue
   - alias: srvtrekk
     resourceType: credential
   - alias: srvtrekk

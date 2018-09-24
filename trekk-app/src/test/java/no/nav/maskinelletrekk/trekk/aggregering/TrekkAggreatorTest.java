@@ -8,9 +8,6 @@ import org.apache.camel.Message;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
@@ -48,18 +45,14 @@ public class TrekkAggreatorTest {
         Trekk oldTrekk = TrekkBuilder.create().addTrekkRequest(
                 TrekkRequestBuilder.create()
                         .bruker("b1234567")
-                        .antallDager(60)
                         .trekkvedtakId(12)
-                        .addOppdragsvedtak(new BigDecimal("123.10"), LocalDate.now(), LocalDate.now())
                         .build()
         ).build();
         when(oldMessage.getBody(Trekk.class)).thenReturn(oldTrekk);
         Trekk newTrekk = TrekkBuilder.create().addTrekkRequest(
                 TrekkRequestBuilder.create()
                         .bruker("c1234568")
-                        .antallDager(60)
                         .trekkvedtakId(13)
-                        .addOppdragsvedtak(new BigDecimal("223.10"), LocalDate.now(), LocalDate.now())
                         .build()
         ).build();
         when(newMessage.getBody(Trekk.class)).thenReturn(newTrekk);

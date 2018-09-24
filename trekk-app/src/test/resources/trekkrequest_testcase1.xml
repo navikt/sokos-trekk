@@ -1,42 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <trekk xmlns="urn:no:nav:maskinelletrekk:trekk:v1">
-    <typeKjoring>P</typeKjoring>
+    <typeKjoring>PERI</typeKjoring>
     <trekkRequest>
         <bruker>12345678901</bruker>
-        <antallDager>60</antallDager>
         <trekkvedtakId>22</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
-        <abetal>J</abetal>
-        <oppdragsvedtak>
-            <sats>1234.50</sats>
-            <typeSats>DAG</typeSats>
-            <periode>
-                <fom>2016-08-01</fom>
-                <tom>2018-05-01</tom>
-            </periode>
-        </oppdragsvedtak>
-        <oppdragsvedtak>
-            <sats>120.00</sats>
-            <typeSats>DAG</typeSats>
-            <periode>
-                <fom>2011-08-01</fom>
-                <tom>2015-08-01</tom>
-            </periode>
-        </oppdragsvedtak>
+        <system>J</system>
+        <totalSatsOS>1354.50</totalSatsOS>
     </trekkRequest>
     <trekkRequest>
         <bruker>10987654321</bruker>
-        <antallDager>60</antallDager>
         <trekkvedtakId>33</trekkvedtakId>
         <trekkalt>LOPM</trekkalt>
-        <abetal>J</abetal>
-        <oppdragsvedtak>
-            <sats>10000.00</sats>
-            <typeSats>MND</typeSats>
-            <periode>
-                <fom>2006-08-19+02:00</fom>
-                <tom>2009-05-16</tom>
-            </periode>
-        </oppdragsvedtak>
+        <system>J</system>
+        <totalSatsOS>10000.00</totalSatsOS>
     </trekkRequest>
 </trekk>

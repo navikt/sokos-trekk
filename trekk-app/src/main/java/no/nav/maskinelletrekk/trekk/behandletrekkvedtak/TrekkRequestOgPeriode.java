@@ -3,6 +3,7 @@ package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 public final class TrekkRequestOgPeriode {
 
@@ -12,9 +13,10 @@ public final class TrekkRequestOgPeriode {
 
     public TrekkRequestOgPeriode(TrekkRequest trekkRequest) {
         this.trekkRequest = trekkRequest;
-        LocalDate now = LocalDate.now();
-        this.fom = now;
-        this.tom = now.plusDays(trekkRequest.getAntallDager());
+        YearMonth nextMonth = YearMonth.now().plusMonths(1);
+        this.fom = nextMonth.atDay(1);
+        this.tom = nextMonth.atEndOfMonth();
+
     }
 
     public TrekkRequest getTrekkRequest() {

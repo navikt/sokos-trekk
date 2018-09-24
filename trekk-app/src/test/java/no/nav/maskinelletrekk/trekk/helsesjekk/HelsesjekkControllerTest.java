@@ -21,4 +21,5 @@ public class HelsesjekkControllerTest {
         ResponseEntity ready = controller.isReady();
         Assert.assertThat(ready.getStatusCode(), CoreMatchers.equalTo(HttpStatus.OK));
     }
+
 }

@@ -4,38 +4,36 @@ import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Collections;
+import java.util.List;
 
-public final class TrekkRequestOgPeriode {
+public final class TrekkOgPeriode {
 
-    private TrekkRequest trekkRequest;
     private LocalDate fom;
     private LocalDate tom;
+    private List<TrekkRequest> trekkRequestList;
 
-    public TrekkRequestOgPeriode(TrekkRequest trekkRequest) {
-        this.trekkRequest = trekkRequest;
+    TrekkOgPeriode(TrekkRequest trekkRequest) {
+        this(Collections.singletonList(trekkRequest));
+    }
+
+    public TrekkOgPeriode(List<TrekkRequest> trekkRequestList) {
+        this.trekkRequestList = trekkRequestList;
         YearMonth nextMonth = YearMonth.now().plusMonths(1);
         this.fom = nextMonth.atDay(1);
         this.tom = nextMonth.atEndOfMonth();
-
-    }
-
-    public TrekkRequest getTrekkRequest() {
-        return trekkRequest;
     }
 
     public LocalDate getFom() {
         return fom;
     }
 
-    public void setFom(LocalDate fom) {
-        this.fom = fom;
-    }
-
     public LocalDate getTom() {
         return tom;
     }
 
-    public void setTom(LocalDate tom) {
-        this.tom = tom;
+    public List<TrekkRequest> getTrekkRequestList() {
+        return trekkRequestList;
     }
+
 }

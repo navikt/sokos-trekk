@@ -21,10 +21,14 @@ public class TrekkRoute extends SpringRouteBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrekkRoute.class);
 
     private static final String TREKK_REPLY_QUEUE = "ref:trekkReply";
-    private static final String TREKK_REPLY_BTC_QUEUE = "ref:trekkReplyBtc";
+    private static final String TREKK_REPLY_BATCH_QUEUE = "ref:trekkReplyBatch";
 
     public static final String BEHANDLE_TREKK_ROUTE = "direct:behandleTrekk";
     private static final String BEHANDLE_TREKK_ROUTE_ID = "behandleTrekk";
+
+    private static final String TYPE_KJORING = "typeKjoring";
+    private static final String PERIODISK_KONTROLL = "PERI";
+    private static final String RETURMELDING_TIL_TREKKINNMELDER = "REME";
 
     private static final DataFormat TREKK_FORMAT = new JaxbDataFormat("no.nav.maskinelletrekk.trekk.v1");
 
@@ -49,11 +53,18 @@ public class TrekkRoute extends SpringRouteBuilder {
         from(BEHANDLE_TREKK_ROUTE)
                 .routeId(BEHANDLE_TREKK_ROUTE_ID)
                 .process(exchange -> aggregerteMeldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt aggregert melding fra OS").inc())
+                .setHeader(TYPE_KJORING, simple("${body.typeKjoring}"))
                 .bean(behandleTrekkvedtak)
                 .marshal(TREKK_FORMAT)
                 .log(INFO, LOGGER, "Legger melding på reply-kø: ${body}")
                 .process(exchange -> meldingerTilOSCounter.labels(PROCESS_TREKK, "Sender melding til OS").inc())
-                .to(TREKK_REPLY_QUEUE);
+                .choice()
+                    .when(header(TYPE_KJORING)
+                            .in(PERIODISK_KONTROLL, RETURMELDING_TIL_TREKKINNMELDER))
+                        .to(TREKK_REPLY_BATCH_QUEUE)
+                    .otherwise()
+                        .to(TREKK_REPLY_QUEUE)
+                .endChoice();
     }
 
 }

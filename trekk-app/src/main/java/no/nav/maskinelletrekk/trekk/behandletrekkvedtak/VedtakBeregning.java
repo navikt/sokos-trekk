@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,26 +26,29 @@ import static no.nav.maskinelletrekk.trekk.v1.Beslutning.INGEN;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.OS;
 import static no.nav.maskinelletrekk.trekk.v1.System.J;
 
-public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkResponse> {
+public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VedtakBeregning.class);
     public static final int SUM_SCALE = 2;
 
     private Map<String, List<ArenaVedtak>> arenaVedtakMap;
+    private LocalDate fom;
+    private LocalDate tom;
 
-    VedtakBeregning(Map<String, List<ArenaVedtak>> arenaVedtakMap) {
+    VedtakBeregning(Map<String, List<ArenaVedtak>> arenaVedtakMap, LocalDate fom, LocalDate tom) {
         this.arenaVedtakMap = arenaVedtakMap;
+        this.fom = fom;
+        this.tom = tom;
     }
 
     @Override
-    public TrekkResponse apply(TrekkRequestOgPeriode trekkRequestOgPeriode) {
-        TrekkRequest trekkRequest = trekkRequestOgPeriode.getTrekkRequest();
+    public TrekkResponse apply(TrekkRequest trekkRequest) {
 
         LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}, bruker:{}]",
                 trekkRequest.getTrekkvedtakId(),
                 trekkRequest.getBruker());
 
-        List<ArenaVedtak> arenaVedtakList = finnArenaYtelsesvedtakForBruker(trekkRequestOgPeriode);
+        List<ArenaVedtak> arenaVedtakList = finnArenaYtelsesvedtakForBruker(trekkRequest);
 
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
         BigDecimal sumOs = trekkRequest.getTotalSatsOS();
@@ -66,14 +70,19 @@ public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkRes
                 antallVedtakArena,
                 beslutning);
 
-        return TrekkResponseBuilder.create()
-                .trekkvedtakId(trekkRequest.getTrekkvedtakId())
+        TrekkResponseBuilder trekkResponseBuilder = TrekkResponseBuilder.create();
+        trekkResponseBuilder.trekkvedtakId(trekkRequest.getTrekkvedtakId())
                 .totalSatsArena(sumArena)
                 .totalSatsOS(sumOs)
                 .beslutning(beslutning)
                 .system(system)
-                .vedtak(arenaVedtakList)
-                .build();
+                .vedtak(arenaVedtakList);
+        if (trekkRequest.getOsParams() != null) {
+            trekkResponseBuilder.msgId(trekkRequest.getOsParams().getMsgId())
+                    .partnerRef(trekkRequest.getOsParams().getPartnerRef())
+                    .ediLoggId(trekkRequest.getOsParams().getEdiLoggId());
+        }
+        return trekkResponseBuilder.build();
     }
 
     private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, System system, Trekkalternativ trekkalt) {
@@ -138,17 +147,17 @@ public class VedtakBeregning implements Function<TrekkRequestOgPeriode, TrekkRes
                 || trekkalt == Trekkalternativ.SALM;
     }
 
-    private List<ArenaVedtak> finnArenaYtelsesvedtakForBruker(TrekkRequestOgPeriode trekkRequestOgPeriode) {
+    private List<ArenaVedtak> finnArenaYtelsesvedtakForBruker(TrekkRequest trekkRequest) {
         List<ArenaVedtak> arenaVedtakList = new ArrayList<>();
 
-        int trekkvedtakId = trekkRequestOgPeriode.getTrekkRequest().getTrekkvedtakId();
-        String bruker = trekkRequestOgPeriode.getTrekkRequest().getBruker();
+        int trekkvedtakId = trekkRequest.getTrekkvedtakId();
+        String bruker = trekkRequest.getBruker();
 
         if (arenaVedtakMap.containsKey(bruker)) {
             for (ArenaVedtak arenaVedtak : arenaVedtakMap.get(bruker)) {
                 Periode requestPeriode = new Periode();
-                requestPeriode.setFom(trekkRequestOgPeriode.getFom());
-                requestPeriode.setTom(trekkRequestOgPeriode.getTom());
+                requestPeriode.setFom(fom);
+                requestPeriode.setTom(tom);
                 if (PeriodeSjekk.erInnenforPeriode(arenaVedtak.getVedtaksperiode(), requestPeriode)) {
                     arenaVedtakList.add(arenaVedtak);
                 }

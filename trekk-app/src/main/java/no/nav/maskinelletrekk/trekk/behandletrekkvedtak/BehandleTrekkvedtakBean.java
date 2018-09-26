@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,19 +34,21 @@ public class BehandleTrekkvedtakBean {
     }
 
     @Handler
-    public Trekk behandleTrekkvedtak(Trekk trekkRequest) {
-        TypeKjoring typeKjoring = trekkRequest.getTypeKjoring();
-        List<TrekkRequest> trekkRequestList = trekkRequest.getTrekkRequest();
+    public Trekk behandleTrekkvedtak(Trekk trekk) {
+        TypeKjoring typeKjoring = trekk.getTypeKjoring();
+        List<TrekkRequest> trekkRequestList = duplikatSjekk(trekk.getTrekkRequest());
         LOGGER.info("Starter behandling av {} trekkvedtak.", trekkRequestList.size());
 
-        List<TrekkRequestOgPeriode> trekkRequestOgPeriodeList =
-                fjernDuplikaterOgAggregerPerioder(trekkRequestList.stream()
-                        .map(TrekkRequestOgPeriode::new)
-                        .collect(Collectors.toList()));
-        Map<String, List<ArenaVedtak>> ytelseskontraktMap = ytelseVedtakService.hentYtelseskontrakt(trekkRequestOgPeriodeList);
+        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(trekkRequestList);
 
-        VedtakBeregning vedtakBeregning = new VedtakBeregning(ytelseskontraktMap);
-        List<TrekkResponse> trekkResponseList = trekkRequestOgPeriodeList.stream()
+        Map<String, List<ArenaVedtak>> ytelseskontraktMap = ytelseVedtakService.hentYtelseskontrakt(trekkOgPeriode);
+
+        VedtakBeregning vedtakBeregning = new VedtakBeregning(
+                ytelseskontraktMap,
+                trekkOgPeriode.getFom(),
+                trekkOgPeriode.getTom());
+
+        List<TrekkResponse> trekkResponseList = trekkOgPeriode.getTrekkRequestList().stream()
                 .map(vedtakBeregning)
                 .collect(Collectors.toList());
 
@@ -60,25 +62,16 @@ public class BehandleTrekkvedtakBean {
         return trekk;
     }
 
-    private static List<TrekkRequestOgPeriode> fjernDuplikaterOgAggregerPerioder(List<TrekkRequestOgPeriode> trekkRequestListe) {
-        Map<String, TrekkRequestOgPeriode> trekkRequestOgPeriodeMap = new HashMap<>();
-        for (TrekkRequestOgPeriode nyRequest : trekkRequestListe) {
-            String fnr = nyRequest.getTrekkRequest().getBruker();
-            if (trekkRequestOgPeriodeMap.containsKey(fnr)) {
-                TrekkRequestOgPeriode eksisterendeRequest = trekkRequestOgPeriodeMap.get(fnr);
-                if (nyRequest.getFom().isBefore(eksisterendeRequest.getFom())) {
-                    eksisterendeRequest.setFom(nyRequest.getFom());
-                }
-                if (nyRequest.getTom().isAfter(eksisterendeRequest.getTom())) {
-                    eksisterendeRequest.setTom(nyRequest.getTom());
-                }
+    private static List<TrekkRequest> duplikatSjekk(List<TrekkRequest> trekkRequestList) {
+        Set<String> fnrSet = new HashSet<>();
+        for (TrekkRequest trekkRequest : trekkRequestList) {
+            if (!fnrSet.contains(trekkRequest.getBruker())) {
+                fnrSet.add(trekkRequest.getBruker());
             } else {
-                trekkRequestOgPeriodeMap.put(fnr, nyRequest);
+                trekkRequestList.remove(trekkRequest);
             }
         }
-        return new ArrayList<>(trekkRequestOgPeriodeMap.values());
+        return trekkRequestList;
     }
-
-
 
 }

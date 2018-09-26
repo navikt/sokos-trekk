@@ -1,7 +1,8 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
-import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRequestOgPeriode;
+import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkOgPeriode;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
+import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeUgyldigInput;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;
@@ -20,7 +21,7 @@ import org.springframework.util.Assert;
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
 import java.io.StringWriter;
-import java.time.Clock;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,8 +44,7 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     @Autowired
     public ArenaYtelseVedtakService(YtelseVedtakV1 ytelseVedtakService,
-                                    SakTilVedtakMapper sakTilVedtakMapper,
-                                    Clock clock) {
+                                    SakTilVedtakMapper sakTilVedtakMapper) {
         Assert.notNull(ytelseVedtakService, "ytelseVedtakService must not be null");
         Assert.notNull(sakTilVedtakMapper, "sakTilVedtakMapper must not be null");
         this.ytelseVedtakService = ytelseVedtakService;
@@ -52,8 +52,8 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     }
 
     @Override
-    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(List<TrekkRequestOgPeriode> trekkRequestListe) {
-        FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(trekkRequestListe);
+    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(TrekkOgPeriode trekkOgPeriode) {
+        FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(trekkOgPeriode);
         loggSoapResponse("Sender melding til Arena: {}", request);
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
         loggSoapResponse("Mottatt melding fra Arena: {}", response);
@@ -62,7 +62,6 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
                 .collect(toMap(PersonYtelse::getIdent, this::opprettArenaVedtakListe));
     }
 
-    @SuppressWarnings("squid:UnusedPrivateMethod") // Brukes i metoden over.
     private List<ArenaVedtak> opprettArenaVedtakListe(PersonYtelse personYtelse) {
         return personYtelse.getSakListe().stream()
                 .flatMap(sakTilVedtakMapper)
@@ -81,33 +80,37 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         return response;
     }
 
-    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(List<TrekkRequestOgPeriode> trekkRequestListe) {
+    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(TrekkOgPeriode trekkOgPeriode) {
         FinnYtelseVedtakListeRequest request = new FinnYtelseVedtakListeRequest();
-        request.getPersonListe().addAll(opprettPersonListe(trekkRequestListe));
+        request.getPersonListe().addAll(opprettPersonListe(trekkOgPeriode));
         request.getTemaListe().addAll(opprettTema("AAP", "DAG", "IND"));
         return request;
     }
 
-    private Set<Person> opprettPersonListe(List<TrekkRequestOgPeriode> trekkRequestListe) {
-        return trekkRequestListe.stream()
+    private Set<Person> opprettPersonListe(TrekkOgPeriode trekkOgPeriode) {
+        final LocalDate fom = trekkOgPeriode.getFom();
+        final LocalDate tom = trekkOgPeriode.getTom();
+        return trekkOgPeriode.getTrekkRequestList().stream()
                 .peek(request -> LOGGER.info("Legger til TrekkRequest " +
                                 "[trekkVedtakId: {}, bruker: {}] i request til Arena",
-                        request.getTrekkRequest().getTrekkvedtakId(), request.getTrekkRequest().getBruker()))
-                .map(this::opprettPerson)
+                        request.getTrekkvedtakId(), request.getBruker()))
+                .map(request -> opprettPerson(request, fom, tom))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private Person opprettPerson(TrekkRequestOgPeriode trekkRequest) {
+    private Person opprettPerson(TrekkRequest trekkRequest, LocalDate fom, LocalDate tom) {
+        Person person = new Person();
+        person.setIdent(trekkRequest.getBruker());
+        person.setPeriode(opprettPeriode(fom, tom));
+        return person;
+    }
+
+    private Periode opprettPeriode(LocalDate fom, LocalDate tom) {
         try {
             Periode periode = new Periode();
-            periode.setFom(DateMapper.toXmlGregorianCalendar(trekkRequest.getFom()));
-            periode.setTom(DateMapper.toXmlGregorianCalendar(trekkRequest.getTom()));
-
-            Person person = new Person();
-            person.setIdent(trekkRequest.getTrekkRequest().getBruker());
-            person.setPeriode(periode);
-
-            return person;
+            periode.setFom(DateMapper.toXmlGregorianCalendar(fom));
+            periode.setTom(DateMapper.toXmlGregorianCalendar(tom));
+            return periode;
         } catch (DatatypeConfigurationException e) {
             throw new FeilVedOpprettelseAvRequestException("Feil ved parsing av dato", e);
         }

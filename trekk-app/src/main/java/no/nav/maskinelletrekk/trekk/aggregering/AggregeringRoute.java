@@ -55,7 +55,7 @@ public class AggregeringRoute extends SpringRouteBuilder {
                 .log(LoggingLevel.INFO, LOGGER, "Mottatt melding fra OS ${body}")
                 .to(VALIDATE_AND_UNMARSHAL_ROUTE)
                 .process(exchange -> meldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt melding fra OS").inc())
-                .aggregate(constant(true), trekkAggregator)
+                .aggregate(simple("${body.typeKjoring}"), trekkAggregator)
                 .completionTimeout(completionTimeout)
                 .completionSize(completionSize)
                 .to(BEHANDLE_TREKK_ROUTE);

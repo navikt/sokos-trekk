@@ -22,7 +22,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.xml.bind.JAXB;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -90,15 +89,11 @@ public class ArenaMockController {
             LOGGER.error("Feil ved parsing: {}", e);
             throw new FeilMedTestdataException("Feil med testdata", e);
         }
-        ytelseVedtakService.setKjoreDato(getKjoredato(mockData));
+        ytelseVedtakService.setKjoreDato(mockData.getKjoreDato());
         ytelseVedtakService.setMockDataXml(input);
         Map<String, List<ArenaVedtak>> listMap = mockData.getPersonYtelse().stream()
                 .collect(Collectors.toMap(PersonYtelse::getIdent, arenaMockDataMapper));
         ytelseVedtakService.setMockDataMap(listMap);
-    }
-
-    private LocalDate getKjoredato(ArenaMockData mockData) {
-        return mockData.getKjoreDato() == null ? LocalDate.now() : mockData.getKjoreDato();
     }
 
 }

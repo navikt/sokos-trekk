@@ -1,4 +1,4 @@
-package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
+package no.nav.maskinelletrekk.trekk.arenamock;
 
 import no.nav.maskinelletrekk.trekk.v1.Periode;
 

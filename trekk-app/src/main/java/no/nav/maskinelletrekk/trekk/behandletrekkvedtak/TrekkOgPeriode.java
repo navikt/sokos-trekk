@@ -4,7 +4,6 @@ import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Collections;
 import java.util.List;
 
 public final class TrekkOgPeriode {
@@ -12,10 +11,6 @@ public final class TrekkOgPeriode {
     private LocalDate fom;
     private LocalDate tom;
     private List<TrekkRequest> trekkRequestList;
-
-    TrekkOgPeriode(TrekkRequest trekkRequest) {
-        this(Collections.singletonList(trekkRequest));
-    }
 
     public TrekkOgPeriode(List<TrekkRequest> trekkRequestList) {
         this.trekkRequestList = trekkRequestList;

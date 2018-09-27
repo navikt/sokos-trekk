@@ -34,7 +34,6 @@ public class VedtakBeregningTest {
     @Test
     public void besluttAbetal_TypeLopendeTrekk_AktivAbetal_YtelseIAbetalErTilstrekkelig() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.J, DAGSATS_1);
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, asList(
                 ArenaVedtakBuilder.create()
                         .dagsats(DAGSATS_1)
@@ -44,7 +43,7 @@ public class VedtakBeregningTest {
                         .dagsats(DAGSATS_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
 
         TrekkResponse response = beregning.apply(request);
 
@@ -59,13 +58,12 @@ public class VedtakBeregningTest {
     public void besluttOS_TypeLopendeTrekk_AktivAbetal_YtelseAbetalErIkkeTilstrekkelig() {
 
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.J, DAGSATS_2.add(BigDecimal.ONE));
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(DAGSATS_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));
@@ -79,13 +77,12 @@ public class VedtakBeregningTest {
     @Test
     public void besluttOS_TypeLopendeTrekk_IkkeAktivtAbetal_YtelseIOSErTilstrekkelig() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.N, DAGSATS_2.add(BigDecimal.ONE));
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(DAGSATS_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));
@@ -99,13 +96,12 @@ public class VedtakBeregningTest {
     @Test
     public void besluttAbetal_TypeLopendeTrekk_IkkeAktivAbetal_YtelseOsErIkkeTilstrekkelig_YtelseAbetalErStorreEnnNull() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.N, DAGSATS_2.subtract(BigDecimal.ONE));
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(DAGSATS_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));
@@ -119,13 +115,12 @@ public class VedtakBeregningTest {
     @Test
     public void besluttIngen_TypeLopende_IkkeAktivtIAbetal_YtelseOsIkkeTilstrekkelig_YtelseAbetalErNull() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.N, ZERO);
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(ZERO)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));
@@ -139,13 +134,12 @@ public class VedtakBeregningTest {
     @Test
     public void besluttAbetal_TypeProsenttrekk_AktivtIAbetal_YtelseOsLikNull_YtelseAbetalStorreEnnNull() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPP, System.J, ZERO);
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(DAGSATS_1)
                         .vedtaksperiode(NOW, NOW.plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));
@@ -159,13 +153,12 @@ public class VedtakBeregningTest {
     @Test
     public void besluttBegge_TypeProsenttrekk_AktivtIAbetal_YtelseOsStorreEnnNull_YtelseAbetalStorreEnnNull() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPP, System.J, DAGSATS_1);
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(DAGSATS_1)
                         .vedtaksperiode(NOW, NOW.plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));
@@ -179,13 +172,12 @@ public class VedtakBeregningTest {
     @Test
     public void besluttIngen_TypeProsenttrekk_AktivtIAbetal_YtelseOsIkkeStorreEnnNull_YtelseAbetalIkkeStorreEnnNull() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPP, System.J, ZERO);
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(ZERO)
                         .vedtaksperiode(NOW, NOW.plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));
@@ -199,13 +191,12 @@ public class VedtakBeregningTest {
     @Test
     public void besluttOs_TypeProsenttrekk_AktivtIAbetal_YtelseOsStorreEnnNull_YtelseAbetalIkkeStorreEnnNull() {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPP, System.J, DAGSATS_1);
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(request);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
                         .dagsats(ZERO)
                         .vedtaksperiode(NOW, NOW.plusDays(30))
                         .build()
-        )), trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        )));
         TrekkResponse response = beregning.apply(request);
 
         assertThat(response.getTrekkvedtakId(), equalTo(1));

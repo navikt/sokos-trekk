@@ -47,6 +47,7 @@ public class TrekkRoute extends SpringRouteBuilder {
                 .handled(true)
                 .useOriginalMessage()
                 .marshal(TREKK_FORMAT)
+                .log(ERROR, LOGGER, "Exception stacktrace: ${exception.stacktrace}")
                 .log(ERROR, LOGGER, "Legger melding på backout-queue ${body}")
                 .to("ref:trekkInnBoq");
 
@@ -56,13 +57,14 @@ public class TrekkRoute extends SpringRouteBuilder {
                 .setHeader(TYPE_KJORING, simple("${body.typeKjoring}"))
                 .bean(behandleTrekkvedtak)
                 .marshal(TREKK_FORMAT)
-                .log(INFO, LOGGER, "Legger melding på reply-kø: ${body}")
                 .process(exchange -> meldingerTilOSCounter.labels(PROCESS_TREKK, "Sender melding til OS").inc())
                 .choice()
                     .when(header(TYPE_KJORING)
                             .in(PERIODISK_KONTROLL, RETURMELDING_TIL_TREKKINNMELDER))
+                        .log(INFO, LOGGER, "Legger melding på BATCH_REPLY-kø: ${body}")
                         .to(TREKK_REPLY_BATCH_QUEUE)
                     .otherwise()
+                        .log(INFO, LOGGER, "Legger melding på REPLY-kø: ${body}")
                         .to(TREKK_REPLY_QUEUE)
                 .endChoice();
     }

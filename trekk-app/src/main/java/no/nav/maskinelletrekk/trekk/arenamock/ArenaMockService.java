@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +29,21 @@ public class ArenaMockService implements YtelseVedtakService {
     @Override
     public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(TrekkOgPeriode trekkOgPeriode) {
         Map<String, List<ArenaVedtak>> vedtakMap = new HashMap<>();
+        Periode periode;
+        if (kjoreDato != null) {
+            LOGGER.info("ARENA-MOCK: Kjøredato er satt til {}", kjoreDato);
+            periode = periode(
+                    YearMonth.of(kjoreDato.getYear(), kjoreDato.getMonth()).plusMonths(1).atDay(1),
+                    YearMonth.of(kjoreDato.getYear(), kjoreDato.getMonth()).plusMonths(1).atEndOfMonth());
+        } else {
+            periode = periode(trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+        }
+        LOGGER.info("ARENA-MOCK: Bruker perioden {} til {}", periode.getFom(), periode.getTom());
         if (mockDataMap != null) {
             for (TrekkRequest trekkRequest : trekkOgPeriode.getTrekkRequestList()) {
                 String fnr = trekkRequest.getBruker();
                 if (mockDataMap.containsKey(fnr)) {
-                    vedtakMap.put(fnr, hentArenaVedtakListe(fnr, trekkOgPeriode.getFom(), trekkOgPeriode.getTom()));
+                    vedtakMap.put(fnr, hentArenaVedtakListe(fnr, periode));
                 }
             }
         } else {
@@ -41,33 +52,20 @@ public class ArenaMockService implements YtelseVedtakService {
         return vedtakMap;
     }
 
-    private List<ArenaVedtak> hentArenaVedtakListe(String fnr, LocalDate fom, LocalDate tom) {
+    private List<ArenaVedtak> hentArenaVedtakListe(String fnr, Periode periode) {
         List<ArenaVedtak> arenaVedtakListe = new ArrayList<>();
         for (ArenaVedtak arenaVedtak : mockDataMap.get(fnr)) {
-            if (isGyldigPeriode(arenaVedtak.getVedtaksperiode(), fom, tom)) {
+            if (PeriodeSjekk.erInnenforPeriode(arenaVedtak.getVedtaksperiode(), periode)) {
                 arenaVedtakListe.add(arenaVedtak);
             }
         }
         return arenaVedtakListe;
     }
 
-    private boolean isGyldigPeriode(Periode periode, LocalDate fom, LocalDate tom) {
-        Periode requestPeriode = PeriodeBuilder.create()
+    private Periode periode(LocalDate fom, LocalDate tom) {
+        return PeriodeBuilder.create()
                 .fom(fom)
                 .tom(tom).build();
-        return erVedtakDatoInnenforRequestPeriode(periode.getTom(), requestPeriode)
-                || erVedtakDatoInnenforRequestPeriode(periode.getFom(), requestPeriode)
-                || erVedtakPeriodeStorreEnnRequestPeriode(periode.getFom(), periode.getTom(), requestPeriode);
-    }
-
-    private boolean erVedtakDatoInnenforRequestPeriode(LocalDate dato, Periode requestPeriode) {
-        return (dato.isAfter(requestPeriode.getFom()) || dato.isEqual(requestPeriode.getFom()))
-                && (dato.isBefore(requestPeriode.getTom()) || dato.isEqual(requestPeriode.getTom()));
-    }
-
-    private boolean erVedtakPeriodeStorreEnnRequestPeriode(LocalDate fom, LocalDate tom, Periode requestPeriode) {
-        return fom.isBefore(requestPeriode.getFom())
-                && tom.isAfter(requestPeriode.getFom());
     }
 
     public String getMockDataXml() {

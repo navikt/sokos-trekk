@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +44,7 @@ public class BehandleTrekkvedtakBean {
 
         Map<String, List<ArenaVedtak>> ytelseskontraktMap = ytelseVedtakService.hentYtelseskontrakt(trekkOgPeriode);
 
-        VedtakBeregning vedtakBeregning = new VedtakBeregning(
-                ytelseskontraktMap,
-                trekkOgPeriode.getFom(),
-                trekkOgPeriode.getTom());
+        VedtakBeregning vedtakBeregning = new VedtakBeregning(ytelseskontraktMap);
 
         List<TrekkResponse> trekkResponseList = trekkOgPeriode.getTrekkRequestList().stream()
                 .map(vedtakBeregning)
@@ -63,15 +61,15 @@ public class BehandleTrekkvedtakBean {
     }
 
     private static List<TrekkRequest> duplikatSjekk(List<TrekkRequest> trekkRequestList) {
+        List<TrekkRequest> newList = new ArrayList<>();
         Set<String> fnrSet = new HashSet<>();
         for (TrekkRequest trekkRequest : trekkRequestList) {
             if (!fnrSet.contains(trekkRequest.getBruker())) {
                 fnrSet.add(trekkRequest.getBruker());
-            } else {
-                trekkRequestList.remove(trekkRequest);
+                newList.add(trekkRequest);
             }
         }
-        return trekkRequestList;
+        return newList;
     }
 
 }

@@ -2,7 +2,6 @@ package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
-import no.nav.maskinelletrekk.trekk.v1.Periode;
 import no.nav.maskinelletrekk.trekk.v1.System;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,13 +30,9 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     public static final int SUM_SCALE = 2;
 
     private Map<String, List<ArenaVedtak>> arenaVedtakMap;
-    private LocalDate fom;
-    private LocalDate tom;
 
-    VedtakBeregning(Map<String, List<ArenaVedtak>> arenaVedtakMap, LocalDate fom, LocalDate tom) {
+    VedtakBeregning(Map<String, List<ArenaVedtak>> arenaVedtakMap) {
         this.arenaVedtakMap = arenaVedtakMap;
-        this.fom = fom;
-        this.tom = tom;
     }
 
     @Override
@@ -89,7 +83,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         Beslutning beslutning;
 
         if (erLopendeEllerSaldotrekk(trekkalt)) {
-            beslutning = besluttLopendeOgSaldotrekk2(sumArena, sumOs, system);
+            beslutning = besluttLopendeOgSaldotrekk(sumArena, sumOs, system);
         } else if (erProsenttrekk(trekkalt)) {
             beslutning = besluttProsenttrekk(sumArena, sumOs);
         } else {
@@ -100,7 +94,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         return beslutning;
     }
 
-    private Beslutning besluttLopendeOgSaldotrekk2(BigDecimal sumArena, BigDecimal sumOs, System system) {
+    private Beslutning besluttLopendeOgSaldotrekk(BigDecimal sumArena, BigDecimal sumOs, System system) {
         Beslutning beslutning;
         if (erAbetal(system) && sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) != 0
                 || sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) > 0) {
@@ -154,14 +148,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         String bruker = trekkRequest.getBruker();
 
         if (arenaVedtakMap.containsKey(bruker)) {
-            for (ArenaVedtak arenaVedtak : arenaVedtakMap.get(bruker)) {
-                Periode requestPeriode = new Periode();
-                requestPeriode.setFom(fom);
-                requestPeriode.setTom(tom);
-                if (PeriodeSjekk.erInnenforPeriode(arenaVedtak.getVedtaksperiode(), requestPeriode)) {
-                    arenaVedtakList.add(arenaVedtak);
-                }
-            }
+            arenaVedtakList.addAll(arenaVedtakMap.get(bruker));
         }
         LOGGER.info("Funnet {} Arena-vedtak for trekkvedtak[trekkvedtakId: {}, bruker {}]",
                 arenaVedtakList.size(), trekkvedtakId, bruker);

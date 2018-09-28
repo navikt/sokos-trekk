@@ -20,6 +20,26 @@ pipeline {
 				junit 'trekk-app/target/surefire-reports/*.xml'
 			}
 		}
+		stage("sonar") {
+			steps {
+				script {
+					withSonarQubeEnv('Default') {
+						def jacocoVersion = "0.8.1"
+						def sonarVersion = "3.4.1.1168"
+						sh "mvn org.jacoco:jacoco-maven-plugin:${jacocoVersion}:prepare-agent" +
+								" clean verify" +
+								" org.sonarsource.scanner.maven:sonar-maven-plugin:${sonarVersion}:sonar" +
+								" -Djacoco.destFile='${env.WORKSPACE}/target/jacoco.exec'" +
+								" -Dsonar.host.url=${env.SONAR_HOST_URL}" +
+								" -Dsonar.login=${env.SONAR_AUTH_TOKEN}" +
+								" -Dsonar.jacoco.reportPath='${env.WORKSPACE}/target/jacoco.exec'" +
+								" -Dsonar.java.source=1.8" +
+								" -Dsonar.branch=${BRANCH}" +
+								" -Dsonar.coverage.exclusions=**/*Config.java,**/*Exception.java,**/*Entity.java,**/*Alias.java"
+					}
+				}
+			}
+		}
 		stage('deploy docker image') {
 			steps {
 				script {

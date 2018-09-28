@@ -34,7 +34,7 @@ pipeline {
 								" -Dsonar.login=${env.SONAR_AUTH_TOKEN}" +
 								" -Dsonar.jacoco.reportPath='${env.WORKSPACE}/target/jacoco.exec'" +
 								" -Dsonar.java.source=1.8" +
-								" -Dsonar.branch=${BRANCH}" +
+								" -Dsonar.branch=${env.BRANCH_NAME}" +
 								" -Dsonar.coverage.exclusions=**/*Config.java,**/*Exception.java,**/*Entity.java,**/*Alias.java"
 					}
 				}

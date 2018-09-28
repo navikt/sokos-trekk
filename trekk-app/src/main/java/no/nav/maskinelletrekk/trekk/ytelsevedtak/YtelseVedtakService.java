@@ -9,6 +9,6 @@ import java.util.Set;
 
 public interface YtelseVedtakService {
 
-    Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerList, LocalDate fom, LocalDate tom);
+    Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerSet, LocalDate fom, LocalDate tom);
 
 }

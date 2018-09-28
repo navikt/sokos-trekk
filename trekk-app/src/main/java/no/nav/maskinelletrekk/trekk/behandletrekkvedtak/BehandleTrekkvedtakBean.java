@@ -53,13 +53,13 @@ public class BehandleTrekkvedtakBean {
     }
 
     private Map<String, List<ArenaVedtak>> kallHentYtelseskontrakt(List<TrekkRequest> trekkRequestList) {
-        Set<String> brukerList = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
+        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
 
         YearMonth nextMonth = YearMonth.now().plusMonths(1);
         LocalDate fom = nextMonth.atDay(1);
         LocalDate tom = nextMonth.atEndOfMonth();
 
-        return ytelseVedtakService.hentYtelseskontrakt(brukerList, fom, tom);
+        return ytelseVedtakService.hentYtelseskontrakt(brukerSet, fom, tom);
     }
 
     private Trekk opprettTrekkResponse(TypeKjoring typeKjoring, List<TrekkResponse> trekkResponseList) {

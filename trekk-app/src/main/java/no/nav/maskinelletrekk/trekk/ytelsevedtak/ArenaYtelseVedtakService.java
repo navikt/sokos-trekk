@@ -48,8 +48,8 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     }
 
     @Override
-    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerList, LocalDate fom, LocalDate tom) {
-        FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(brukerList, fom, tom);
+    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerSet, LocalDate fom, LocalDate tom) {
+        FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(brukerSet, fom, tom);
         loggSoapResponse("Sender melding til Arena: {}", request);
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
         loggSoapResponse("Mottatt melding fra Arena: {}", response);
@@ -77,17 +77,17 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         return response;
     }
 
-    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(Set<String> brukerList,
+    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(Set<String> brukerSet,
                                                                              LocalDate fom,
                                                                              LocalDate tom) {
         FinnYtelseVedtakListeRequest request = new FinnYtelseVedtakListeRequest();
-        request.getPersonListe().addAll(opprettPersonListe(brukerList, opprettPeriode(fom, tom)));
+        request.getPersonListe().addAll(opprettPersonListe(brukerSet, opprettPeriode(fom, tom)));
         request.getTemaListe().addAll(opprettTema("AAP", "DAG", "IND"));
         return request;
     }
 
-    private Set<Person> opprettPersonListe(Set<String> brukerList, Periode periode) {
-        return brukerList.stream()
+    private Set<Person> opprettPersonListe(Set<String> brukerSet, Periode periode) {
+        return brukerSet.stream()
                 .peek(fnr -> LOGGER.info("Legger til Bruker [bruker: {}] i request til Arena", fnr))
                 .map(fnr -> opprettPerson(fnr, periode))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -112,13 +112,13 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     }
 
     private Set<Tema> opprettTema(String... temanavn) {
-        Set<Tema> temaList = new HashSet<>();
+        Set<Tema> temaSet = new HashSet<>();
         for (String s : temanavn) {
             Tema tema = new Tema();
             tema.setValue(s);
-            temaList.add(tema);
+            temaSet.add(tema);
         }
-        return temaList;
+        return temaSet;
     }
 
     private void loggSoapResponse(String format, Object request) {

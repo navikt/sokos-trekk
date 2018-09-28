@@ -48,9 +48,8 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         System system = trekkRequest.getSystem();
         Trekkalternativ trekkalt = trekkRequest.getTrekkalt();
         OsParams osParams = trekkRequest.getOsParams();
-        String bruker = trekkRequest.getBruker();
 
-        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId, bruker);
+        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
 
         Beslutning beslutning = beslutt(sumArena, sumOs, system, trekkalt);
 
@@ -149,7 +148,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
             arenaVedtakList.addAll(arenaVedtakMap.get(bruker));
         }
         LOGGER.info("Funnet {} Arena-vedtak for trekkvedtak[trekkvedtakId: {}]",
-                arenaVedtakList.size(), trekkRequest.getTrekkvedtakId(), bruker);
+                arenaVedtakList.size(), trekkRequest.getTrekkvedtakId());
         return arenaVedtakList;
     }
 

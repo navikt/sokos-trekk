@@ -2,7 +2,6 @@ package no.nav.maskinelletrekk.trekk.config;
 
 import no.nav.maskinelletrekk.trekk.sikkerhet.STSClientConfig;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;
-import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +46,6 @@ public class YtelseVedtakConfig {
         factoryBean.setServiceClass(YtelseVedtakV1.class);
         factoryBean.setAddress(ytelseVedtakEndpoint);
         factoryBean.getFeatures().add(new WSAddressingFeature());
-        factoryBean.getFeatures().add(new LoggingFeature());
         YtelseVedtakV1 port = factoryBean.create(YtelseVedtakV1.class);
         return stsClientConfig.configureRequestSamlToken(port);
     }

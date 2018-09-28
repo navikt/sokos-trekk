@@ -26,7 +26,7 @@ public class ArenaMockService implements YtelseVedtakService {
     private Map<String, List<ArenaVedtak>> mockDataMap;
 
     @Override
-    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerList, LocalDate fom, LocalDate tom) {
+    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerSet, LocalDate fom, LocalDate tom) {
         Map<String, List<ArenaVedtak>> vedtakMap = new HashMap<>();
         Periode periode;
         if (kjoreDato != null) {
@@ -39,7 +39,7 @@ public class ArenaMockService implements YtelseVedtakService {
         }
         LOGGER.info("[ARENA-MOCK]: Bruker perioden {} til {}", periode.getFom(), periode.getTom());
         if (mockDataMap != null) {
-            for (String fnr : brukerList) {
+            for (String fnr : brukerSet) {
                 if (mockDataMap.containsKey(fnr)) {
                     List<ArenaVedtak> arenaVedtakList = hentArenaVedtakListe(fnr, periode);
                     LOGGER.info("[ARENA-MOCK]: Hentet {} Arena-vedtak for bruker {} og periode {} til {}",

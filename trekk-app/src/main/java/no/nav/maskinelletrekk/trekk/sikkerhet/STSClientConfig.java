@@ -5,8 +5,6 @@ import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.endpoint.Endpoint;
-import org.apache.cxf.feature.Feature;
-import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.service.model.EndpointInfo;
 import org.apache.cxf.ws.policy.EndpointPolicy;
@@ -18,10 +16,7 @@ import org.apache.cxf.ws.security.SecurityConstants;
 import org.apache.cxf.ws.security.trust.STSClient;
 import org.apache.neethi.Policy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import static java.util.Collections.singletonList;
 
 public class STSClientConfig {
 
@@ -40,22 +35,22 @@ public class STSClientConfig {
 
     public <T> T configureRequestSamlToken(T port) {
         Client client = ClientProxy.getClient(port);
-        configureStsRequestSamlToken(client, true);
+        configureStsRequestSamlToken(client);
         return port;
     }
 
-    private void configureStsRequestSamlToken(Client client, boolean cacheTokenInEndpoint) {
+    private void configureStsRequestSamlToken(Client client) {
         STSClient stsClient = createCustomSTSClient(client.getBus());
-        configureStsWithPolicyForClient(stsClient, client, STS_REQUEST_SAML_POLICY, cacheTokenInEndpoint);
+        configureStsWithPolicyForClient(stsClient, client, STS_REQUEST_SAML_POLICY);
     }
 
 
-    private void configureStsWithPolicyForClient(STSClient stsClient, Client client, String policyReference, boolean cacheTokenInEndpoint) {
+    private void configureStsWithPolicyForClient(STSClient stsClient, Client client, String policyReference) {
 
         configureSTSClient(stsClient, location, username, password);
 
         client.getRequestContext().put(SecurityConstants.STS_CLIENT, stsClient);
-        client.getRequestContext().put(SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT, cacheTokenInEndpoint);
+        client.getRequestContext().put(SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT, true);
         setEndpointPolicyReference(client, policyReference);
     }
 
@@ -63,14 +58,11 @@ public class STSClientConfig {
         return new STSClientWSTrust13and14(bus);
     }
 
-    private static STSClient configureSTSClient(STSClient stsClient, String location, String username, String password) {
+    private static void configureSTSClient(STSClient stsClient, String location, String username, String password) {
 
         stsClient.setEnableAppliesTo(false);
         stsClient.setAllowRenewing(false);
         stsClient.setLocation(location);
-        //For debugging
-        stsClient.setFeatures(new ArrayList<Feature>(singletonList(new LoggingFeature())));
-
         HashMap<String, Object> properties = new HashMap<>();
         properties.put(SecurityConstants.USERNAME, username);
         properties.put(SecurityConstants.PASSWORD, password);
@@ -79,7 +71,6 @@ public class STSClientConfig {
 
         //used for the STS client to authenticate itself to the STS provider.
         stsClient.setPolicy(STS_CLIENT_AUTHENTICATION_POLICY);
-        return stsClient;
     }
 
     private static void setEndpointPolicyReference(Client client, String uri) {

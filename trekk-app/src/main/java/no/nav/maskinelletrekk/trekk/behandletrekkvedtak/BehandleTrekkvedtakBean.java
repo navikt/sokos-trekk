@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,20 +39,27 @@ public class BehandleTrekkvedtakBean {
     @Handler
     public Trekk behandleTrekkvedtak(Trekk trekk) {
         TypeKjoring typeKjoring = trekk.getTypeKjoring();
-        List<TrekkRequest> trekkRequestList = duplikatSjekk(trekk.getTrekkRequest());
+        List<TrekkRequest> trekkRequestList = duplikatTrekkvedtakIdSjekk(trekk.getTrekkRequest());
         LOGGER.info("Starter behandling av {} trekkvedtak.", trekkRequestList.size());
 
-        TrekkOgPeriode trekkOgPeriode = new TrekkOgPeriode(trekkRequestList);
-
-        Map<String, List<ArenaVedtak>> ytelseskontraktMap = ytelseVedtakService.hentYtelseskontrakt(trekkOgPeriode);
+        Map<String, List<ArenaVedtak>> ytelseskontraktMap = kallHentYtelseskontrakt(trekkRequestList);
 
         VedtakBeregning vedtakBeregning = new VedtakBeregning(ytelseskontraktMap);
-
-        List<TrekkResponse> trekkResponseList = trekkOgPeriode.getTrekkRequestList().stream()
+        List<TrekkResponse> trekkResponseList = trekkRequestList.stream()
                 .map(vedtakBeregning)
                 .collect(Collectors.toList());
 
         return opprettTrekkResponse(typeKjoring, trekkResponseList);
+    }
+
+    private Map<String, List<ArenaVedtak>> kallHentYtelseskontrakt(List<TrekkRequest> trekkRequestList) {
+        Set<String> brukerList = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
+
+        YearMonth nextMonth = YearMonth.now().plusMonths(1);
+        LocalDate fom = nextMonth.atDay(1);
+        LocalDate tom = nextMonth.atEndOfMonth();
+
+        return ytelseVedtakService.hentYtelseskontrakt(brukerList, fom, tom);
     }
 
     private Trekk opprettTrekkResponse(TypeKjoring typeKjoring, List<TrekkResponse> trekkResponseList) {
@@ -60,12 +69,12 @@ public class BehandleTrekkvedtakBean {
         return trekk;
     }
 
-    private static List<TrekkRequest> duplikatSjekk(List<TrekkRequest> trekkRequestList) {
+    private static List<TrekkRequest> duplikatTrekkvedtakIdSjekk(List<TrekkRequest> trekkRequestList) {
         List<TrekkRequest> newList = new ArrayList<>();
-        Set<String> fnrSet = new HashSet<>();
+        Set<Integer> trekkvedtakIdSet = new HashSet<>();
         for (TrekkRequest trekkRequest : trekkRequestList) {
-            if (!fnrSet.contains(trekkRequest.getBruker())) {
-                fnrSet.add(trekkRequest.getBruker());
+            if (!trekkvedtakIdSet.contains(trekkRequest.getTrekkvedtakId())) {
+                trekkvedtakIdSet.add(trekkRequest.getTrekkvedtakId());
                 newList.add(trekkRequest);
             }
         }

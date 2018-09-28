@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -25,6 +24,8 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anySet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BehandleTrekkvedtakBeanTest {
@@ -63,7 +64,7 @@ public class BehandleTrekkvedtakBeanTest {
     @Test
     public void skalBeslutteOSDersomSumOSErStorreEnnSumArena() {
         Map<String, List<ArenaVedtak>> tid = opprettSvar(FNR_1, DAGSATS_1, DAGSATS_2);
-        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(Matchers.any(TrekkOgPeriode.class))).thenReturn(tid);
+        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySet(), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
 
         Trekk trekk = behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 
@@ -78,7 +79,7 @@ public class BehandleTrekkvedtakBeanTest {
         requestFromXml = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_2_XML);
 
         Map<String, List<ArenaVedtak>> tid = opprettSvar(FNR_1);
-        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(Matchers.any(TrekkOgPeriode.class))).thenReturn(tid);
+        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySet(), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
 
         Trekk trekk = behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 

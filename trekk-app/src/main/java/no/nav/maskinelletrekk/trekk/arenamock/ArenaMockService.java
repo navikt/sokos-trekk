@@ -1,9 +1,7 @@
 package no.nav.maskinelletrekk.trekk.arenamock;
 
-import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkOgPeriode;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Periode;
-import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.builder.PeriodeBuilder;
 import no.nav.maskinelletrekk.trekk.ytelsevedtak.YtelseVedtakService;
 import org.slf4j.Logger;
@@ -16,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ArenaMockService implements YtelseVedtakService {
@@ -27,27 +26,29 @@ public class ArenaMockService implements YtelseVedtakService {
     private Map<String, List<ArenaVedtak>> mockDataMap;
 
     @Override
-    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(TrekkOgPeriode trekkOgPeriode) {
+    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerList, LocalDate fom, LocalDate tom) {
         Map<String, List<ArenaVedtak>> vedtakMap = new HashMap<>();
         Periode periode;
         if (kjoreDato != null) {
-            LOGGER.info("ARENA-MOCK: Kjøredato er satt til {}", kjoreDato);
+            LOGGER.info("[ARENA-MOCK]: Kjøredato er satt til {}", kjoreDato);
             periode = periode(
                     YearMonth.of(kjoreDato.getYear(), kjoreDato.getMonth()).plusMonths(1).atDay(1),
                     YearMonth.of(kjoreDato.getYear(), kjoreDato.getMonth()).plusMonths(1).atEndOfMonth());
         } else {
-            periode = periode(trekkOgPeriode.getFom(), trekkOgPeriode.getTom());
+            periode = periode(fom, tom);
         }
-        LOGGER.info("ARENA-MOCK: Bruker perioden {} til {}", periode.getFom(), periode.getTom());
+        LOGGER.info("[ARENA-MOCK]: Bruker perioden {} til {}", periode.getFom(), periode.getTom());
         if (mockDataMap != null) {
-            for (TrekkRequest trekkRequest : trekkOgPeriode.getTrekkRequestList()) {
-                String fnr = trekkRequest.getBruker();
+            for (String fnr : brukerList) {
                 if (mockDataMap.containsKey(fnr)) {
-                    vedtakMap.put(fnr, hentArenaVedtakListe(fnr, periode));
+                    List<ArenaVedtak> arenaVedtakList = hentArenaVedtakListe(fnr, periode);
+                    LOGGER.info("[ARENA-MOCK]: Hentet {} Arena-vedtak for bruker {} og periode {} til {}",
+                            arenaVedtakList.size(), fnr, periode.getFom(), periode.getTom());
+                    vedtakMap.put(fnr, arenaVedtakList);
                 }
             }
         } else {
-            LOGGER.error("Mangler testdata!");
+            LOGGER.warn("[ARENA-MOCK]: Mangler testdata!");
         }
         return vedtakMap;
     }

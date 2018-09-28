@@ -1,11 +1,9 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
-import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkOgPeriode;
 import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
-import no.nav.maskinelletrekk.trekk.v1.builder.TrekkRequestBuilder;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Periode;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Person;
@@ -30,8 +28,11 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -120,17 +121,7 @@ public class ArenaYtelseVedtakServiceTest {
 
         when(ytelseVedtakService.finnYtelseVedtakListe(any(FinnYtelseVedtakListeRequest.class))).thenReturn(svarFraYtelseVedtakService);
 
-        List<TrekkRequest> trekkRequestList = Arrays.asList(
-                TrekkRequestBuilder.create()
-                        .bruker(PERSON_IDENT_1)
-                        .trekkvedtakId(TREKKVEDTAK_ID_1)
-                        .build(),
-                TrekkRequestBuilder.create()
-                        .bruker(PERSON_IDENT_2)
-                        .trekkvedtakId(TREKKVEDTAK_ID_2)
-                        .build()
-        );
-        Map<String, List<ArenaVedtak>> stringArenaYtelseVedtakMap = service.hentYtelseskontrakt(new TrekkOgPeriode(trekkRequestList));
+        Map<String, List<ArenaVedtak>> stringArenaYtelseVedtakMap = service.hentYtelseskontrakt(new HashSet<>(Arrays.asList(PERSON_IDENT_1, PERSON_IDENT_2)), FOM_PERIODE_1, TOM_PERIODE_1);
         Assert.assertNotNull(stringArenaYtelseVedtakMap);
     }
 
@@ -140,7 +131,8 @@ public class ArenaYtelseVedtakServiceTest {
         Trekk requestFromXml = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_XML);
 
         List<TrekkRequest> trekkRequestList = requestFromXml.getTrekkRequest();
-        service.hentYtelseskontrakt(new TrekkOgPeriode(trekkRequestList));
+        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
+        service.hentYtelseskontrakt(brukerSet, FOM_PERIODE_1, TOM_PERIODE_1);
         verify(ytelseVedtakService).finnYtelseVedtakListe(requestCaptor.capture());
 
         Person person1 = requestCaptor.getValue().getPersonListe().get(0);
@@ -154,8 +146,9 @@ public class ArenaYtelseVedtakServiceTest {
         when(ytelseVedtakService.finnYtelseVedtakListe(any()))
                 .thenReturn(new FinnYtelseVedtakListeResponse());
 
-        List<TrekkRequest> trekkRequest = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_XML).getTrekkRequest();
-        Map<String, List<ArenaVedtak>> arenaYtelseVedtakMap = service.hentYtelseskontrakt(new TrekkOgPeriode(trekkRequest));
+        List<TrekkRequest> trekkRequestList = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_XML).getTrekkRequest();
+        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
+        Map<String, List<ArenaVedtak>> arenaYtelseVedtakMap = service.hentYtelseskontrakt(brukerSet, FOM_PERIODE_1, TOM_PERIODE_1);
 
         assertThat(arenaYtelseVedtakMap, notNullValue());
         assertThat(arenaYtelseVedtakMap.size(), is(0));

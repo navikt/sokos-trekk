@@ -1,8 +1,6 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
-import no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkOgPeriode;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
-import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeUgyldigInput;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1;
@@ -40,7 +38,7 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private YtelseVedtakV1 ytelseVedtakService;
     private SakTilVedtakMapper sakTilVedtakMapper;
 
-//    @Autowired
+    //    @Autowired
     public ArenaYtelseVedtakService(YtelseVedtakV1 ytelseVedtakService,
                                     SakTilVedtakMapper sakTilVedtakMapper) {
         Assert.notNull(ytelseVedtakService, "ytelseVedtakService must not be null");
@@ -50,8 +48,8 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     }
 
     @Override
-    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(TrekkOgPeriode trekkOgPeriode) {
-        FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(trekkOgPeriode);
+    public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerList, LocalDate fom, LocalDate tom) {
+        FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(brukerList, fom, tom);
         loggSoapResponse("Sender melding til Arena: {}", request);
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
         loggSoapResponse("Mottatt melding fra Arena: {}", response);
@@ -79,28 +77,26 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
         return response;
     }
 
-    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(TrekkOgPeriode trekkOgPeriode) {
+    private FinnYtelseVedtakListeRequest opprettFinnYtelseVedtakListeRequest(Set<String> brukerList,
+                                                                             LocalDate fom,
+                                                                             LocalDate tom) {
         FinnYtelseVedtakListeRequest request = new FinnYtelseVedtakListeRequest();
-        request.getPersonListe().addAll(opprettPersonListe(trekkOgPeriode));
+        request.getPersonListe().addAll(opprettPersonListe(brukerList, opprettPeriode(fom, tom)));
         request.getTemaListe().addAll(opprettTema("AAP", "DAG", "IND"));
         return request;
     }
 
-    private Set<Person> opprettPersonListe(TrekkOgPeriode trekkOgPeriode) {
-        final LocalDate fom = trekkOgPeriode.getFom();
-        final LocalDate tom = trekkOgPeriode.getTom();
-        return trekkOgPeriode.getTrekkRequestList().stream()
-                .peek(request -> LOGGER.info("Legger til TrekkRequest " +
-                                "[trekkVedtakId: {}, bruker: {}] i request til Arena",
-                        request.getTrekkvedtakId(), request.getBruker()))
-                .map(request -> opprettPerson(request, fom, tom))
+    private Set<Person> opprettPersonListe(Set<String> brukerList, Periode periode) {
+        return brukerList.stream()
+                .peek(fnr -> LOGGER.info("Legger til Bruker [bruker: {}] i request til Arena", fnr))
+                .map(fnr -> opprettPerson(fnr, periode))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private Person opprettPerson(TrekkRequest trekkRequest, LocalDate fom, LocalDate tom) {
+    private Person opprettPerson(String fnr, Periode periode) {
         Person person = new Person();
-        person.setIdent(trekkRequest.getBruker());
-        person.setPeriode(opprettPeriode(fom, tom));
+        person.setIdent(fnr);
+        person.setPeriode(periode);
         return person;
     }
 

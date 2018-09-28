@@ -2,6 +2,7 @@ package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
+import no.nav.maskinelletrekk.trekk.v1.OsParams;
 import no.nav.maskinelletrekk.trekk.v1.System;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
@@ -37,76 +38,73 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
 
     @Override
     public TrekkResponse apply(TrekkRequest trekkRequest) {
-
-        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}, bruker:{}]",
-                trekkRequest.getTrekkvedtakId(),
-                trekkRequest.getBruker());
+        int trekkvedtakId = trekkRequest.getTrekkvedtakId();
 
         List<ArenaVedtak> arenaVedtakList = finnArenaYtelsesvedtakForBruker(trekkRequest);
 
+        int antallVedtakArena = arenaVedtakList.size();
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
         BigDecimal sumOs = trekkRequest.getTotalSatsOS();
-        int antallVedtakArena = arenaVedtakList.size();
         System system = trekkRequest.getSystem();
         Trekkalternativ trekkalt = trekkRequest.getTrekkalt();
+        OsParams osParams = trekkRequest.getOsParams();
+        String bruker = trekkRequest.getBruker();
+
+        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId, bruker);
 
         Beslutning beslutning = beslutt(sumArena, sumOs, system, trekkalt);
 
-        LOGGER.info("Beslutning[trekkVedtakId:{}, bruker:{}]: " +
+        LOGGER.info("Beslutning[trekkVedtakId:{}]: " +
                         "sumOS:{}, " +
                         "sumArena:{}, " +
                         "antallVedtakArena:{}, " +
                         "beslutning:{}",
-                trekkRequest.getTrekkvedtakId(),
-                trekkRequest.getBruker(),
+                trekkvedtakId,
                 sumOs,
                 sumArena,
                 antallVedtakArena,
                 beslutning);
 
+        return opprettTrekkResponse(trekkvedtakId, arenaVedtakList, sumArena, sumOs, system, osParams, beslutning);
+    }
+
+    private TrekkResponse opprettTrekkResponse(int trekkvedtakId,
+                                               List<ArenaVedtak> arenaVedtakList,
+                                               BigDecimal sumArena,
+                                               BigDecimal sumOs,
+                                               System system,
+                                               OsParams osParams,
+                                               Beslutning beslutning) {
         TrekkResponseBuilder trekkResponseBuilder = TrekkResponseBuilder.create();
-        trekkResponseBuilder.trekkvedtakId(trekkRequest.getTrekkvedtakId())
+        trekkResponseBuilder
+                .trekkvedtakId(trekkvedtakId)
                 .totalSatsArena(sumArena)
                 .totalSatsOS(sumOs)
                 .beslutning(beslutning)
                 .system(system)
                 .vedtak(arenaVedtakList);
-        if (trekkRequest.getOsParams() != null) {
-            trekkResponseBuilder.msgId(trekkRequest.getOsParams().getMsgId())
-                    .partnerRef(trekkRequest.getOsParams().getPartnerRef())
-                    .ediLoggId(trekkRequest.getOsParams().getEdiLoggId());
+        if (osParams != null) {
+            trekkResponseBuilder
+                    .msgId(osParams.getMsgId())
+                    .partnerRef(osParams.getPartnerRef())
+                    .ediLoggId(osParams.getEdiLoggId());
         }
         return trekkResponseBuilder.build();
     }
 
     private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, System system, Trekkalternativ trekkalt) {
-        Beslutning beslutning;
-
-        if (erLopendeEllerSaldotrekk(trekkalt)) {
-            beslutning = besluttLopendeOgSaldotrekk(sumArena, sumOs, system);
-        } else if (erProsenttrekk(trekkalt)) {
-            beslutning = besluttProsenttrekk(sumArena, sumOs);
-        } else {
-            LOGGER.error("Ugyldig trekkalternativ: {}", trekkalt);
-            throw new UgyldigTrekkalternativException(String.format("Ugyldig trekkalternativ: %s", trekkalt));
+        switch (trekkalt) {
+            case SALP:
+            case LOPP:
+                return besluttProsenttrekk(sumArena, sumOs);
+            case LOPD:
+            case LOPM:
+            case SALD:
+            case SALM:
+            default:
+                return besluttLopendeOgSaldotrekk(sumArena, sumOs, system);
         }
-
-        return beslutning;
     }
-
-    private Beslutning besluttLopendeOgSaldotrekk(BigDecimal sumArena, BigDecimal sumOs, System system) {
-        Beslutning beslutning;
-        if (erAbetal(system) && sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) != 0
-                || sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) > 0) {
-            beslutning = ABETAL;
-        } else if (sumOs.compareTo(sumArena) > 0) {
-            beslutning = OS;
-        } else {
-            beslutning = INGEN;
-        }
-        return beslutning;
-    }
-
 
     private Beslutning besluttProsenttrekk(BigDecimal sumArena, BigDecimal sumOs) {
         Beslutning beslutning = null;
@@ -125,33 +123,33 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         return beslutning;
     }
 
+    private Beslutning besluttLopendeOgSaldotrekk(BigDecimal sumArena, BigDecimal sumOs, System system) {
+        Beslutning beslutning;
+        if (erAbetal(system) && sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) != 0
+                || sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) > 0) {
+            beslutning = ABETAL;
+        } else if (sumOs.compareTo(sumArena) > 0) {
+            beslutning = OS;
+        } else {
+            beslutning = INGEN;
+        }
+        return beslutning;
+    }
+
     private boolean erAbetal(System system) {
         return J.equals(system);
-    }
-
-    private boolean erProsenttrekk(Trekkalternativ trekkalt) {
-        return trekkalt == Trekkalternativ.LOPP
-                || trekkalt == Trekkalternativ.SALP;
-    }
-
-    private boolean erLopendeEllerSaldotrekk(Trekkalternativ trekkalt) {
-        return trekkalt == Trekkalternativ.LOPD
-                || trekkalt == Trekkalternativ.LOPM
-                || trekkalt == Trekkalternativ.SALD
-                || trekkalt == Trekkalternativ.SALM;
     }
 
     private List<ArenaVedtak> finnArenaYtelsesvedtakForBruker(TrekkRequest trekkRequest) {
         List<ArenaVedtak> arenaVedtakList = new ArrayList<>();
 
-        int trekkvedtakId = trekkRequest.getTrekkvedtakId();
         String bruker = trekkRequest.getBruker();
 
         if (arenaVedtakMap.containsKey(bruker)) {
             arenaVedtakList.addAll(arenaVedtakMap.get(bruker));
         }
-        LOGGER.info("Funnet {} Arena-vedtak for trekkvedtak[trekkvedtakId: {}, bruker {}]",
-                arenaVedtakList.size(), trekkvedtakId, bruker);
+        LOGGER.info("Funnet {} Arena-vedtak for trekkvedtak[trekkvedtakId: {}]",
+                arenaVedtakList.size(), trekkRequest.getTrekkvedtakId(), bruker);
         return arenaVedtakList;
     }
 

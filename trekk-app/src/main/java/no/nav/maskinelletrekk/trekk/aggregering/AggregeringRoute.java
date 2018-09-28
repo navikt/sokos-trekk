@@ -67,6 +67,4 @@ public class AggregeringRoute extends SpringRouteBuilder {
                 .validate(bodyAs(Trekk.class).isNotNull());
     }
 
-
-
 }

@@ -53,7 +53,7 @@ public class BehandleTrekkvedtakBean {
     }
 
     private Map<String, List<ArenaVedtak>> kallHentYtelseskontrakt(List<TrekkRequest> trekkRequestList) {
-        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
+        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getOffnr).collect(Collectors.toSet());
 
         YearMonth nextMonth = YearMonth.now().plusMonths(1);
         LocalDate fom = nextMonth.atDay(1);

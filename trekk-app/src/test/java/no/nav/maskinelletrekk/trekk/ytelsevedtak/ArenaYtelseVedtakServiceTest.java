@@ -131,7 +131,7 @@ public class ArenaYtelseVedtakServiceTest {
         Trekk requestFromXml = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_XML);
 
         List<TrekkRequest> trekkRequestList = requestFromXml.getTrekkRequest();
-        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
+        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getOffnr).collect(Collectors.toSet());
         service.hentYtelseskontrakt(brukerSet, FOM_PERIODE_1, TOM_PERIODE_1);
         verify(ytelseVedtakService).finnYtelseVedtakListe(requestCaptor.capture());
 
@@ -147,7 +147,7 @@ public class ArenaYtelseVedtakServiceTest {
                 .thenReturn(new FinnYtelseVedtakListeResponse());
 
         List<TrekkRequest> trekkRequestList = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_XML).getTrekkRequest();
-        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getBruker).collect(Collectors.toSet());
+        Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getOffnr).collect(Collectors.toSet());
         Map<String, List<ArenaVedtak>> arenaYtelseVedtakMap = service.hentYtelseskontrakt(brukerSet, FOM_PERIODE_1, TOM_PERIODE_1);
 
         assertThat(arenaYtelseVedtakMap, notNullValue());

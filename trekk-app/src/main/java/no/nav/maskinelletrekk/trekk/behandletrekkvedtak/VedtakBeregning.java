@@ -142,7 +142,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     private List<ArenaVedtak> finnArenaYtelsesvedtakForBruker(TrekkRequest trekkRequest) {
         List<ArenaVedtak> arenaVedtakList = new ArrayList<>();
 
-        String bruker = trekkRequest.getBruker();
+        String bruker = trekkRequest.getOffnr();
 
         if (arenaVedtakMap.containsKey(bruker)) {
             arenaVedtakList.addAll(arenaVedtakMap.get(bruker));

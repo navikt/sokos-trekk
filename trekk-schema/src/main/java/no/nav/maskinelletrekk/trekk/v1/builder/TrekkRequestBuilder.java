@@ -12,7 +12,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public final class TrekkRequestBuilder {
 
-    private String bruker;
+    private String offnr;
     private int trekkvedtakId;
     private Trekkalternativ trekkalt;
     private System system;
@@ -28,8 +28,8 @@ public final class TrekkRequestBuilder {
         return new TrekkRequestBuilder();
     }
 
-    public TrekkRequestBuilder bruker(String bruker) {
-        this.bruker = bruker;
+    public TrekkRequestBuilder offnr(String offnr) {
+        this.offnr = offnr;
         return this;
     }
 
@@ -69,7 +69,7 @@ public final class TrekkRequestBuilder {
 
     public TrekkRequest build() {
         TrekkRequest trekkRequest = new ObjectFactory().createTrekkRequest();
-        trekkRequest.setBruker(bruker);
+        trekkRequest.setOffnr(offnr);
         trekkRequest.setTrekkvedtakId(trekkvedtakId);
         trekkRequest.setTrekkalt(trekkalt);
         trekkRequest.setSystem(system);

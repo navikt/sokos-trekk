@@ -19,7 +19,7 @@
 
     <xsd:complexType name="TrekkRequest">
         <xsd:sequence>
-            <xsd:element name="bruker" type="xsd:string"/>
+            <xsd:element name="offnr" type="xsd:string"/>
             <xsd:element name="trekkvedtakId" type="xsd:int"/>
             <xsd:element name="trekkalt" type="Trekkalternativ"/>
             <xsd:element name="system" type="System"/>

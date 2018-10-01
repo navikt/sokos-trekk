@@ -210,7 +210,7 @@ public class VedtakBeregningTest {
     private TrekkRequest opprettTrekkRequest(Trekkalternativ trekkalternativ, System system, BigDecimal totalSatsOS) {
         return TrekkRequestBuilder.create()
                 .trekkvedtakId(1)
-                .bruker(FNR_1)
+                .offnr(FNR_1)
                 .trekkalt(trekkalternativ)
                 .system(system)
                 .totalSatsOS(totalSatsOS)

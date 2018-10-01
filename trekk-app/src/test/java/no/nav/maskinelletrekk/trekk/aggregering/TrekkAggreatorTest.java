@@ -44,14 +44,14 @@ public class TrekkAggreatorTest {
     public void skalAggregereMeldinger() {
         Trekk oldTrekk = TrekkBuilder.create().addTrekkRequest(
                 TrekkRequestBuilder.create()
-                        .bruker("b1234567")
+                        .offnr("b1234567")
                         .trekkvedtakId(12)
                         .build()
         ).build();
         when(oldMessage.getBody(Trekk.class)).thenReturn(oldTrekk);
         Trekk newTrekk = TrekkBuilder.create().addTrekkRequest(
                 TrekkRequestBuilder.create()
-                        .bruker("c1234568")
+                        .offnr("c1234568")
                         .trekkvedtakId(13)
                         .build()
         ).build();

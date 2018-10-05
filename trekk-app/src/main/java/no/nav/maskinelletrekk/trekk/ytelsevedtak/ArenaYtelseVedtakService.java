@@ -12,6 +12,8 @@ import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakList
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.xml.bind.JAXB;
@@ -30,7 +32,7 @@ import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFraArenaCounter;
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilArenaCounter;
 
-//@Service
+@Service
 public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArenaYtelseVedtakService.class);
@@ -38,7 +40,7 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private YtelseVedtakV1 ytelseVedtakService;
     private SakTilVedtakMapper sakTilVedtakMapper;
 
-    //    @Autowired
+    @Autowired
     public ArenaYtelseVedtakService(YtelseVedtakV1 ytelseVedtakService,
                                     SakTilVedtakMapper sakTilVedtakMapper) {
         Assert.notNull(ytelseVedtakService, "ytelseVedtakService must not be null");

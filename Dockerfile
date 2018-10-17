@@ -1,3 +1,8 @@
 FROM navikt/java:8
 
+ARG SPRING_PROFILES_ACTIVE
+RUN echo ${SPRING_PROFILES_ACTIVE}
+
+
 COPY trekk-app/target/trekk-*.jar app.jar
+ENV JAVA_OPTS="${JAVA_OPTS} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}"

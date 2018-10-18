@@ -2,7 +2,6 @@ package no.nav.maskinelletrekk.trekk.v1.builder;
 
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
-import no.nav.maskinelletrekk.trekk.v1.OsParams;
 import no.nav.maskinelletrekk.trekk.v1.System;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
 
@@ -11,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 public final class TrekkResponseBuilder {
 
     private int trekkvedtakId;
@@ -20,9 +17,6 @@ public final class TrekkResponseBuilder {
     private System system;
     private BigDecimal totalSatsOS;
     private BigDecimal totalSatsArena;
-    private String msgId;
-    private String partnerRef;
-    private String ediLoggId;
     private List<ArenaVedtak> vedtak = new ArrayList<>();
 
     private TrekkResponseBuilder() {
@@ -57,22 +51,6 @@ public final class TrekkResponseBuilder {
         return this;
     }
 
-
-    public TrekkResponseBuilder msgId(String msgId) {
-        this.msgId = msgId;
-        return this;
-    }
-
-    public TrekkResponseBuilder partnerRef(String partnerRef) {
-        this.partnerRef = partnerRef;
-        return this;
-    }
-
-    public TrekkResponseBuilder ediLoggId(String ediLoggId) {
-        this.ediLoggId = ediLoggId;
-        return this;
-    }
-
     public TrekkResponseBuilder vedtak(List<ArenaVedtak> vedtak) {
         this.vedtak = vedtak;
         return this;
@@ -90,15 +68,6 @@ public final class TrekkResponseBuilder {
         trekkResponse.setSystem(system);
         trekkResponse.setTotalSatsOS(totalSatsOS);
         trekkResponse.setTotalSatsArena(totalSatsArena);
-        if (isNotEmpty(msgId)
-                || isNotEmpty(partnerRef)
-                || isNotEmpty(ediLoggId)) {
-            OsParams osParams = new OsParams();
-            osParams.setPartnerRef(partnerRef);
-            osParams.setEdiLoggId(ediLoggId);
-            osParams.setMsgId(msgId);
-            trekkResponse.setOsParams(osParams);
-        }
         trekkResponse.getVedtak().addAll(vedtak);
         return trekkResponse;
     }

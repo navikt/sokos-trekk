@@ -10,7 +10,8 @@ node {
 	def application = "trekk"
 	def naisConfig = "nais.yaml"
 	def mockSuffix = "T"
-	def dockerRepo = "docker.adeo.no:5000/okonomi"
+	def dockerRepo = "docker.adeo.no:5000"
+	def project = "okonomi"
 
 	try {
 
@@ -33,10 +34,15 @@ node {
 			sh "${mvn} clean package -U"
 		}
 
+		stage('test') {
+			sh "${mvn} test"
+			junit "trekk-app/target/surefire-reports/*.xml"
+		}
+
 		stage('Package') {
 			if (isSnapshot) {
-				sh "docker build --build-arg --build-arg SPRING_PROFILES_ACTIVE=mock -t ${dockerRepo}/${application}:${releaseVersion}-${mockSuffix} --rm=true ."
-				sh "docker build --build-arg -t ${dockerRepo}/${application}:${releaseVersion} --rm=true ."
+				sh "docker build --build-arg SPRING_PROFILES_ACTIVE=mock -t ${project}/${application}:${releaseVersion}-${mockSuffix} --rm=true ."
+				sh "docker build --build-arg -t ${project}/${application}:${releaseVersion} --rm=true ."
 
 //				sh "git commit -am \"Set version to ${releaseVersion} (from Jenkins pipeline)\""
 //				sh "git push origin ${branch}"
@@ -53,8 +59,8 @@ node {
 //					sh "curl -s -F r=m2internal -F hasPom=false -F e=yaml -F g=${groupId} -F a=${application} -F " + "v=${releaseVersion}-${mockSuffix} -F p=yaml -F file=@${naisConfig} -u ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} http://maven.adeo.no/nexus/service/local/artifact/maven/content"
 //					sh "curl -s -F r=m2internal -F hasPom=false -F e=yaml -F g=${groupId} -F a=${application} -F " + "v=${releaseVersion} -F p=yaml -F file=@${naisConfig} -u ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} http://maven.adeo.no/nexus/service/local/artifact/maven/content"
 //				}
-//				sh "docker push ${dockerRepo}/${application}:${releaseVersion}-${mockSuffix}"
-//				sh "docker push ${dockerRepo}/${application}:${releaseVersion}"
+//				sh "docker push ${dockerRepo}/${project}/${application}:${releaseVersion}-${mockSuffix}"
+//				sh "docker push ${dockerRepo}/${project}/${application}:${releaseVersion}"
 			} else {
 				println("[INFO] POM version is not a SNAPSHOT, it is ${pom.version}. Skipping publishing!")
 			}
@@ -68,6 +74,22 @@ node {
 //				}
 			} else {
 				println("[INFO] POM version is not a SNAPSHOT, it is ${pom.version}. Skipping deploy of nais.yaml to nexus!")
+			}
+		}
+		stage("sonar") {
+			withSonarQubeEnv('Default') {
+				def jacocoVersion = "0.8.1"
+				def sonarVersion = "3.4.1.1168"
+				sh "${mvn} org.jacoco:jacoco-maven-plugin:${jacocoVersion}:prepare-agent" +
+						" clean verify" +
+						" org.sonarsource.scanner.maven:sonar-maven-plugin:${sonarVersion}:sonar" +
+						" -Djacoco.destFile='${env.WORKSPACE}/target/jacoco.exec'" +
+						" -Dsonar.host.url=${env.SONAR_HOST_URL}" +
+						" -Dsonar.login=${env.SONAR_AUTH_TOKEN}" +
+						" -Dsonar.jacoco.reportPath='${env.WORKSPACE}/target/jacoco.exec'" +
+						" -Dsonar.java.source=1.8" +
+						" -Dsonar.branch=${BRANCH}" +
+						" -Dsonar.coverage.exclusions=**/*Config.java,**/*Exception.java,**/*Entity.java,**/*Alias.java"
 			}
 		}
 	} finally {

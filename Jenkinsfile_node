@@ -15,7 +15,7 @@ node {
 
 	try {
 
-		stage('initialize') {
+		stage('Initialize') {
 			mvnHome = tool 'Maven'
 			mvn = "${mvnHome}/bin/mvn"
 			scannerHome = tool 'SonarQube'
@@ -31,10 +31,10 @@ node {
 		stage('Build') {
 			print "Building project"
 			sh "${mvn} versions:set -B -DnewVersion=${releaseVersion} -DgenerateBackupPoms=false"
-			sh "${mvn} clean package -U"
+			sh "${mvn} clean package -U -DskipTests"
 		}
 
-		stage('test') {
+		stage('Test') {
 			sh "${mvn} test"
 			junit "trekk-app/target/surefire-reports/*.xml"
 		}
@@ -42,25 +42,25 @@ node {
 		stage('Package') {
 			if (isSnapshot) {
 				sh "docker build --build-arg SPRING_PROFILES_ACTIVE=mock -t ${project}/${application}:${releaseVersion}-${mockSuffix} --rm=true ."
-				sh "docker build -t ${project}/${application}:${releaseVersion} --rm=true ."
+				sh "docker build --build-arg SPRING_PROFILES_ACTIVE=prod -t ${project}/${application}:${releaseVersion} --rm=true ."
 
-//				sh "git commit -am \"Set version to ${releaseVersion} (from Jenkins pipeline)\""
-//				sh "git push origin ${branch}"
-//				sh "git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}"
-//				sh "git push --tags"
+				sh "git commit -am \"Set version to ${releaseVersion} (from Jenkins pipeline)\""
+				sh "git push origin ${BRANCH}"
+				sh "git tag -a ${application}-${releaseVersion} -m ${application}-${releaseVersion}"
+				sh "git push --tags"
 			} else {
 				println("[INFO] POM version is not a SNAPSHOT, it is ${pom.version}. Skipping releasing")
 			}
 		}
 
-		stage("Publish Docker image") {
+		stage("Publish Docker images") {
 			if (isSnapshot) {
-//				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
-//					sh "curl -s -F r=m2internal -F hasPom=false -F e=yaml -F g=${groupId} -F a=${application} -F " + "v=${releaseVersion}-${mockSuffix} -F p=yaml -F file=@${naisConfig} -u ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} http://maven.adeo.no/nexus/service/local/artifact/maven/content"
-//					sh "curl -s -F r=m2internal -F hasPom=false -F e=yaml -F g=${groupId} -F a=${application} -F " + "v=${releaseVersion} -F p=yaml -F file=@${naisConfig} -u ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} http://maven.adeo.no/nexus/service/local/artifact/maven/content"
-//				}
-//				sh "docker push ${dockerRepo}/${project}/${application}:${releaseVersion}-${mockSuffix}"
-//				sh "docker push ${dockerRepo}/${project}/${application}:${releaseVersion}"
+				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
+					sh "curl -s -F r=m2internal -F hasPom=false -F e=yaml -F g=${groupId} -F a=${application} -F " + "v=${releaseVersion}-${mockSuffix} -F p=yaml -F file=@${naisConfig} -u ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} http://maven.adeo.no/nexus/service/local/artifact/maven/content"
+					sh "curl -s -F r=m2internal -F hasPom=false -F e=yaml -F g=${groupId} -F a=${application} -F " + "v=${releaseVersion} -F p=yaml -F file=@${naisConfig} -u ${env.NEXUS_USERNAME}:${env.NEXUS_PASSWORD} http://maven.adeo.no/nexus/service/local/artifact/maven/content"
+				}
+				sh "docker push ${dockerRepo}/${project}/${application}:${releaseVersion}-${mockSuffix}"
+				sh "docker push ${dockerRepo}/${project}/${application}:${releaseVersion}"
 			} else {
 				println("[INFO] POM version is not a SNAPSHOT, it is ${pom.version}. Skipping publishing!")
 			}
@@ -68,15 +68,15 @@ node {
 
 		stage('Deploy nais.yaml to nexus m2internal') {
 			if (isSnapshot) {
-//				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
-//					sh "nais upload -f ${naisConfig} -a ${application} -v ${releaseVersion}-${mockSuffix} -u ${NEXUS_USERNAME} -p ${NEXUS_PASSWORD}"
-//					sh "nais upload -f ${naisConfig} -a ${application} -v ${releaseVersion} -u ${NEXUS_USERNAME} -p ${NEXUS_PASSWORD}"
-//				}
+				withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'nexus-user', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD']]) {
+					sh "nais upload -f ${naisConfig} -a ${application} -v ${releaseVersion}-${mockSuffix} -u ${NEXUS_USERNAME} -p ${NEXUS_PASSWORD}"
+					sh "nais upload -f ${naisConfig} -a ${application} -v ${releaseVersion} -u ${NEXUS_USERNAME} -p ${NEXUS_PASSWORD}"
+				}
 			} else {
 				println("[INFO] POM version is not a SNAPSHOT, it is ${pom.version}. Skipping deploy of nais.yaml to nexus!")
 			}
 		}
-		stage("sonar") {
+		stage("Sonar") {
 			withSonarQubeEnv('Default') {
 				def jacocoVersion = "0.8.1"
 				def sonarVersion = "3.4.1.1168"
@@ -93,15 +93,15 @@ node {
 			}
 		}
 	} finally {
-		stage("finally: set new DEV-version") {
+		stage("Bump snapshot-version") {
 			def versionItems = releaseVersion.tokenize('.')
 			nextVersion = versionItems.getAt(0) + "." + versionItems.getAt(1)
 			nextVersion += "." + (versionItems.getAt(-1).toInteger() + 1)
 			nextVersion += "-SNAPSHOT"
 			println("[INFO] releaseVersion: ${releaseVersion} / nextVersion: ${nextVersion}")
 			sh "${mvn} versions:set -B -DnewVersion=${nextVersion} -DgenerateBackupPoms=false"
-//			sh "git commit -am \"Updated version to ${nextVersion}\""
-//			sh "git push origin ${branch}"
+			sh "git commit -am \"Updated version to ${nextVersion}\""
+			sh "git push origin ${BRANCH}"
 		}
 	}
 }

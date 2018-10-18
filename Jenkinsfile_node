@@ -41,8 +41,8 @@ node {
 
 		stage('Package') {
 			if (isSnapshot) {
-				sh "docker build --build-arg SPRING_PROFILES_ACTIVE=mock -t ${project}/${application}:${releaseVersion}-${mockSuffix} --rm=true ."
-				sh "docker build --build-arg SPRING_PROFILES_ACTIVE=prod -t ${project}/${application}:${releaseVersion} --rm=true ."
+				sh "docker build --build-arg SPRING_PROFILES_ACTIVE=mock -t ${dockerRepo}/${project}/${application}:${releaseVersion}-${mockSuffix} --rm=true ."
+				sh "docker build --build-arg SPRING_PROFILES_ACTIVE=prod -t ${dockerRepo}/${project}/${application}:${releaseVersion} --rm=true ."
 
 				sh "git commit -am \"Set version to ${releaseVersion} (from Jenkins pipeline)\""
 				sh "git push origin ${BRANCH}"

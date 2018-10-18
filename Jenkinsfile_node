@@ -18,13 +18,13 @@ node {
 			mvnHome = tool 'Maven'
 			mvn = "${mvnHome}/bin/mvn"
 			scannerHome = tool 'SonarQube'
-			pom = readMavenPom file: 'pom.xml'
-			releaseVersion = pom.version.tokenize("-")[0]
-			isSnapshot = pom.version.contains("-SNAPSHOT")
 		}
 
 		stage("Checkout") {
 			checkout scm
+			pom = readMavenPom file: 'pom.xml'
+			releaseVersion = pom.version.tokenize("-")[0]
+			isSnapshot = pom.version.contains("-SNAPSHOT")
 		}
 
 		stage('Build') {

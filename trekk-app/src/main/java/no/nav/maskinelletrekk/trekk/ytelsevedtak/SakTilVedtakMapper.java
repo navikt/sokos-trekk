@@ -17,7 +17,7 @@ import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.VedtakBeregning.S
 import static no.nav.maskinelletrekk.trekk.ytelsevedtak.DateMapper.toLocalDate;
 
 @Component
-@Profile({"prod", "!mock"})
+@Profile({"prod"})
 public class SakTilVedtakMapper implements Function<Sak, Stream<? extends ArenaVedtak>> {
 
     @Override

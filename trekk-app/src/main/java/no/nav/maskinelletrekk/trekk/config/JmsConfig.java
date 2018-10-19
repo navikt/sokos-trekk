@@ -19,10 +19,10 @@ import javax.jms.Queue;
 public class JmsConfig {
 
     @Value("${trekk.jms.concurrentConsumers}")
-    private Integer concurrentConsumers;
+    private Integer concurrentConsumers = 1;
 
     @Value("${trekk.jms.transactionTimeout}")
-    private Integer transactionTimeout;
+    private Integer transactionTimeout = 300;
 
     @Value("${srvappserver.username}")
     private String qmUsername;

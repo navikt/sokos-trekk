@@ -34,7 +34,7 @@ import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFra
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilArenaCounter;
 
 @Service
-@Profile({"prod", "!mock"})
+@Profile({"prod"})
 public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArenaYtelseVedtakService.class);

@@ -20,6 +20,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class VedtakBeregningTest {
@@ -73,6 +74,27 @@ public class VedtakBeregningTest {
         assertThat(response.getTotalSatsOS(), equalTo(DAGSATS_2.add(BigDecimal.ONE)));
         assertThat(response.getVedtak().size(), equalTo(1));
     }
+
+    @Test
+    public void besluttOS_TypeLopendeTrekk_NyttTrekk() {
+
+        TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, null, DAGSATS_2.add(BigDecimal.valueOf(2)), DAGSATS_2.add(BigDecimal.ONE));
+        VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
+                ArenaVedtakBuilder.create()
+                        .dagsats(DAGSATS_2)
+                        .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
+                        .build()
+        )));
+        TrekkResponse response = beregning.apply(request);
+
+        assertThat(response.getTrekkvedtakId(), equalTo(1));
+        assertThat(response.getBeslutning(), equalTo(Beslutning.OS));
+        assertThat(response.getSystem(), nullValue());
+        assertThat(response.getTotalSatsArena(), equalTo(DAGSATS_2));
+        assertThat(response.getTotalSatsOS(), equalTo(DAGSATS_2.add(BigDecimal.ONE)));
+        assertThat(response.getVedtak().size(), equalTo(1));
+    }
+
 
     @Test
     public void besluttOS_TypeLopendeTrekk_IkkeAktivtAbetal_YtelseIOSErTilstrekkelig() {

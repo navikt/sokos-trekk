@@ -13,6 +13,7 @@ public final class TrekkRequestBuilder {
     private int trekkvedtakId;
     private Trekkalternativ trekkalt;
     private System system;
+    private BigDecimal trekkSats;
     private BigDecimal totalSatsOS;
 
     private TrekkRequestBuilder() {
@@ -41,6 +42,12 @@ public final class TrekkRequestBuilder {
         this.system = system;
         return this;
     }
+
+    public TrekkRequestBuilder trekkSats(BigDecimal trekkSats) {
+        this.trekkSats = trekkSats;
+        return this;
+    }
+
     public TrekkRequestBuilder totalSatsOS(BigDecimal totalSatsOS) {
         this.totalSatsOS = totalSatsOS;
         return this;
@@ -52,6 +59,7 @@ public final class TrekkRequestBuilder {
         trekkRequest.setTrekkvedtakId(trekkvedtakId);
         trekkRequest.setTrekkalt(trekkalt);
         trekkRequest.setSystem(system);
+        trekkRequest.setTrekkSats(trekkSats);
         trekkRequest.setTotalSatsOS(totalSatsOS);
         return trekkRequest;
     }

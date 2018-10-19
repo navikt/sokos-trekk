@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <springProfile name="default">
+    <springProfile name="!local">
         <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
             <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
         </appender>
@@ -19,7 +19,7 @@
         <logger name="org.apache.cxf.common.logging" level="ERROR"/>
         <logger name="org.apache.wss4j.common.crypto" level="ERROR"/>
     </springProfile>
-    <springProfile name="u1">
+    <springProfile name="local">
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
                 <pattern>%green(%d{HH:mm:ss}){faint} %cyan([%-4.4t]){faint} %cyan(%0.-5p) %yellow(%-40.40logger{39}){cyan}: %m%n</pattern>

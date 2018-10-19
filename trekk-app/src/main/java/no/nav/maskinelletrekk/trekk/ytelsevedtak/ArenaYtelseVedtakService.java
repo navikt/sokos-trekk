@@ -13,6 +13,7 @@ import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakList
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -33,6 +34,7 @@ import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFra
 import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilArenaCounter;
 
 @Service
+@Profile({"prod", "!mock"})
 public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArenaYtelseVedtakService.class);

@@ -5,6 +5,8 @@ import no.nav.maskinelletrekk.arenamock.v1.PersonYtelse;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.builder.ArenaVedtakBuilder;
 import no.nav.maskinelletrekk.trekk.v1.builder.PeriodeBuilder;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
+@Profile("mock")
 public class ArenaMockDataMapper implements Function<PersonYtelse, List<ArenaVedtak>> {
 
     @Override

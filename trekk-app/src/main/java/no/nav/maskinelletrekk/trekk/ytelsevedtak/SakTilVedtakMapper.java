@@ -5,6 +5,7 @@ import no.nav.maskinelletrekk.trekk.v1.builder.ArenaVedtakBuilder;
 import no.nav.maskinelletrekk.trekk.v1.builder.PeriodeBuilder;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Sak;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.informasjon.Vedtak;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.VedtakBeregning.S
 import static no.nav.maskinelletrekk.trekk.ytelsevedtak.DateMapper.toLocalDate;
 
 @Component
+@Profile({"prod", "!mock"})
 public class SakTilVedtakMapper implements Function<Sak, Stream<? extends ArenaVedtak>> {
 
     @Override

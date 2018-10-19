@@ -6,6 +6,7 @@
         <trekkvedtakId>22</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
         <system>J</system>
+        <trekkSats>0</trekkSats>
         <totalSatsOS>0</totalSatsOS>
     </trekkRequest>
     <trekkRequest>
@@ -13,6 +14,7 @@
         <trekkvedtakId>33</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
         <system>J</system>
+        <trekkSats>0</trekkSats>
         <totalSatsOS>0</totalSatsOS>
     </trekkRequest>
 </trekk>

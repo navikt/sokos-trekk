@@ -2,7 +2,6 @@ package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
-import no.nav.maskinelletrekk.trekk.v1.OsParams;
 import no.nav.maskinelletrekk.trekk.v1.System;
 import no.nav.maskinelletrekk.trekk.v1.TrekkRequest;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
@@ -46,12 +45,12 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
         BigDecimal sumOs = trekkRequest.getTotalSatsOS();
         System system = trekkRequest.getSystem();
+        BigDecimal trekkSats = trekkRequest.getTrekkSats();
         Trekkalternativ trekkalt = trekkRequest.getTrekkalt();
-        OsParams osParams = trekkRequest.getOsParams();
 
         LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
 
-        Beslutning beslutning = beslutt(sumArena, sumOs, system, trekkalt);
+        Beslutning beslutning = beslutt(sumArena, sumOs, trekkSats, system, trekkalt);
 
         LOGGER.info("Beslutning[trekkVedtakId:{}]: " +
                         "sumOS:{}, " +
@@ -64,34 +63,16 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
                 antallVedtakArena,
                 beslutning);
 
-        return opprettTrekkResponse(trekkvedtakId, arenaVedtakList, sumArena, sumOs, system, osParams, beslutning);
-    }
-
-    private TrekkResponse opprettTrekkResponse(int trekkvedtakId,
-                                               List<ArenaVedtak> arenaVedtakList,
-                                               BigDecimal sumArena,
-                                               BigDecimal sumOs,
-                                               System system,
-                                               OsParams osParams,
-                                               Beslutning beslutning) {
-        TrekkResponseBuilder trekkResponseBuilder = TrekkResponseBuilder.create();
-        trekkResponseBuilder
+        return TrekkResponseBuilder.create()
                 .trekkvedtakId(trekkvedtakId)
                 .totalSatsArena(sumArena)
                 .totalSatsOS(sumOs)
                 .beslutning(beslutning)
                 .system(system)
-                .vedtak(arenaVedtakList);
-        if (osParams != null) {
-            trekkResponseBuilder
-                    .msgId(osParams.getMsgId())
-                    .partnerRef(osParams.getPartnerRef())
-                    .ediLoggId(osParams.getEdiLoggId());
-        }
-        return trekkResponseBuilder.build();
+                .vedtak(arenaVedtakList).build();
     }
 
-    private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, System system, Trekkalternativ trekkalt) {
+    private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, BigDecimal trekkSats, System system, Trekkalternativ trekkalt) {
         switch (trekkalt) {
             case SALP:
             case LOPP:
@@ -101,7 +82,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
             case SALD:
             case SALM:
             default:
-                return besluttLopendeOgSaldotrekk(sumArena, sumOs, system);
+                return besluttLopendeOgSaldotrekk(sumArena, sumOs, trekkSats, system);
         }
     }
 
@@ -122,9 +103,9 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         return beslutning;
     }
 
-    private Beslutning besluttLopendeOgSaldotrekk(BigDecimal sumArena, BigDecimal sumOs, System system) {
+    private Beslutning besluttLopendeOgSaldotrekk(BigDecimal sumArena, BigDecimal sumOs, BigDecimal trekkSats, System system) {
         Beslutning beslutning;
-        if (erAbetal(system) && sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) != 0
+        if (erAbetal(system) && sumArena.compareTo(trekkSats) >= 0 && sumArena.compareTo(ZERO) != 0
                 || sumArena.compareTo(sumOs) >= 0 && sumArena.compareTo(ZERO) > 0) {
             beslutning = ABETAL;
         } else if (sumOs.compareTo(sumArena) > 0) {

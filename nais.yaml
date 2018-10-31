@@ -21,6 +21,9 @@ resources:
     requests:
       cpu: 100m
       memory: 256Mi
+prometheus:
+  enabled: true
+  path: /prometheus
 fasitResources:
   used:
   - alias: mqGateway01

@@ -50,7 +50,7 @@ public class STSClientConfig {
         configureSTSClient(stsClient, location, username, password);
 
         client.getRequestContext().put(SecurityConstants.STS_CLIENT, stsClient);
-        client.getRequestContext().put(SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT, true);
+        client.getRequestContext().put(SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT, Boolean.TRUE);
         setEndpointPolicyReference(client, policyReference);
     }
 

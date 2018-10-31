@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.VedtakBeregning.FAKTOR_MND;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -26,9 +27,13 @@ import static org.junit.Assert.assertThat;
 public class VedtakBeregningTest {
 
     private static final String FNR_1 = "12312312312";
-    private static final BigDecimal DAGSATS_1 = new BigDecimal("123.00");
-    private static final BigDecimal DAGSATS_2 = new BigDecimal("123.00");
-    private static final BigDecimal DAGSATS_3 = new BigDecimal("123.00");
+    private static final BigDecimal DAGSATS_1 = new BigDecimal("2167.00");
+    private static final BigDecimal DAGSATS_2 = new BigDecimal("2167.00");
+    private static final BigDecimal DAGSATS_ARENA_1 = new BigDecimal("100.00");
+    private static final BigDecimal DAGSATS_ARENA_2 = new BigDecimal("100.00");
+    private static final BigDecimal MNDSATS_ARENA_1 = new BigDecimal("2167.00");
+    private static final BigDecimal MNDSATS_ARENA_2 = new BigDecimal("2167.00");
+
     private static final LocalDate NOW = LocalDate.now();
     private static final BigDecimal ZERO = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
 
@@ -37,11 +42,11 @@ public class VedtakBeregningTest {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.J, DAGSATS_1, DAGSATS_1);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, asList(
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_1)
+                        .dagsats(DAGSATS_ARENA_1)
                         .vedtaksperiode(LocalDate.now().minusDays(10), null)
                         .build(),
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_2)
+                        .dagsats(DAGSATS_ARENA_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
         )));
@@ -61,7 +66,7 @@ public class VedtakBeregningTest {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.J, DAGSATS_2.add(BigDecimal.valueOf(2)), DAGSATS_2.add(BigDecimal.ONE));
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_2)
+                        .dagsats(DAGSATS_ARENA_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
         )));
@@ -70,7 +75,7 @@ public class VedtakBeregningTest {
         assertThat(response.getTrekkvedtakId(), equalTo(1));
         assertThat(response.getBeslutning(), equalTo(Beslutning.OS));
         assertThat(response.getSystem(), equalTo(System.J));
-        assertThat(response.getTotalSatsArena(), equalTo(DAGSATS_2));
+        assertThat(response.getTotalSatsArena(), equalTo(MNDSATS_ARENA_2));
         assertThat(response.getTotalSatsOS(), equalTo(DAGSATS_2.add(BigDecimal.ONE)));
         assertThat(response.getVedtak().size(), equalTo(1));
     }
@@ -81,7 +86,7 @@ public class VedtakBeregningTest {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, null, DAGSATS_2.add(BigDecimal.valueOf(2)), DAGSATS_2.add(BigDecimal.ONE));
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_2)
+                        .dagsats(DAGSATS_2.divide(FAKTOR_MND, 2, RoundingMode.HALF_DOWN))
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
         )));
@@ -101,7 +106,7 @@ public class VedtakBeregningTest {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.N, DAGSATS_2, DAGSATS_2.add(BigDecimal.ONE));
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_2)
+                        .dagsats(DAGSATS_ARENA_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
         )));
@@ -110,7 +115,7 @@ public class VedtakBeregningTest {
         assertThat(response.getTrekkvedtakId(), equalTo(1));
         assertThat(response.getBeslutning(), equalTo(Beslutning.OS));
         assertThat(response.getSystem(), equalTo(System.N));
-        assertThat(response.getTotalSatsArena(), equalTo(DAGSATS_2));
+        assertThat(response.getTotalSatsArena(), equalTo(MNDSATS_ARENA_2));
         assertThat(response.getTotalSatsOS(), equalTo(DAGSATS_2.add(BigDecimal.ONE)));
         assertThat(response.getVedtak().size(), equalTo(1));
     }
@@ -120,7 +125,7 @@ public class VedtakBeregningTest {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPD, System.N, DAGSATS_2, DAGSATS_2.subtract(BigDecimal.ONE));
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_2)
+                        .dagsats(DAGSATS_ARENA_2)
                         .vedtaksperiode(LocalDate.now(), LocalDate.now().plusDays(30))
                         .build()
         )));
@@ -129,7 +134,7 @@ public class VedtakBeregningTest {
         assertThat(response.getTrekkvedtakId(), equalTo(1));
         assertThat(response.getBeslutning(), equalTo(Beslutning.ABETAL));
         assertThat(response.getSystem(), equalTo(System.N));
-        assertThat(response.getTotalSatsArena(), equalTo(DAGSATS_2));
+        assertThat(response.getTotalSatsArena(), equalTo(MNDSATS_ARENA_2));
         assertThat(response.getTotalSatsOS(), equalTo(DAGSATS_2.subtract(BigDecimal.ONE)));
         assertThat(response.getVedtak().size(), equalTo(1));
     }
@@ -158,7 +163,7 @@ public class VedtakBeregningTest {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPP, System.J, ZERO, ZERO);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_1)
+                        .dagsats(DAGSATS_ARENA_1)
                         .vedtaksperiode(NOW, NOW.plusDays(30))
                         .build()
         )));
@@ -167,7 +172,7 @@ public class VedtakBeregningTest {
         assertThat(response.getTrekkvedtakId(), equalTo(1));
         assertThat(response.getBeslutning(), equalTo(Beslutning.ABETAL));
         assertThat(response.getSystem(), equalTo(System.J));
-        assertThat(response.getTotalSatsArena(), equalTo(DAGSATS_1));
+        assertThat(response.getTotalSatsArena(), equalTo(MNDSATS_ARENA_1));
         assertThat(response.getTotalSatsOS(), equalTo(ZERO));
         assertThat(response.getVedtak().size(), equalTo(1));
     }
@@ -177,7 +182,7 @@ public class VedtakBeregningTest {
         TrekkRequest request = opprettTrekkRequest(Trekkalternativ.LOPP, System.J, DAGSATS_1, DAGSATS_1);
         VedtakBeregning beregning = new VedtakBeregning(opprettArenaYtelser(FNR_1, singletonList(
                 ArenaVedtakBuilder.create()
-                        .dagsats(DAGSATS_1)
+                        .dagsats(DAGSATS_ARENA_1)
                         .vedtaksperiode(NOW, NOW.plusDays(30))
                         .build()
         )));
@@ -186,7 +191,7 @@ public class VedtakBeregningTest {
         assertThat(response.getTrekkvedtakId(), equalTo(1));
         assertThat(response.getBeslutning(), equalTo(Beslutning.BEGGE));
         assertThat(response.getSystem(), equalTo(System.J));
-        assertThat(response.getTotalSatsArena(), equalTo(DAGSATS_1));
+        assertThat(response.getTotalSatsArena(), equalTo(MNDSATS_ARENA_1));
         assertThat(response.getTotalSatsOS(), equalTo(DAGSATS_1));
         assertThat(response.getVedtak().size(), equalTo(1));
     }

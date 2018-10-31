@@ -5,9 +5,9 @@
         <offnr>12345678901</offnr>
         <trekkvedtakId>22</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
-        <system>J</system>
+        <system>N</system>
         <trekkSats>899.0</trekkSats>
-        <totalSatsOS>1354.50</totalSatsOS>
+        <totalSatsOS>4000.50</totalSatsOS>
     </trekkRequest>
     <trekkRequest>
         <offnr>10987654321</offnr>

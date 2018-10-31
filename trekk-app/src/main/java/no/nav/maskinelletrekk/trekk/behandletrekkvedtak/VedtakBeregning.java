@@ -28,6 +28,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VedtakBeregning.class);
     public static final int SUM_SCALE = 2;
+    public static final BigDecimal FAKTOR_MND = new BigDecimal("21.67");
 
     private Map<String, List<ArenaVedtak>> arenaVedtakMap;
 
@@ -137,6 +138,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         return arenaVedtakList.stream()
                 .map(ArenaVedtak::getDagsats)
                 .reduce(ZERO, BigDecimal::add)
+                .multiply(FAKTOR_MND)
                 .setScale(SUM_SCALE, ROUND_HALF_UP);
     }
 

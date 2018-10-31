@@ -3,7 +3,7 @@
     <parent>
         <artifactId>trekk</artifactId>
         <groupId>no.nav.maskinelle-trekk</groupId>
-        <version>14.0.6-SNAPSHOT</version>
+        <version>14.0.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

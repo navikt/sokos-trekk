@@ -3,22 +3,19 @@
     <typeKjoring>INNL</typeKjoring>
     <!--1 to 1000 repetitions:-->
     <trekkRequest>
-        <bruker>12345678901</bruker>
+        <offnr>12345678901</offnr>
         <trekkvedtakId>3</trekkvedtakId>
         <trekkalt>LOPD</trekkalt>
         <system>J</system>
+        <trekkSats>10.0</trekkSats>
         <totalSatsOS>100.00</totalSatsOS>
-        <osParams>
-            <msgId>12345678</msgId>
-            <partnerRef>4234231253</partnerRef>
-            <ediLoggId>AB123JH234</ediLoggId>
-        </osParams>
     </trekkRequest>
     <trekkRequest>
-        <bruker>10987654321</bruker>
+        <offnr>10987654321</offnr>
         <trekkvedtakId>4</trekkvedtakId>
-        <trekkalt>SALD</trekkalt>
-        <system>J</system>
+        <trekkalt>SALM</trekkalt>
+        <system>N</system>
+        <trekkSats>100.0</trekkSats>
         <totalSatsOS>100.00</totalSatsOS>
     </trekkRequest>
 </trekk>

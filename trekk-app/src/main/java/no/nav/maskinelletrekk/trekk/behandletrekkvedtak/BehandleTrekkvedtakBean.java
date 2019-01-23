@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -30,10 +31,14 @@ public class BehandleTrekkvedtakBean {
 
     private YtelseVedtakService ytelseVedtakService;
 
+    private Clock clock;
+
     @Autowired
-    public BehandleTrekkvedtakBean(YtelseVedtakService ytelseVedtakService) {
+    public BehandleTrekkvedtakBean(YtelseVedtakService ytelseVedtakService,  Clock clock) {
         Assert.notNull(ytelseVedtakService, "ytelseVedtakService must not be null");
+        Assert.notNull(clock, "clock must not be null");
         this.ytelseVedtakService = ytelseVedtakService;
+        this.clock = clock;
     }
 
     @Handler
@@ -55,8 +60,8 @@ public class BehandleTrekkvedtakBean {
     private Map<String, List<ArenaVedtak>> kallHentYtelseskontrakt(List<TrekkRequest> trekkRequestList) {
         Set<String> brukerSet = trekkRequestList.stream().map(TrekkRequest::getOffnr).collect(Collectors.toSet());
 
-        YearMonth nextMonth = YearMonth.now().plusMonths(1);
-        LocalDate fom = nextMonth.atDay(1);
+        YearMonth nextMonth = YearMonth.now(clock).plusMonths(1);
+        LocalDate fom = LocalDate.now(clock);
         LocalDate tom = nextMonth.atEndOfMonth();
 
         return ytelseVedtakService.hentYtelseskontrakt(brukerSet, fom, tom);

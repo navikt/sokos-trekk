@@ -1,28 +1,39 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import com.google.common.base.Verify;
 import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
+import no.nav.maskinelletrekk.trekk.v1.Trekkalternativ;
+import no.nav.maskinelletrekk.trekk.v1.TypeKjoring;
 import no.nav.maskinelletrekk.trekk.v1.builder.ArenaVedtakBuilder;
+import no.nav.maskinelletrekk.trekk.v1.builder.TrekkBuilder;
+import no.nav.maskinelletrekk.trekk.v1.builder.TrekkRequestBuilder;
 import no.nav.maskinelletrekk.trekk.ytelsevedtak.YtelseVedtakService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anySet;
@@ -51,6 +62,9 @@ public class BehandleTrekkvedtakBeanTest {
     @Mock
     private YtelseVedtakService ytelseVedtakService;
 
+    @Mock
+    private Clock clock;
+
     @InjectMocks
     private BehandleTrekkvedtakBean behandleTrekkvedtak;
 
@@ -59,6 +73,9 @@ public class BehandleTrekkvedtakBeanTest {
     @Before
     public void setUp() throws Exception {
         requestFromXml = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_1_XML);
+
+        Mockito.when(clock.instant()).thenReturn(Instant.parse("2019-01-01T10:00:00Z"));
+        Mockito.when(clock.getZone()).thenReturn(ZoneId.systemDefault());
     }
 
     @Test
@@ -88,6 +105,21 @@ public class BehandleTrekkvedtakBeanTest {
         assertThat(trekkResponse1.getBeslutning(), equalTo(Beslutning.INGEN));
         assertThat(trekkResponse2.getBeslutning(), equalTo(Beslutning.INGEN));
         assertThat(trekk.getTrekkResponse().size(), equalTo(2));
+    }
+
+    @Test
+    public void verifiserFomTom() throws Exception {
+
+
+        ArgumentCaptor <LocalDate> fomCaptor = ArgumentCaptor.forClass(LocalDate.class);
+        ArgumentCaptor <LocalDate> tomCaptor = ArgumentCaptor.forClass(LocalDate.class);
+
+        behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
+
+        Mockito.verify(ytelseVedtakService).hentYtelseskontrakt(anySet(), fomCaptor.capture(), tomCaptor.capture());
+
+        assertEquals(fomCaptor.getValue(), LocalDate.now(clock));
+        assertEquals(tomCaptor.getValue(), YearMonth.now(clock).plusMonths(1).atEndOfMonth());
     }
 
     private Map<String, List<ArenaVedtak>> opprettSvar(String fnr, BigDecimal... dagsatser) {

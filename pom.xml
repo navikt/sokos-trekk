@@ -7,7 +7,7 @@
     <groupId>no.nav.maskinelle-trekk</groupId>
     <artifactId>trekk</artifactId>
     <packaging>pom</packaging>
-    <version>14.0.8-SNAPSHOT</version>
+    <version>14.0.8</version>
     <description>Maskinelle trekk - trekk</description>
 
     <parent>

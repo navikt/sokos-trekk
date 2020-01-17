@@ -10,7 +10,7 @@ node {
 	def application = "trekk"
 	def naisConfig = "nais.yaml"
 	def mockSuffix = "T"
-	def dockerRepo = "docker.adeo.no:5000"
+	def dockerRepo = "repo.adeo.no:5443"
 	def project = "okonomi"
 
 	try {

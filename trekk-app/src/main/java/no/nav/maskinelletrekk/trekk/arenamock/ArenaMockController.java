@@ -38,7 +38,7 @@ public class ArenaMockController {
 
     private ArenaMockDataMapper arenaMockDataMapper;
 
-    @Value("${FASIT_ENVIRONMENT_NAME}")
+    @Value("${NAIS_NAMESPACE}")
     private String fasitEnv;
 
     @Autowired

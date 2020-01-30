@@ -35,7 +35,7 @@ spec:
     value: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
   - name: VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL
     value: https://arena-q1.adeo.no/ail_ws/YtelseVedtak_v1
-  image: repo.adeo.no:5443/okonomi/trekk:14.0.12
+  image: repo.adeo.no:5443/okonomi/trekk:14.0.13
   ingresses:
   - https://trekk-q1.nais.preprod.local
   liveness:

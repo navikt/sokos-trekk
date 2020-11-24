@@ -70,27 +70,10 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>jms</artifactId>
-        </dependency>
-
         <!-- IBM MQ -->
         <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>com.ibm.mq</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>com.ibm.mqjms</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm</groupId>
-            <artifactId>dhbcore</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.ibm.mq</groupId>
-            <artifactId>jmqi</artifactId>
+            <artifactId>com.ibm.mq.allclient</artifactId>
         </dependency>
 
 
@@ -117,6 +100,21 @@
         <dependency>
             <groupId>org.apache.cxf.services.sts</groupId>
             <artifactId>cxf-services-sts-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_spring_boot</artifactId>
+        </dependency>
+        <!-- Hotspot JVM metrics-->
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_hotspot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

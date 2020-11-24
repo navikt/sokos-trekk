@@ -1,9 +1,9 @@
 package no.nav.maskinelletrekk.trekk.config;
 
+import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.jms.MQQueue;
 import com.ibm.mq.jms.MQXAConnectionFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
-import com.ibm.msg.client.wmq.v6.base.internal.MQC;
 import org.apache.camel.component.jms.JmsConfiguration;
 import org.apache.camel.component.jms.JmsEndpoint;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,7 +82,6 @@ public class JmsConfig {
         return jmsEndpoint;
     }
 
-
     @Bean("trekkReply")
     public JmsEndpoint trekkReplyEndpoint(Queue trekkReplyQueue,
                                           JmsConfiguration jmsConfiguration) throws JMSException {
@@ -99,7 +98,6 @@ public class JmsConfig {
         return jmsEndpoint;
     }
 
-
     @Bean
     public ConnectionFactory wmqConnectionFactory(GatewayAlias gateway, ChannelAlias channel) throws JMSException {
         MQXAConnectionFactory connectionFactory = new MQXAConnectionFactory();
@@ -109,7 +107,7 @@ public class JmsConfig {
         connectionFactory.setQueueManager(gateway.getName());
         connectionFactory.setTransportType(WMQConstants.WMQ_CM_CLIENT);
         connectionFactory.setCCSID(1208);
-        connectionFactory.setIntProperty(WMQConstants.JMS_IBM_ENCODING, MQC.MQENC_NATIVE);
+        connectionFactory.setIntProperty(WMQConstants.JMS_IBM_ENCODING, MQConstants.MQENC_NATIVE);
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_CHARACTER_SET, 1208);
 
         UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();

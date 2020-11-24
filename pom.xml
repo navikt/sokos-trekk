@@ -49,27 +49,19 @@
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <!-- Spring -->
         <spring.boot.version>1.5.6.RELEASE</spring.boot.version>
-        <spring.version>4.3.7.RELEASE</spring.version>
-        <!-- Javax -->
-        <javax.jms.version>1.1</javax.jms.version>
-        <javax.inject.version>1</javax.inject.version>
         <!-- Apache CXF -->
         <apache.cxf.version>3.2.1</apache.cxf.version>
         <!-- Camel -->
         <camel.version>2.18.1</camel.version>
         <!-- Apache -->
         <commons.lang3.version>3.5</commons.lang3.version>
-        <commons-io.version>2.5</commons-io.version>
         <activemq-core.version>5.7.0</activemq-core.version>
         <activemq-client.version>5.14.5</activemq-client.version>
-        <!-- NAV -->
-        <no.nav.felles.version>3.30</no.nav.felles.version>
         <!-- Test Frameworks -->
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
-        <ytelseskontrakt-v3.version>3.0.1</ytelseskontrakt-v3.version>
-        <ytelseVedtak-v1.version>1.0.1</ytelseVedtak-v1.version>
-        <wmq.version>7.0</wmq.version>
+        <ibm.mq.version>9.1.4.0</ibm.mq.version>
+        <cxf.version>3.3.3</cxf.version>
     </properties>
 
     <dependencyManagement>
@@ -189,52 +181,22 @@
 
             <!-- IBM MQ -->
             <dependency>
-                <groupId>com.ibm</groupId>
-                <artifactId>com.ibm.mq</artifactId>
-                <version>${wmq.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm</groupId>
-                <artifactId>com.ibm.mqjms</artifactId>
-                <version>${wmq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm</groupId>
-                <artifactId>dhbcore</artifactId>
-                <version>${wmq.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.ibm.mq</groupId>
-                <artifactId>jmqi</artifactId>
-                <version>${wmq.version}</version>
-                <scope>runtime</scope>
+                <artifactId>com.ibm.mq.allclient</artifactId>
+                <version>${ibm.mq.version}</version>
             </dependency>
 
-            <!-- Javax -->
+            <!-- metrikker -->
             <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>jms</artifactId>
-                <version>${javax.jms.version}</version>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_spring_boot</artifactId>
+                <version>0.0.26</version>
             </dependency>
+            <!-- Hotspot JVM metrics-->
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
-            </dependency>
-            <!-- Tjenestespesifikasjon -->
-            <dependency>
-                <groupId>no.nav.tjenester</groupId>
-                <artifactId>nav-ytelseVedtak-v1-tjenestespesifikasjon</artifactId>
-                <version>${ytelseVedtak-v1.version}</version>
-                <classifier>jaxws</classifier>
-            </dependency>
-            <!-- no.nav.felles -->
-            <dependency>
-                <groupId>no.nav.sbl.felles</groupId>
-                <artifactId>nav-sbl-felles-commons-jee</artifactId>
-                <version>${no.nav.felles.version}</version>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_hotspot</artifactId>
+                <version>0.0.26</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -256,7 +218,11 @@
             <artifactId>spring-boot-starter-logging</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang3.version}</version>
+        </dependency>
         <!-- Test Frameworks -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -275,44 +241,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- metrikker -->
-        <dependency>
-            <groupId>io.prometheus</groupId>
-            <artifactId>simpleclient_spring_boot</artifactId>
-            <version>0.0.26</version>
-        </dependency>
-        <!-- Hotspot JVM metrics-->
-        <dependency>
-            <groupId>io.prometheus</groupId>
-            <artifactId>simpleclient_hotspot</artifactId>
-            <version>0.0.26</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
-
-    <scm>
-        <url>http://stash.devillo.no/scm/oko/trekk.git</url>
-        <connection>scm:git:ssh://git@stash.devillo.no:7999/oko/trekk.git</connection>
-        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/oko/trekk.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>m2internal</id>
-            <name>NAV Maven2 Internal Repository</name>
-            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2internal</url>
-        </repository>
-        <snapshotRepository>
-            <id>m2snapshot</id>
-            <name>NAV Maven2 Snapshot Repository</name>
-            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2snapshot</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -339,5 +268,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
 </project>

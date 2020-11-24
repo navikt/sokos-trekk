@@ -9,14 +9,6 @@
 
     <artifactId>trekk-schema</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>no.nav.tjenester</groupId>
-            <artifactId>nav-ytelseVedtak-v1-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -48,6 +40,29 @@
                     </sources>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>${cxf.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>${project.basedir}/src/main/resources/nav-ytelseVedtak/v1/YtelseVedtakV1.wsdl</wsdl>
+                                    <wsdlLocation>classpath:nav-ytelseVedtak/v1/YtelseVedtakV1.wsdl</wsdlLocation>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

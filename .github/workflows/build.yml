@@ -1,0 +1,80 @@
+name: Build, push, and deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+
+env:
+  IMAGE: docker.pkg.github.com/${{ github.repository }}/trekk:${{ github.sha }}
+
+jobs:
+  build:
+    name: Build and push Docker container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+      - name: mvn package
+        run: mvn package
+      - name: Build and publish Docker image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker build --tag ${IMAGE} .
+          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+          docker push ${IMAGE}
+
+  deploy-qx:
+    name: Deploy to dev-fss qx
+    needs: build
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: .nais/naiserator-qx.yaml
+
+  deploy-q1:
+    name: Deploy to dev-fss q1
+    needs: build
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: .nais/naiserator-q1.yaml
+
+  deploy-t13:
+    name: Deploy to dev-fss t13
+    needs: build
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: .nais/naiserator-t13.yaml
+
+  deploy-prod:
+    name: Deploy to prod-fss
+    needs: [build, deploy-q1]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: .nais/naiserator-prod.yaml

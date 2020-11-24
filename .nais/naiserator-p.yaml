@@ -6,38 +6,9 @@ metadata:
   labels:
     team: okonomi
 spec:
-  env:
-  - name: MQGATEWAY01_PORT
-    value: "1414"
-  - name: MQGATEWAY01_NAME
-    value: MPLSC01
-  - name: MQGATEWAY01_HOSTNAME
-    value: a01apvl061.adeo.no
-  - name: TREKK_CHANNEL_QUEUEMANAGER
-    value: mq://a01apvl061.adeo.no:1414/MPLSC01
-  - name: TREKK_CHANNEL_NAME
-    value: P_TREKK
-  - name: TREKK_TREKK_INN_QUEUENAME
-    value: QA.P_TREKK.TREKK_INN
-  - name: TREKK_TREKK_INN_QUEUEMANAGER
-    value: mq://a01apvl061.adeo.no:1414/MPLSC01
-  - name: TREKK_TREKK_INN_BOQ_QUEUEMANAGER
-    value: mq://a01apvl061.adeo.no:1414/MPLSC01
-  - name: TREKK_TREKK_INN_BOQ_QUEUENAME
-    value: QA.P_TREKK.TREKK_INN_BOQ
-  - name: OB04_TREKK_REPLY_QUEUENAME
-    value: QA.P231.OB04_TREKK_REPLY
-  - name: OB04_TREKK_REPLY_BATCH_QUEUENAME
-    value: QA.P231.OB04_TREKK_REPLY_BATCH
-  - name: SRVTREKK_USERNAME
-    value: srvtrekk
-  - name: SECURITYTOKENSERVICE_URL
-    value: https://sts.adeo.no/SecurityTokenServiceProvider/
-  - name: VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL
-    value: https://arena.adeo.no/ail_ws/YtelseVedtak_v1
-  image: repo.adeo.no:5443/okonomi/trekk:14.0.13
+  image: {{image}}
   ingresses:
-  - https://trekk.nais.adeo.no
+  - https://trekk.intern.nav.no
   liveness:
     path: /isAlive
     initialDelay: 30
@@ -66,5 +37,34 @@ spec:
     paths:
     - kvPath: /serviceuser/data/prod/srvtrekk
       mountPath: /var/run/secrets/nais.io/srvtrekk
-#    - kvPath: /kv/prod/fss/trekk/default
-#      mountPath: /var/run/secrets/nais.io/vault
+  env:
+    - name: MQGATEWAY01_PORT
+      value: "1414"
+    - name: MQGATEWAY01_NAME
+      value: MPLSC01
+    - name: MQGATEWAY01_HOSTNAME
+      value: a01apvl061.adeo.no
+    - name: TREKK_CHANNEL_QUEUEMANAGER
+      value: mq://a01apvl061.adeo.no:1414/MPLSC01
+    - name: TREKK_CHANNEL_NAME
+      value: P_TREKK
+    - name: TREKK_TREKK_INN_QUEUENAME
+      value: QA.P_TREKK.TREKK_INN
+    - name: TREKK_TREKK_INN_QUEUEMANAGER
+      value: mq://a01apvl061.adeo.no:1414/MPLSC01
+    - name: TREKK_TREKK_INN_BOQ_QUEUEMANAGER
+      value: mq://a01apvl061.adeo.no:1414/MPLSC01
+    - name: TREKK_TREKK_INN_BOQ_QUEUENAME
+      value: QA.P_TREKK.TREKK_INN_BOQ
+    - name: OB04_TREKK_REPLY_QUEUENAME
+      value: QA.P231.OB04_TREKK_REPLY
+    - name: OB04_TREKK_REPLY_BATCH_QUEUENAME
+      value: QA.P231.OB04_TREKK_REPLY_BATCH
+    - name: SRVTREKK_USERNAME
+      value: srvtrekk
+    - name: SECURITYTOKENSERVICE_URL
+      value: https://sts.adeo.no/SecurityTokenServiceProvider/
+    - name: VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL
+      value: https://arena.adeo.no/ail_ws/YtelseVedtak_v1
+    - name: SPRING_PROFILES_ACTIVE
+      value: default,prod

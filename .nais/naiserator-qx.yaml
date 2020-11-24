@@ -16,7 +16,7 @@ spec:
     failureThreshold: 30
   prometheus:
     enabled: true
-    path: /prometheus
+    path: /actuator/prometheus
   readiness:
     path: /isReady
     initialDelay: 30

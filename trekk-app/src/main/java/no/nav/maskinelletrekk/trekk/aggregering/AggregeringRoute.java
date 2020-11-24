@@ -1,9 +1,10 @@
 package no.nav.maskinelletrekk.trekk.aggregering;
 
+import io.micrometer.core.instrument.Metrics;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
-import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +14,11 @@ import java.time.format.DateTimeParseException;
 
 import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
-import static no.nav.maskinelletrekk.trekk.config.Metrics.meldingerFraOSCounter;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDINGER_FRA_OS;
 import static org.apache.camel.LoggingLevel.ERROR;
 
 @Service
-public class AggregeringRoute extends SpringRouteBuilder {
+public class AggregeringRoute extends RouteBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AggregeringRoute.class);
 
@@ -50,7 +51,7 @@ public class AggregeringRoute extends SpringRouteBuilder {
         from(TREKK_INN_QUEUE)
                 .routeId(AGGREGERING_ROUTE_ID)
                 .to(VALIDATE_AND_UNMARSHAL_ROUTE)
-                .process(exchange -> meldingerFraOSCounter.inc())
+                .process(exchange -> Metrics.counter(MELDINGER_FRA_OS).increment())
                 .aggregate(simple("${body.typeKjoring}"), trekkAggregator)
                 .completionTimeout(completionTimeout)
                 .completionSize(completionSize)

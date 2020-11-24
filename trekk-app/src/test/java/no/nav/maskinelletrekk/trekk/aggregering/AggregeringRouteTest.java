@@ -7,43 +7,23 @@ import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import static no.nav.maskinelletrekk.trekk.aggregering.AggregeringRoute.AGGREGERING_ROUTE_ID;
 
-@RunWith(MockitoJUnitRunner.class)
 public class AggregeringRouteTest extends CamelTestSupport {
 
     private static final String DIRECT_AGGREGER_BESTILLING = "direct:aggreger_bestilling";
 
-    @Mock
-    @Produce(uri = DIRECT_AGGREGER_BESTILLING)
+    @Produce(DIRECT_AGGREGER_BESTILLING)
     private ProducerTemplate aggregeringMock;
 
-    @Spy
-    private TrekkAggreator trekkAggregator;
-
-    @InjectMocks
-    private AggregeringRoute aggregeringRoute;
-
+    private final AggregeringRoute aggregeringRoute = new AggregeringRoute(new TrekkAggreator());
 
     @Override
     protected void doPostSetup() throws Exception {
-        context.getRouteDefinition(AGGREGERING_ROUTE_ID).adviceWith(context, aggregeringAdvice());
+        AdviceWithRouteBuilder.adviceWith(context, AGGREGERING_ROUTE_ID,
+                routeBuilder -> routeBuilder.replaceFromWith(DIRECT_AGGREGER_BESTILLING));
         context.start();
-    }
-
-    private AdviceWithRouteBuilder aggregeringAdvice() {
-        return new AdviceWithRouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-                replaceFromWith(DIRECT_AGGREGER_BESTILLING);
-            }
-        };
     }
 
     @Override

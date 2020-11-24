@@ -1,18 +1,16 @@
 package no.nav.maskinelletrekk.trekk.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@ConfigurationProperties("TREKK_CHANNEL")
+@Component
 public class ChannelAlias {
 
+    @Value("${TREKK_CHANNEL_NAME}")
     private String name;
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override

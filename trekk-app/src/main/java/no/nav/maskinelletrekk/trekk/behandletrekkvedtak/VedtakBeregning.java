@@ -1,6 +1,6 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
-import no.nav.maskinelletrekk.trekk.config.Metrics;
+import io.micrometer.core.instrument.Metrics;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.System;
@@ -19,6 +19,7 @@ import java.util.function.Function;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.BESLUTNING_COUNTER;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.ABETAL;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.BEGGE;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.INGEN;
@@ -52,7 +53,10 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
 
         Beslutning beslutning = beslutt(sumArena, sumOs, trekkSats, system, trekkalt);
-        Metrics.beslutningerCounter.labels(trekkalt.name(), erAbetal(system) ? "ABETAL" : "OS", beslutning.name()).inc();
+        Metrics.counter(BESLUTNING_COUNTER,
+                "trekkalternativ", trekkalt.name(),
+                "system", erAbetal(system) ? "ABETAL" : "OS",
+                "beslutning", beslutning.name()).increment();
 
         return TrekkResponseBuilder.create()
                 .trekkvedtakId(trekkvedtakId)

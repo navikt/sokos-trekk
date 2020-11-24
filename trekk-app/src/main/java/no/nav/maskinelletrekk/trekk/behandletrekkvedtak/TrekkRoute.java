@@ -1,22 +1,24 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
-import no.nav.maskinelletrekk.trekk.config.Metrics;
+import io.micrometer.core.instrument.Metrics;
+import no.nav.maskinelletrekk.trekk.config.Metrikker;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
-import org.apache.camel.spring.SpringRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static java.util.Objects.requireNonNull;
-import static no.nav.maskinelletrekk.trekk.config.Metrics.aggregerteMeldingerFraOSCounter;
-import static no.nav.maskinelletrekk.trekk.config.Metrics.meldingerTilOSCounter;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.AGGREGERTE_MELDINGER_FRA_OS;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_LABEL_QUEUE;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDINGER_TIL_OS;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
 import static org.apache.camel.LoggingLevel.ERROR;
-import static org.apache.camel.LoggingLevel.INFO;
 
 @Service
-public class TrekkRoute extends SpringRouteBuilder {
+public class TrekkRoute extends RouteBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrekkRoute.class);
 
@@ -48,22 +50,23 @@ public class TrekkRoute extends SpringRouteBuilder {
                 .marshal(TREKK_FORMAT)
                 .logStackTrace(true)
                 .log(ERROR, LOGGER, "Legger melding på backout-queue")
-                .process(x -> Metrics.boqCounter.labels(x.getException().getClass().getCanonicalName()).inc())
+                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME,
+                        x.getException().getClass().getCanonicalName()).increment())
                 .to("ref:trekkInnBoq");
 
         from(BEHANDLE_TREKK_ROUTE)
                 .routeId(BEHANDLE_TREKK_ROUTE_ID)
-                .process(exchange -> aggregerteMeldingerFraOSCounter.inc())
+                .process(exchange -> Metrics.counter(AGGREGERTE_MELDINGER_FRA_OS).increment())
                 .setHeader(TYPE_KJORING, simple("${body.typeKjoring}"))
                 .bean(behandleTrekkvedtak)
                 .marshal(TREKK_FORMAT)
                 .choice()
                     .when(header(TYPE_KJORING)
                             .in(PERIODISK_KONTROLL, RETURMELDING_TIL_TREKKINNMELDER))
-                        .process(exchange -> meldingerTilOSCounter.labels("BATCH_REPLY").inc())
+                        .process(exchange -> Metrics.counter(MELDINGER_TIL_OS, TAG_LABEL_QUEUE, "BATCH_REPLY").increment())
                         .to(TREKK_REPLY_BATCH_QUEUE)
                     .otherwise()
-                        .process(exchange -> meldingerTilOSCounter.labels("REPLY").inc())
+                        .process(exchange -> Metrics.counter(MELDINGER_TIL_OS, TAG_LABEL_QUEUE, "REPLY").increment())
                         .to(TREKK_REPLY_QUEUE)
                 .endChoice();
     }

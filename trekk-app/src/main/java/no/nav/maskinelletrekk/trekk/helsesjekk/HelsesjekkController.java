@@ -7,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import static no.nav.maskinelletrekk.trekk.config.Metrics.isReady;
-
 @Controller
 public class HelsesjekkController {
 
@@ -21,7 +19,6 @@ public class HelsesjekkController {
     @ResponseBody
     @RequestMapping(value = "isReady", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> isReady() {
-        isReady.set(1);
         return new ResponseEntity<>("Ready", HttpStatus.OK);
     }
 }

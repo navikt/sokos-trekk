@@ -1,5 +1,6 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import no.nav.maskinelletrekk.trekk.config.Metrics;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
 import org.apache.camel.spring.SpringRouteBuilder;
@@ -7,11 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.aggregerteMeldingerFraOSCounter;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilOSCounter;
+import static java.util.Objects.requireNonNull;
+import static no.nav.maskinelletrekk.trekk.config.Metrics.aggregerteMeldingerFraOSCounter;
+import static no.nav.maskinelletrekk.trekk.config.Metrics.meldingerTilOSCounter;
 import static org.apache.camel.LoggingLevel.ERROR;
 import static org.apache.camel.LoggingLevel.INFO;
 
@@ -32,12 +32,11 @@ public class TrekkRoute extends SpringRouteBuilder {
 
     private static final DataFormat TREKK_FORMAT = new JaxbDataFormat("no.nav.maskinelletrekk.trekk.v1");
 
-    private BehandleTrekkvedtakBean behandleTrekkvedtak;
+    private final BehandleTrekkvedtakBean behandleTrekkvedtak;
 
     @Autowired
     public TrekkRoute(BehandleTrekkvedtakBean behandleTrekkvedtak) {
-        Assert.notNull(behandleTrekkvedtak, "behandleTrekkvedtak must not be null");
-        this.behandleTrekkvedtak = behandleTrekkvedtak;
+        this.behandleTrekkvedtak = requireNonNull(behandleTrekkvedtak, "behandleTrekkvedtak must not be null");
     }
 
     @Override
@@ -47,24 +46,24 @@ public class TrekkRoute extends SpringRouteBuilder {
                 .handled(true)
                 .useOriginalMessage()
                 .marshal(TREKK_FORMAT)
-                .log(ERROR, LOGGER, "Exception stacktrace: ${exception.stacktrace}")
-                .log(ERROR, LOGGER, "Legger melding på backout-queue ${body}")
+                .logStackTrace(true)
+                .log(ERROR, LOGGER, "Legger melding på backout-queue")
+                .process(x -> Metrics.boqCounter.labels(x.getException().getClass().getCanonicalName()).inc())
                 .to("ref:trekkInnBoq");
 
         from(BEHANDLE_TREKK_ROUTE)
                 .routeId(BEHANDLE_TREKK_ROUTE_ID)
-                .process(exchange -> aggregerteMeldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt aggregert melding fra OS").inc())
+                .process(exchange -> aggregerteMeldingerFraOSCounter.inc())
                 .setHeader(TYPE_KJORING, simple("${body.typeKjoring}"))
                 .bean(behandleTrekkvedtak)
                 .marshal(TREKK_FORMAT)
-                .process(exchange -> meldingerTilOSCounter.labels(PROCESS_TREKK, "Sender melding til OS").inc())
                 .choice()
                     .when(header(TYPE_KJORING)
                             .in(PERIODISK_KONTROLL, RETURMELDING_TIL_TREKKINNMELDER))
-                        .log(INFO, LOGGER, "Legger melding på BATCH_REPLY-kø: ${body}")
+                        .process(exchange -> meldingerTilOSCounter.labels("BATCH_REPLY").inc())
                         .to(TREKK_REPLY_BATCH_QUEUE)
                     .otherwise()
-                        .log(INFO, LOGGER, "Legger melding på REPLY-kø: ${body}")
+                        .process(exchange -> meldingerTilOSCounter.labels("REPLY").inc())
                         .to(TREKK_REPLY_QUEUE)
                 .endChoice();
     }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.isReady;
+import static no.nav.maskinelletrekk.trekk.config.Metrics.isReady;
 
 @Controller
 public class HelsesjekkController {

@@ -1,5 +1,6 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
+import no.nav.maskinelletrekk.trekk.config.Metrics;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeUgyldigInput;
@@ -15,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import javax.xml.bind.JAXB;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -28,10 +28,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFraArenaCounter;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilArenaCounter;
 
 @Service
 @Profile({"prod"})
@@ -39,30 +37,24 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArenaYtelseVedtakService.class);
 
-    private YtelseVedtakV1 ytelseVedtakService;
-    private SakTilVedtakMapper sakTilVedtakMapper;
+    private final YtelseVedtakV1 ytelseVedtakService;
+    private final SakTilVedtakMapper sakTilVedtakMapper;
 
     @Autowired
-    public ArenaYtelseVedtakService(YtelseVedtakV1 ytelseVedtakService,
-                                    SakTilVedtakMapper sakTilVedtakMapper) {
-        Assert.notNull(ytelseVedtakService, "ytelseVedtakService must not be null");
-        Assert.notNull(sakTilVedtakMapper, "sakTilVedtakMapper must not be null");
-        this.ytelseVedtakService = ytelseVedtakService;
-        this.sakTilVedtakMapper = sakTilVedtakMapper;
+    public ArenaYtelseVedtakService(YtelseVedtakV1 ytelseVedtakService, SakTilVedtakMapper sakTilVedtakMapper) {
+        this.ytelseVedtakService = requireNonNull(ytelseVedtakService, "ytelseVedtakService must not be null");
+        this.sakTilVedtakMapper = requireNonNull(sakTilVedtakMapper, "sakTilVedtakMapper must not be null");
     }
 
     @Override
     public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerSet, LocalDate fom, LocalDate tom) {
         FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(brukerSet, fom, tom);
-        loggSoapResponse("Sender melding til Arena: {}", request);
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
-        loggSoapResponse("Mottatt melding fra Arena: {}", response);
 
         return response.getPersonYtelseListe().stream()
                 .collect(toMap(PersonYtelse::getIdent, this::opprettArenaVedtakListe));
     }
 
-    @SuppressWarnings("squid:UnusedPrivateMethod")
     private List<ArenaVedtak> opprettArenaVedtakListe(PersonYtelse personYtelse) {
         return personYtelse.getSakListe().stream()
                 .flatMap(sakTilVedtakMapper)
@@ -72,10 +64,11 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private FinnYtelseVedtakListeResponse kallArenaYtelseVedtakService(FinnYtelseVedtakListeRequest request) {
         FinnYtelseVedtakListeResponse response;
         try {
-            meldingerTilArenaCounter.labels(PROCESS_TREKK, "Sender melding til ARENA").inc();
+            Metrics.meldingerTilArenaCounter.inc();
             response = ytelseVedtakService.finnYtelseVedtakListe(request);
-            meldingerFraArenaCounter.labels(PROCESS_TREKK, "Mottatt melding fra ARENA").inc();
+            Metrics.meldingerFraArenaCounter.inc();
         } catch (FinnYtelseVedtakListeUgyldigInput | FinnYtelseVedtakListeSikkerhetsbegrensning e) {
+            Metrics.feilmeldingerArenaCounter.labels(e.getClass().getSimpleName()).inc();
             throw new WebserviceFailException("Kall mot Arena feilet", e);
         }
         return response;
@@ -92,7 +85,6 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
 
     private Set<Person> opprettPersonListe(Set<String> brukerSet, Periode periode) {
         return brukerSet.stream()
-                .peek(fnr -> LOGGER.info("Legger til Bruker [bruker: {}] i request til Arena", fnr))
                 .map(fnr -> opprettPerson(fnr, periode))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
@@ -123,12 +115,6 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
             temaSet.add(tema);
         }
         return temaSet;
-    }
-
-    private void loggSoapResponse(String format, Object request) {
-        StringWriter ws = new StringWriter();
-        JAXB.marshal(request, ws);
-        LOGGER.info(format, ws.toString());
     }
 
 }

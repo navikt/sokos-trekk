@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -24,21 +23,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 @Component
 public class BehandleTrekkvedtakBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandleTrekkvedtakBean.class);
 
-    private YtelseVedtakService ytelseVedtakService;
-
-    private Clock clock;
+    private final YtelseVedtakService ytelseVedtakService;
+    private final Clock clock;
 
     @Autowired
-    public BehandleTrekkvedtakBean(YtelseVedtakService ytelseVedtakService,  Clock clock) {
-        Assert.notNull(ytelseVedtakService, "ytelseVedtakService must not be null");
-        Assert.notNull(clock, "clock must not be null");
-        this.ytelseVedtakService = ytelseVedtakService;
-        this.clock = clock;
+    public BehandleTrekkvedtakBean(YtelseVedtakService ytelseVedtakService, Clock clock) {
+        this.ytelseVedtakService = requireNonNull(ytelseVedtakService, "ytelseVedtakService must not be null");
+        this.clock = requireNonNull(clock, "clock must not be null");
     }
 
     @Handler

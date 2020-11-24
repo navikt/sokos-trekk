@@ -1,5 +1,6 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import no.nav.maskinelletrekk.trekk.config.Metrics;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.System;
@@ -42,7 +43,6 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
 
         List<ArenaVedtak> arenaVedtakList = finnArenaYtelsesvedtakForBruker(trekkRequest);
 
-        int antallVedtakArena = arenaVedtakList.size();
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
         BigDecimal sumOs = trekkRequest.getTotalSatsOS();
         System system = trekkRequest.getSystem();
@@ -52,17 +52,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
 
         Beslutning beslutning = beslutt(sumArena, sumOs, trekkSats, system, trekkalt);
-
-        LOGGER.info("Beslutning[trekkVedtakId:{}]: " +
-                        "sumOS:{}, " +
-                        "sumArena:{}, " +
-                        "antallVedtakArena:{}, " +
-                        "beslutning:{}",
-                trekkvedtakId,
-                sumOs,
-                sumArena,
-                antallVedtakArena,
-                beslutning);
+        Metrics.beslutningerCounter.labels(trekkalt.name(), erAbetal(system) ? "ABETAL" : "OS", beslutning.name()).inc();
 
         return TrekkResponseBuilder.create()
                 .trekkvedtakId(trekkvedtakId)
@@ -73,7 +63,8 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
                 .vedtak(arenaVedtakList).build();
     }
 
-    private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, BigDecimal trekkSats, System system, Trekkalternativ trekkalt) {
+    private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, BigDecimal trekkSats,
+                               System system, Trekkalternativ trekkalt) {
         switch (trekkalt) {
             case SALP:
             case LOPP:

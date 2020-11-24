@@ -52,13 +52,13 @@
         <!-- Apache CXF -->
         <apache.cxf.version>3.2.1</apache.cxf.version>
         <!-- Camel -->
-        <camel.version>2.18.1</camel.version>
+        <camel.version>2.25.2</camel.version>
         <!-- Apache -->
         <commons.lang3.version>3.5</commons.lang3.version>
         <activemq-core.version>5.7.0</activemq-core.version>
         <activemq-client.version>5.14.5</activemq-client.version>
         <!-- Test Frameworks -->
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <ibm.mq.version>9.1.4.0</ibm.mq.version>
         <cxf.version>3.3.3</cxf.version>

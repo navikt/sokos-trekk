@@ -1,7 +1,6 @@
 package no.nav.maskinelletrekk.trekk.aggregering;
 
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
 import org.apache.camel.spring.SpringRouteBuilder;
@@ -9,13 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.time.format.DateTimeParseException;
 
+import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerFraOSCounter;
+import static no.nav.maskinelletrekk.trekk.config.Metrics.meldingerFraOSCounter;
 import static org.apache.camel.LoggingLevel.ERROR;
 
 @Service
@@ -35,11 +33,10 @@ public class AggregeringRoute extends SpringRouteBuilder {
     @Value("${trekk.aggregator.completionSize}")
     private int completionSize = 30;
 
-    private TrekkAggreator trekkAggregator;
+    private final TrekkAggreator trekkAggregator;
 
     public AggregeringRoute(TrekkAggreator trekkAggregator) {
-        Assert.notNull(trekkAggregator, "trekkAggregator must not be null");
-        this.trekkAggregator = trekkAggregator;
+        this.trekkAggregator = requireNonNull(trekkAggregator, "trekkAggregator must not be null");
     }
 
     @Override
@@ -52,9 +49,8 @@ public class AggregeringRoute extends SpringRouteBuilder {
 
         from(TREKK_INN_QUEUE)
                 .routeId(AGGREGERING_ROUTE_ID)
-                .log(LoggingLevel.INFO, LOGGER, "Mottatt melding fra OS ${body}")
                 .to(VALIDATE_AND_UNMARSHAL_ROUTE)
-                .process(exchange -> meldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt melding fra OS").inc())
+                .process(exchange -> meldingerFraOSCounter.inc())
                 .aggregate(simple("${body.typeKjoring}"), trekkAggregator)
                 .completionTimeout(completionTimeout)
                 .completionSize(completionSize)

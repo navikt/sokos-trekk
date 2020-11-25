@@ -79,4 +79,4 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
-          RESOURCE: .nais/naiserator-prod.yaml
+          RESOURCE: .nais/naiserator-p.yaml

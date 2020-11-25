@@ -1,7 +1,6 @@
 package no.nav.maskinelletrekk.trekk.aggregering;
 
 import io.micrometer.core.instrument.Metrics;
-import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
@@ -15,9 +14,9 @@ import java.time.format.DateTimeParseException;
 
 import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.ANTALL_MELDINGER_FRA_OS;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.GYLDIGE_MELDINGER_FRA_OS;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.MESSAGES_ON_BOQ;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_FRA_OS_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.GYLDIG_MELDING_FRA_OS_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_TIL_BOQ_COUNTER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
 import static org.apache.camel.LoggingLevel.ERROR;
 
@@ -47,7 +46,8 @@ public class AggregeringRoute extends RouteBuilder {
     @Override
     public void configure() {
 
-        LOGGER.info("Aggregator parametere: completionTimeout: {} completionSize: {}", completionTimeout, completionSize);
+        LOGGER.info("Aggregator parametere: completionTimeout: {} completionSize: {}",
+                completionTimeout, completionSize);
 
         onException(Throwable.class)
                 .handled(true)
@@ -55,7 +55,7 @@ public class AggregeringRoute extends RouteBuilder {
                 .logStackTrace(true)
                 .process(exchange -> {
                     Throwable throwable = exchange.getProperty(exchange.EXCEPTION_CAUGHT, Throwable.class);
-                    Metrics.counter(MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
+                    Metrics.counter(MELDING_TIL_BOQ_COUNTER, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
                             .increment();
                 });
 
@@ -63,9 +63,9 @@ public class AggregeringRoute extends RouteBuilder {
 
         from(TREKK_INN_QUEUE)
                 .routeId(AGGREGERING_ROUTE_ID)
-                .process(exchange -> Metrics.counter(ANTALL_MELDINGER_FRA_OS).increment())
+                .process(exchange -> Metrics.counter(MELDING_FRA_OS_COUNTER).increment())
                 .to(VALIDATE_AND_UNMARSHAL_ROUTE)
-                .process(exchange -> Metrics.counter(GYLDIGE_MELDINGER_FRA_OS).increment())
+                .process(exchange -> Metrics.counter(GYLDIG_MELDING_FRA_OS_COUNTER).increment())
                 .aggregate(simple("${body.typeKjoring}"), trekkAggregator)
                 .completionTimeout(completionTimeout)
                 .completionSize(completionSize)

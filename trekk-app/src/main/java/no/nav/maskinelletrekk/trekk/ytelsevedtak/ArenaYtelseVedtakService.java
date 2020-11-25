@@ -1,7 +1,6 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
 import io.micrometer.core.instrument.Metrics;
-import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeUgyldigInput;
@@ -29,9 +28,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.FEILMELDINGER_FRA_ARENA;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.REQUESTS_TIL_ARENA;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.RESPONSE_FRA_ARENA;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.FEILMELDING_FRA_ARENA_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.REQUESTS_TIL_ARENA_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.RESPONSE_FRA_ARENA_COUNTER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
 
 @Service
@@ -67,11 +66,11 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     private FinnYtelseVedtakListeResponse kallArenaYtelseVedtakService(FinnYtelseVedtakListeRequest request) {
         FinnYtelseVedtakListeResponse response;
         try {
-            Metrics.counter(REQUESTS_TIL_ARENA).increment();
+            Metrics.counter(REQUESTS_TIL_ARENA_COUNTER).increment();
             response = ytelseVedtakService.finnYtelseVedtakListe(request);
-            Metrics.counter(RESPONSE_FRA_ARENA).increment();
+            Metrics.counter(RESPONSE_FRA_ARENA_COUNTER).increment();
         } catch (FinnYtelseVedtakListeUgyldigInput | FinnYtelseVedtakListeSikkerhetsbegrensning e) {
-            Metrics.counter(FEILMELDINGER_FRA_ARENA, TAG_EXCEPTION_NAME, e.getClass().getSimpleName()).increment();
+            Metrics.counter(FEILMELDING_FRA_ARENA_COUNTER, TAG_EXCEPTION_NAME, e.getClass().getSimpleName()).increment();
             throw new WebserviceFailException("Kall mot Arena feilet", e);
         }
         return response;

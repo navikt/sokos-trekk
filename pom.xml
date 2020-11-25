@@ -61,7 +61,6 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <ibm.mq.version>9.1.4.0</ibm.mq.version>
-        <cxf.version>3.3.3</cxf.version>
     </properties>
 
     <dependencyManagement>

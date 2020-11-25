@@ -1,6 +1,7 @@
 package no.nav.maskinelletrekk.trekk.aggregering;
 
 import io.micrometer.core.instrument.Metrics;
+import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
@@ -15,6 +16,7 @@ import java.time.format.DateTimeParseException;
 import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDINGER_FRA_OS;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
 import static org.apache.camel.LoggingLevel.ERROR;
 
 @Service
@@ -45,7 +47,13 @@ public class AggregeringRoute extends RouteBuilder {
 
         LOGGER.info("Aggregator parametere: completionTimeout: {} completionSize: {}", completionTimeout, completionSize);
 
-        errorHandler(defaultErrorHandler().useOriginalMessage());
+        onException(Throwable.class)
+                .handled(true)
+                .useOriginalMessage()
+                .logStackTrace(true)
+                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME,
+                        x.getException().getClass().getCanonicalName()).increment());
+
         onException(DateTimeParseException.class).log(ERROR, LOGGER, "Parsing av dato i request XML feilet");
 
         from(TREKK_INN_QUEUE)

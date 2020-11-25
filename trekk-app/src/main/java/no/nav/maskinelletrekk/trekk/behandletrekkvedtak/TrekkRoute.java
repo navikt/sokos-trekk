@@ -49,7 +49,6 @@ public class TrekkRoute extends RouteBuilder {
                 .useOriginalMessage()
                 .marshal(TREKK_FORMAT)
                 .logStackTrace(true)
-                .log(ERROR, LOGGER, "Legger melding på backout-queue")
                 .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME,
                         x.getException().getClass().getCanonicalName()).increment())
                 .to("ref:trekkInnBoq");

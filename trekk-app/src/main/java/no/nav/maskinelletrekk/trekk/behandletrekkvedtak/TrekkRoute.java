@@ -49,8 +49,7 @@ public class TrekkRoute extends RouteBuilder {
                 .useOriginalMessage()
                 .marshal(TREKK_FORMAT)
                 .logStackTrace(true)
-                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME,
-                        x.getException().getClass().getCanonicalName()).increment())
+                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME, "trekkRoute").increment())
                 .to("ref:trekkInnBoq");
 
         from(BEHANDLE_TREKK_ROUTE)

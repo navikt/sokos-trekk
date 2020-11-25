@@ -50,9 +50,8 @@ public class AggregeringRoute extends RouteBuilder {
         onException(Throwable.class)
                 .handled(true)
                 .useOriginalMessage()
-                .logStackTrace(true)
-                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME,
-                        x.getException().getClass().getCanonicalName()).increment());
+                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME, "agreggering").increment())
+                .logStackTrace(true);
 
         onException(DateTimeParseException.class).log(ERROR, LOGGER, "Parsing av dato i request XML feilet");
 

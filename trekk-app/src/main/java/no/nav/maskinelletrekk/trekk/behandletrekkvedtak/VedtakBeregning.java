@@ -42,6 +42,8 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     public TrekkResponse apply(TrekkRequest trekkRequest) {
         int trekkvedtakId = trekkRequest.getTrekkvedtakId();
 
+        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
+
         List<ArenaVedtak> arenaVedtakList = finnArenaYtelsesvedtakForBruker(trekkRequest);
 
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
@@ -49,8 +51,6 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
         System system = trekkRequest.getSystem();
         BigDecimal trekkSats = trekkRequest.getTrekkSats();
         Trekkalternativ trekkalt = trekkRequest.getTrekkalt();
-
-        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
 
         Beslutning beslutning = beslutt(sumArena, sumOs, trekkSats, system, trekkalt);
         Metrics.counter(BESLUTNING_COUNTER,

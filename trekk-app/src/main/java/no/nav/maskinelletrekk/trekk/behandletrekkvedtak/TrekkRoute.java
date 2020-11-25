@@ -1,26 +1,21 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
 import io.micrometer.core.instrument.Metrics;
-import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.AGGREGERTE_MELDINGER_FRA_OS;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_LABEL_QUEUE;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDINGER_TIL_OS;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MESSAGES_ON_BOQ;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
-import static org.apache.camel.LoggingLevel.ERROR;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_LABEL_QUEUE;
 
 @Service
 public class TrekkRoute extends RouteBuilder {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrekkRoute.class);
 
     private static final String TREKK_REPLY_QUEUE = "ref:trekkReply";
     private static final String TREKK_REPLY_BATCH_QUEUE = "ref:trekkReplyBatch";
@@ -49,7 +44,11 @@ public class TrekkRoute extends RouteBuilder {
                 .useOriginalMessage()
                 .marshal(TREKK_FORMAT)
                 .logStackTrace(true)
-                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME, "trekkRoute").increment())
+                .process(exchange -> {
+                    Throwable throwable = exchange.getProperty(exchange.EXCEPTION_CAUGHT, Throwable.class);
+                    Metrics.counter(MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
+                            .increment();
+                })
                 .to("ref:trekkInnBoq");
 
         from(BEHANDLE_TREKK_ROUTE)

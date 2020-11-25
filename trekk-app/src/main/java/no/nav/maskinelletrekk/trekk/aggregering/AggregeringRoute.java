@@ -15,7 +15,9 @@ import java.time.format.DateTimeParseException;
 
 import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.behandletrekkvedtak.TrekkRoute.BEHANDLE_TREKK_ROUTE;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDINGER_FRA_OS;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.ANTALL_MELDINGER_FRA_OS;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.GYLDIGE_MELDINGER_FRA_OS;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MESSAGES_ON_BOQ;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
 import static org.apache.camel.LoggingLevel.ERROR;
 
@@ -50,15 +52,20 @@ public class AggregeringRoute extends RouteBuilder {
         onException(Throwable.class)
                 .handled(true)
                 .useOriginalMessage()
-                .process(x -> Metrics.counter(Metrikker.MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME, "agreggering").increment())
-                .logStackTrace(true);
+                .logStackTrace(true)
+                .process(exchange -> {
+                    Throwable throwable = exchange.getProperty(exchange.EXCEPTION_CAUGHT, Throwable.class);
+                    Metrics.counter(MESSAGES_ON_BOQ, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
+                            .increment();
+                });
 
         onException(DateTimeParseException.class).log(ERROR, LOGGER, "Parsing av dato i request XML feilet");
 
         from(TREKK_INN_QUEUE)
                 .routeId(AGGREGERING_ROUTE_ID)
+                .process(exchange -> Metrics.counter(ANTALL_MELDINGER_FRA_OS).increment())
                 .to(VALIDATE_AND_UNMARSHAL_ROUTE)
-                .process(exchange -> Metrics.counter(MELDINGER_FRA_OS).increment())
+                .process(exchange -> Metrics.counter(GYLDIGE_MELDINGER_FRA_OS).increment())
                 .aggregate(simple("${body.typeKjoring}"), trekkAggregator)
                 .completionTimeout(completionTimeout)
                 .completionSize(completionSize)

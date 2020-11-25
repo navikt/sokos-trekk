@@ -19,13 +19,17 @@ public final class Metrikker {
     public static final String REQUESTS_TIL_ARENA = "requests_til_arena";
     public static final String MELDINGER_TIL_OS = "meldinger_til_os";
     public static final String AGGREGERTE_MELDINGER_FRA_OS = "aggregerte_meldinger_fra_os";
-    public static final String MELDINGER_FRA_OS = "meldinger_fra_os";
+    public static final String ANTALL_MELDINGER_FRA_OS = "antall_meldinger_fra_os";
+    public static final String GYLDIGE_MELDINGER_FRA_OS = "gyldige_meldinger_fra_os";
 
     @Autowired
     public Metrikker(MeterRegistry registry) {
         Objects.requireNonNull(registry);
-        Counter.builder(MELDINGER_FRA_OS)
-                .description("Antall meldinger mottatt fra OS")
+        Counter.builder(ANTALL_MELDINGER_FRA_OS)
+                .description("Totalt antall meldinger mottatt fra OS")
+                .register(registry);
+        Counter.builder(GYLDIGE_MELDINGER_FRA_OS)
+                .description("Antall meldinger mottatt fra OS som validerer")
                 .register(registry);
         Counter.builder(AGGREGERTE_MELDINGER_FRA_OS)
                 .description("Antall aggregerte meldinger mottatt fra OS")

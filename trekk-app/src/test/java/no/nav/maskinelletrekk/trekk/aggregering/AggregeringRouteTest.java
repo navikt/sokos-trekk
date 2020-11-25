@@ -1,6 +1,7 @@
 package no.nav.maskinelletrekk.trekk.aggregering;
 
 import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
+import org.apache.camel.CamelExecutionException;
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
@@ -40,5 +41,10 @@ public class AggregeringRouteTest extends CamelTestSupport {
     public void skalAggregereMeldinger() throws Exception {
         String body = XmlHelper.getRequestFromXmlAsString("trekkrequest_testcase1.xml");
         aggregeringMock.sendBody(body);
+    }
+
+    @Test(expected = CamelExecutionException.class)
+    public void skalKasteExceptionVedUgyldigMelding() {
+        aggregeringMock.sendBody("invalid");
     }
 }

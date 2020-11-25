@@ -50,7 +50,6 @@ public class AggregeringRoute extends RouteBuilder {
                 completionTimeout, completionSize);
 
         onException(Throwable.class)
-                .handled(true)
                 .useOriginalMessage()
                 .logStackTrace(true)
                 .process(exchange -> {

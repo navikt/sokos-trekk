@@ -8,7 +8,7 @@ metadata:
 spec:
   image: {{image}}
   ingresses:
-  - https://trekk-t13.dev.adeo.no
+  - https://trekk-t13.dev.intern.nav.no
   liveness:
     path: /isAlive
     initialDelay: 30

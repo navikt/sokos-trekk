@@ -42,7 +42,7 @@ public class BehandleTrekkvedtakBean {
     }
 
     @Handler
-    @Timed(Metrikker.VEDTAK_BEREGNING_TIMER)
+    @Timed(Metrikker.BEHANDLE_MELDING_TIMER)
     public Trekk behandleTrekkvedtak(Trekk trekk) {
         TypeKjoring typeKjoring = trekk.getTypeKjoring();
         List<TrekkRequest> trekkRequestList = duplikatTrekkvedtakIdSjekk(trekk.getTrekkRequest());

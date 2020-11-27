@@ -51,6 +51,7 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
     }
 
     @Override
+    @Timed(KALL_TIL_ARENA_TIMER)
     public Map<String, List<ArenaVedtak>> hentYtelseskontrakt(Set<String> brukerSet, LocalDate fom, LocalDate tom) {
         FinnYtelseVedtakListeRequest request = opprettFinnYtelseVedtakListeRequest(brukerSet, fom, tom);
         FinnYtelseVedtakListeResponse response = kallArenaYtelseVedtakService(request);
@@ -65,7 +66,6 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
                 .collect(Collectors.toList());
     }
 
-    @Timed(KALL_TIL_ARENA_TIMER)
     private FinnYtelseVedtakListeResponse kallArenaYtelseVedtakService(FinnYtelseVedtakListeRequest request) {
         FinnYtelseVedtakListeResponse response;
         try {

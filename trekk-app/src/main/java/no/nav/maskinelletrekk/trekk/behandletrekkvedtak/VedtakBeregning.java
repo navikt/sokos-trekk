@@ -34,14 +34,13 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     public static final int SUM_SCALE = 2;
     public static final BigDecimal FAKTOR_MND = new BigDecimal("21.67");
 
-    private Map<String, List<ArenaVedtak>> arenaVedtakMap;
+    private final Map<String, List<ArenaVedtak>> arenaVedtakMap;
 
     VedtakBeregning(Map<String, List<ArenaVedtak>> arenaVedtakMap) {
         this.arenaVedtakMap = arenaVedtakMap;
     }
 
     @Override
-    @Timed(Metrikker.VEDTAK_BEREGNING_TIMER)
     public TrekkResponse apply(TrekkRequest trekkRequest) {
         int trekkvedtakId = trekkRequest.getTrekkvedtakId();
 

@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.6.RELEASE</version>
+        <version>2.4.0</version>
         <relativePath/>
     </parent>
 
@@ -36,7 +36,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <!-- Logging -->
-        <jcl.slf4j.version>1.7.25</jcl.slf4j.version>
+        <logback.version>1.2.3</logback.version>
+        <logstash-logback-encoder-version>4.10</logstash-logback-encoder-version>
+        <!-- Metrikker -->
+        <micrometer.version>1.6.1</micrometer.version>
         <!-- Maven -->
         <maven.compiler.version>3.5.1</maven.compiler.version>
         <maven.ear.version>2.10.1</maven.ear.version>
@@ -44,32 +47,19 @@
         <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
         <maven.release.version>2.5.3</maven.release.version>
         <maven.deploy.version>2.8.2</maven.deploy.version>
-        <scm.version>1.9.5</scm.version>
         <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <!-- Spring -->
-        <spring.boot.version>1.5.6.RELEASE</spring.boot.version>
-        <spring.version>4.3.7.RELEASE</spring.version>
-        <!-- Javax -->
-        <javax.jms.version>1.1</javax.jms.version>
-        <javax.inject.version>1</javax.inject.version>
+        <spring.boot.version>2.4.0</spring.boot.version>
         <!-- Apache CXF -->
-        <apache.cxf.version>3.2.1</apache.cxf.version>
+        <apache.cxf.version>3.4.0</apache.cxf.version>
         <!-- Camel -->
-        <camel.version>2.18.1</camel.version>
-        <!-- Apache -->
-        <commons.lang3.version>3.5</commons.lang3.version>
-        <commons-io.version>2.5</commons-io.version>
-        <activemq-core.version>5.7.0</activemq-core.version>
-        <activemq-client.version>5.14.5</activemq-client.version>
-        <!-- NAV -->
-        <no.nav.felles.version>3.30</no.nav.felles.version>
+        <camel.version>3.6.0</camel.version>
+        <!-- IBM MQ -->
+        <ibm.mq.version>9.1.4.0</ibm.mq.version>
         <!-- Test Frameworks -->
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <mockito.version>1.9.5</mockito.version>
-        <ytelseskontrakt-v3.version>3.0.1</ytelseskontrakt-v3.version>
-        <ytelseVedtak-v1.version>1.0.1</ytelseVedtak-v1.version>
-        <wmq.version>7.0</wmq.version>
     </properties>
 
     <dependencyManagement>
@@ -97,7 +87,7 @@
                 <version>${spring.boot.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.camel</groupId>
+                <groupId>org.apache.camel.springboot</groupId>
                 <artifactId>camel-spring-boot-starter</artifactId>
                 <version>${camel.version}</version>
             </dependency>
@@ -109,6 +99,11 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
             <dependency>
@@ -189,52 +184,22 @@
 
             <!-- IBM MQ -->
             <dependency>
-                <groupId>com.ibm</groupId>
-                <artifactId>com.ibm.mq</artifactId>
-                <version>${wmq.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm</groupId>
-                <artifactId>com.ibm.mqjms</artifactId>
-                <version>${wmq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm</groupId>
-                <artifactId>dhbcore</artifactId>
-                <version>${wmq.version}</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.ibm.mq</groupId>
-                <artifactId>jmqi</artifactId>
-                <version>${wmq.version}</version>
-                <scope>runtime</scope>
+                <artifactId>com.ibm.mq.allclient</artifactId>
+                <version>${ibm.mq.version}</version>
             </dependency>
 
-            <!-- Javax -->
+            <!-- metrikker -->
             <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>jms</artifactId>
-                <version>${javax.jms.version}</version>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-core</artifactId>
+                <version>${micrometer.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax.inject.version}</version>
-            </dependency>
-            <!-- Tjenestespesifikasjon -->
-            <dependency>
-                <groupId>no.nav.tjenester</groupId>
-                <artifactId>nav-ytelseVedtak-v1-tjenestespesifikasjon</artifactId>
-                <version>${ytelseVedtak-v1.version}</version>
-                <classifier>jaxws</classifier>
-            </dependency>
-            <!-- no.nav.felles -->
-            <dependency>
-                <groupId>no.nav.sbl.felles</groupId>
-                <artifactId>nav-sbl-felles-commons-jee</artifactId>
-                <version>${no.nav.felles.version}</version>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <version>${micrometer.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -242,21 +207,20 @@
     <dependencies>
         <!-- Logging -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${jcl.slf4j.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>4.10</version>
+            <version>${logstash-logback-encoder-version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-            <version>${spring.boot.version}</version>
-        </dependency>
-
         <!-- Test Frameworks -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -270,49 +234,7 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- metrikker -->
-        <dependency>
-            <groupId>io.prometheus</groupId>
-            <artifactId>simpleclient_spring_boot</artifactId>
-            <version>0.0.26</version>
-        </dependency>
-        <!-- Hotspot JVM metrics-->
-        <dependency>
-            <groupId>io.prometheus</groupId>
-            <artifactId>simpleclient_hotspot</artifactId>
-            <version>0.0.26</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
-
-    <scm>
-        <url>http://stash.devillo.no/scm/oko/trekk.git</url>
-        <connection>scm:git:ssh://git@stash.devillo.no:7999/oko/trekk.git</connection>
-        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/oko/trekk.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>m2internal</id>
-            <name>NAV Maven2 Internal Repository</name>
-            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2internal</url>
-        </repository>
-        <snapshotRepository>
-            <id>m2snapshot</id>
-            <name>NAV Maven2 Snapshot Repository</name>
-            <url>dav:http://maven.adeo.no/nexus/content/repositories/m2snapshot</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <build>
         <plugins>
@@ -324,8 +246,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -339,5 +261,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
 </project>

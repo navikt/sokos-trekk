@@ -1,8 +1,8 @@
 package no.nav.maskinelletrekk.trekk.aggregering;
 
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
+import org.apache.camel.AggregationStrategy;
 import org.apache.camel.Exchange;
-import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.springframework.stereotype.Component;
 
 @Component

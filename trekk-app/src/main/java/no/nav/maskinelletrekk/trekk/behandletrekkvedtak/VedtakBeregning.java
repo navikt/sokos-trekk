@@ -1,5 +1,8 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.Metrics;
+import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.System;
@@ -18,6 +21,7 @@ import java.util.function.Function;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.BESLUTNING_COUNTER;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.ABETAL;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.BEGGE;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.INGEN;
@@ -30,7 +34,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     public static final int SUM_SCALE = 2;
     public static final BigDecimal FAKTOR_MND = new BigDecimal("21.67");
 
-    private Map<String, List<ArenaVedtak>> arenaVedtakMap;
+    private final Map<String, List<ArenaVedtak>> arenaVedtakMap;
 
     VedtakBeregning(Map<String, List<ArenaVedtak>> arenaVedtakMap) {
         this.arenaVedtakMap = arenaVedtakMap;
@@ -40,29 +44,21 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     public TrekkResponse apply(TrekkRequest trekkRequest) {
         int trekkvedtakId = trekkRequest.getTrekkvedtakId();
 
+        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
+
         List<ArenaVedtak> arenaVedtakList = finnArenaYtelsesvedtakForBruker(trekkRequest);
 
-        int antallVedtakArena = arenaVedtakList.size();
         BigDecimal sumArena = kalkulerSumArena(arenaVedtakList);
         BigDecimal sumOs = trekkRequest.getTotalSatsOS();
         System system = trekkRequest.getSystem();
         BigDecimal trekkSats = trekkRequest.getTrekkSats();
         Trekkalternativ trekkalt = trekkRequest.getTrekkalt();
 
-        LOGGER.info("Starter beregning av trekkvedtak[trekkvedtakId:{}]", trekkvedtakId);
-
         Beslutning beslutning = beslutt(sumArena, sumOs, trekkSats, system, trekkalt);
-
-        LOGGER.info("Beslutning[trekkVedtakId:{}]: " +
-                        "sumOS:{}, " +
-                        "sumArena:{}, " +
-                        "antallVedtakArena:{}, " +
-                        "beslutning:{}",
-                trekkvedtakId,
-                sumOs,
-                sumArena,
-                antallVedtakArena,
-                beslutning);
+        Metrics.counter(BESLUTNING_COUNTER,
+                "trekkalternativ", trekkalt.name(),
+                "system", erAbetal(system) ? "ABETAL" : "OS",
+                "beslutning", beslutning.name()).increment();
 
         return TrekkResponseBuilder.create()
                 .trekkvedtakId(trekkvedtakId)
@@ -73,7 +69,8 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
                 .vedtak(arenaVedtakList).build();
     }
 
-    private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, BigDecimal trekkSats, System system, Trekkalternativ trekkalt) {
+    private Beslutning beslutt(BigDecimal sumArena, BigDecimal sumOs, BigDecimal trekkSats,
+                               System system, Trekkalternativ trekkalt) {
         switch (trekkalt) {
             case SALP:
             case LOPP:

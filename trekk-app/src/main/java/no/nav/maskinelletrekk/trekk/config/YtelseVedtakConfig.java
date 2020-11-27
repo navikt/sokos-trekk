@@ -14,10 +14,10 @@ import java.util.HashMap;
 @Configuration
 public class YtelseVedtakConfig {
 
-    private static final String WSDL_URL = "/wsdl/no/nav/tjeneste/virksomhet/ytelseVedtak/v1/YtelseVedtakV1.wsdl";
+    private static final String WSDL_URL = "/nav-ytelseVedtak/v1/YtelseVedtakV1.wsdl";
     private static final String TARGET_NAMESPACE = "http://nav.no/tjeneste/virksomhet/ytelseVedtak/v1";
-    private QName endpointName = new QName(TARGET_NAMESPACE, "YtelseVedtak_v1Port");
-    private QName serviceName = new QName(TARGET_NAMESPACE, "YtelseVedtak_v1");
+    private final QName endpointName = new QName(TARGET_NAMESPACE, "YtelseVedtak_v1Port");
+    private final QName serviceName = new QName(TARGET_NAMESPACE, "YtelseVedtak_v1");
 
     @Value("${VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL}")
     public String ytelseVedtakEndpoint;

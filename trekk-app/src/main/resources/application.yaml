@@ -18,20 +18,16 @@ trekk:
 
 server:
   port: 8080
-  use-forward-headers: true
+  forward-headers-strategy: native
 
 logging:
   config: classpath:logback-spring.xml
 
-endpoints:
-  enabled: false
-  prometheus:
-    enabled: true
-    sensitive: false
-
 management:
-  security:
-    enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
 
 srvappserver:
   username: srvappserver

@@ -1,24 +1,21 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import io.micrometer.core.instrument.Metrics;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
-import org.apache.camel.spring.SpringRouteBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
-import static no.nav.maskinelletrekk.trekk.config.PrometheusLabels.PROCESS_TREKK;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.aggregerteMeldingerFraOSCounter;
-import static no.nav.maskinelletrekk.trekk.config.PrometheusMetrics.meldingerTilOSCounter;
-import static org.apache.camel.LoggingLevel.ERROR;
-import static org.apache.camel.LoggingLevel.INFO;
+import static java.util.Objects.requireNonNull;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.AGGREGERT_MELDING_FRA_OS_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_TIL_OS_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_TIL_BOQ_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_LABEL_QUEUE;
 
 @Service
-public class TrekkRoute extends SpringRouteBuilder {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrekkRoute.class);
+public class TrekkRoute extends RouteBuilder {
 
     private static final String TREKK_REPLY_QUEUE = "ref:trekkReply";
     private static final String TREKK_REPLY_BATCH_QUEUE = "ref:trekkReplyBatch";
@@ -32,12 +29,11 @@ public class TrekkRoute extends SpringRouteBuilder {
 
     private static final DataFormat TREKK_FORMAT = new JaxbDataFormat("no.nav.maskinelletrekk.trekk.v1");
 
-    private BehandleTrekkvedtakBean behandleTrekkvedtak;
+    private final BehandleTrekkvedtakBean behandleTrekkvedtak;
 
     @Autowired
     public TrekkRoute(BehandleTrekkvedtakBean behandleTrekkvedtak) {
-        Assert.notNull(behandleTrekkvedtak, "behandleTrekkvedtak must not be null");
-        this.behandleTrekkvedtak = behandleTrekkvedtak;
+        this.behandleTrekkvedtak = requireNonNull(behandleTrekkvedtak, "behandleTrekkvedtak must not be null");
     }
 
     @Override
@@ -47,24 +43,29 @@ public class TrekkRoute extends SpringRouteBuilder {
                 .handled(true)
                 .useOriginalMessage()
                 .marshal(TREKK_FORMAT)
-                .log(ERROR, LOGGER, "Exception stacktrace: ${exception.stacktrace}")
-                .log(ERROR, LOGGER, "Legger melding på backout-queue ${body}")
+                .logStackTrace(true)
+                .process(exchange -> {
+                    Throwable throwable = exchange.getProperty(exchange.EXCEPTION_CAUGHT, Throwable.class);
+                    Metrics.counter(MELDING_TIL_BOQ_COUNTER, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
+                            .increment();
+                })
                 .to("ref:trekkInnBoq");
 
         from(BEHANDLE_TREKK_ROUTE)
                 .routeId(BEHANDLE_TREKK_ROUTE_ID)
-                .process(exchange -> aggregerteMeldingerFraOSCounter.labels(PROCESS_TREKK, "Mottatt aggregert melding fra OS").inc())
+                .process(exchange -> Metrics.counter(AGGREGERT_MELDING_FRA_OS_COUNTER).increment())
                 .setHeader(TYPE_KJORING, simple("${body.typeKjoring}"))
                 .bean(behandleTrekkvedtak)
                 .marshal(TREKK_FORMAT)
-                .process(exchange -> meldingerTilOSCounter.labels(PROCESS_TREKK, "Sender melding til OS").inc())
                 .choice()
                     .when(header(TYPE_KJORING)
                             .in(PERIODISK_KONTROLL, RETURMELDING_TIL_TREKKINNMELDER))
-                        .log(INFO, LOGGER, "Legger melding på BATCH_REPLY-kø: ${body}")
+                        .process(exchange -> Metrics.counter(MELDING_TIL_OS_COUNTER, TAG_LABEL_QUEUE, "BATCH_REPLY")
+                                .increment())
                         .to(TREKK_REPLY_BATCH_QUEUE)
                     .otherwise()
-                        .log(INFO, LOGGER, "Legger melding på REPLY-kø: ${body}")
+                        .process(exchange -> Metrics.counter(MELDING_TIL_OS_COUNTER, TAG_LABEL_QUEUE, "REPLY")
+                                .increment())
                         .to(TREKK_REPLY_QUEUE)
                 .endChoice();
     }

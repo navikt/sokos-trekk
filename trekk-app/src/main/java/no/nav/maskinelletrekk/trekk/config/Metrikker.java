@@ -21,6 +21,9 @@ public final class Metrikker {
     public static final String AGGREGERT_MELDING_FRA_OS_COUNTER = PREFIX + "aggregert_melding_fra_os_counter";
     public static final String MELDING_FRA_OS_COUNTER = PREFIX + "antall_melding_fra_os_counter";
     public static final String GYLDIG_MELDING_FRA_OS_COUNTER = PREFIX + "gyldig_melding_fra_os_counter";
+    public static final String KALL_TIL_ARENA_TIMER = PREFIX + "kall_til_arena_timer";
+    public static final String VEDTAK_BEREGNING_TIMER = PREFIX + "vedtak_beregning_timer";
+    public static final String BEHANDLE_MELDING_TIMER = PREFIX + "behandle_melding_timer";
 
     public static final String TAG_LABEL_QUEUE = "queue";
     public static final String TAG_EXCEPTION_NAME = "exception_name";

@@ -1,5 +1,6 @@
 package no.nav.maskinelletrekk.trekk.ytelsevedtak;
 
+import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Metrics;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.FinnYtelseVedtakListeSikkerhetsbegrensning;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.FEILMELDING_FRA_ARENA_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.KALL_TIL_ARENA_TIMER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.REQUESTS_TIL_ARENA_COUNTER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.RESPONSE_FRA_ARENA_COUNTER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
@@ -63,6 +65,7 @@ public class ArenaYtelseVedtakService implements YtelseVedtakService {
                 .collect(Collectors.toList());
     }
 
+    @Timed(KALL_TIL_ARENA_TIMER)
     private FinnYtelseVedtakListeResponse kallArenaYtelseVedtakService(FinnYtelseVedtakListeRequest request) {
         FinnYtelseVedtakListeResponse response;
         try {

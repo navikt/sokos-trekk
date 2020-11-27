@@ -1,6 +1,8 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Metrics;
+import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.System;
@@ -39,6 +41,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
     }
 
     @Override
+    @Timed(Metrikker.VEDTAK_BEREGNING_TIMER)
     public TrekkResponse apply(TrekkRequest trekkRequest) {
         int trekkvedtakId = trekkRequest.getTrekkvedtakId();
 

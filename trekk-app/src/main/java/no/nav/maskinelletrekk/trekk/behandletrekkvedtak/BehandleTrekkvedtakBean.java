@@ -1,5 +1,7 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
+import io.micrometer.core.annotation.Timed;
+import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.ObjectFactory;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
@@ -40,6 +42,7 @@ public class BehandleTrekkvedtakBean {
     }
 
     @Handler
+    @Timed(Metrikker.VEDTAK_BEREGNING_TIMER)
     public Trekk behandleTrekkvedtak(Trekk trekk) {
         TypeKjoring typeKjoring = trekk.getTypeKjoring();
         List<TrekkRequest> trekkRequestList = duplikatTrekkvedtakIdSjekk(trekk.getTrekkRequest());

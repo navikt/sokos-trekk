@@ -70,6 +70,7 @@ public class TrekkRoute extends RouteBuilder {
                 .setHeader(TYPE_KJORING, simple("${body.typeKjoring}"))
                 .bean(behandleTrekkvedtak)
                 .marshal(TREKK_FORMAT)
+                .process(e -> e.getIn().setBody(e.getIn().getBody(String.class).trim()))
                 .choice()
                     .when(header(TYPE_KJORING)
                             .in(PERIODISK_KONTROLL, RETURMELDING_TIL_TREKKINNMELDER))

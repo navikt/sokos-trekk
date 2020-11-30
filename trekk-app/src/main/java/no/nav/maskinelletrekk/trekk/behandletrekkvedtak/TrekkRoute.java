@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.Marshaller;
+import java.util.HashMap;
+import java.util.Map;
+
 import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.AGGREGERT_MELDING_FRA_OS_COUNTER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_TIL_OS_COUNTER;
@@ -26,13 +30,21 @@ public class TrekkRoute extends RouteBuilder {
     private static final String TREKK_REPLY_BATCH_QUEUE = "ref:trekkReplyBatch";
 
     public static final String BEHANDLE_TREKK_ROUTE = "direct:behandleTrekk";
-    private static final String BEHANDLE_TREKK_ROUTE_ID = "behandleTrekk";
+    public static final String BEHANDLE_TREKK_ROUTE_ID = "behandleTrekk";
 
     private static final String TYPE_KJORING = "typeKjoring";
     private static final String PERIODISK_KONTROLL = "PERI";
     private static final String RETURMELDING_TIL_TREKKINNMELDER = "REME";
 
-    private static final DataFormat TREKK_FORMAT = new JaxbDataFormat("no.nav.maskinelletrekk.trekk.v1");
+    private static final DataFormat TREKK_FORMAT;
+
+    static {
+        JaxbDataFormat jaxbDataFormat = new JaxbDataFormat("no.nav.maskinelletrekk.trekk.v1");
+        Map<String, Object> jaxbProviderProperties = new HashMap<>();
+        jaxbProviderProperties.put(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+        jaxbDataFormat.setJaxbProviderProperties(jaxbProviderProperties);
+        TREKK_FORMAT = jaxbDataFormat;
+    }
 
     private final BehandleTrekkvedtakBean behandleTrekkvedtak;
 

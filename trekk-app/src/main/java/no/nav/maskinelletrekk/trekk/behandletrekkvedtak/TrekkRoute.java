@@ -4,8 +4,6 @@ import io.micrometer.core.instrument.Metrics;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,22 +13,20 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.AGGREGERT_MELDING_FRA_OS_COUNTER;
-import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_TIL_OS_COUNTER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_TIL_BOQ_COUNTER;
+import static no.nav.maskinelletrekk.trekk.config.Metrikker.MELDING_TIL_OS_COUNTER;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_EXCEPTION_NAME;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_LABEL_QUEUE;
-import static org.apache.camel.LoggingLevel.INFO;
 
 @Service
 public class TrekkRoute extends RouteBuilder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrekkRoute.class);
+    public static final String BEHANDLE_TREKK_ROUTE = "direct:behandleTrekk";
+    public static final String BEHANDLE_TREKK_ROUTE_ID = "behandleTrekk";
 
     private static final String TREKK_REPLY_QUEUE = "ref:trekkReply";
     private static final String TREKK_REPLY_BATCH_QUEUE = "ref:trekkReplyBatch";
-
-    public static final String BEHANDLE_TREKK_ROUTE = "direct:behandleTrekk";
-    public static final String BEHANDLE_TREKK_ROUTE_ID = "behandleTrekk";
+    private static final String TREKK_INN_BOQ = "ref:trekkInnBoq";
 
     private static final String TYPE_KJORING = "typeKjoring";
     private static final String PERIODISK_KONTROLL = "PERI";
@@ -66,7 +62,7 @@ public class TrekkRoute extends RouteBuilder {
                     Metrics.counter(MELDING_TIL_BOQ_COUNTER, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
                             .increment();
                 })
-                .to("ref:trekkInnBoq");
+                .to(TREKK_INN_BOQ);
 
         from(BEHANDLE_TREKK_ROUTE)
                 .routeId(BEHANDLE_TREKK_ROUTE_ID)

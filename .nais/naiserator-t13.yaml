@@ -35,7 +35,7 @@ spec:
   vault:
     enabled: true
     paths:
-    - kvPath: /serviceuser/data/dev/srvtrekk
+    - kvPath: /serviceuser/data/test/srvtrekk
       mountPath: /var/run/secrets/nais.io/srvtrekk
   env:
     - name: MQGATEWAY01_HOSTNAME

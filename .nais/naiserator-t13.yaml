@@ -44,18 +44,12 @@ spec:
       value: "1412"
     - name: MQGATEWAY01_NAME
       value: MTXLSC01
-    - name: TREKK_CHANNEL_QUEUEMANAGER
-      value: mq://d26apvl257.test.local:1412/MTXLSC01
     - name: TREKK_CHANNEL_NAME
       value: T13_TREKK
     - name: TREKK_TREKK_INN_QUEUENAME
       value: QA.T13_TREKK.TREKK_INN
-    - name: TREKK_TREKK_INN_QUEUEMANAGER
-      value: mq://d26apvl257.test.local:1412/MTXLSC01
     - name: TREKK_TREKK_INN_BOQ_QUEUENAME
       value: QA.T13_TREKK.TREKK_INN_BOQ
-    - name: TREKK_TREKK_INN_BOQ_QUEUEMANAGER
-      value: mq://d26apvl257.test.local:1412/MTXLSC01
     - name: OB04_TREKK_REPLY_QUEUENAME
       value: QA.T13_231.OB04_TREKK_REPLY
     - name: OB04_TREKK_REPLY_BATCH_QUEUENAME

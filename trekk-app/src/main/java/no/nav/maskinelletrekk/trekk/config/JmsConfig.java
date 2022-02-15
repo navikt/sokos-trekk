@@ -3,6 +3,7 @@ package no.nav.maskinelletrekk.trekk.config;
 import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.jms.MQQueue;
 import com.ibm.mq.jms.MQXAConnectionFactory;
+import com.ibm.msg.client.jms.JmsConstants;
 import com.ibm.msg.client.wmq.WMQConstants;
 import org.apache.camel.component.jms.JmsConfiguration;
 import org.apache.camel.component.jms.JmsEndpoint;
@@ -24,10 +25,10 @@ public class JmsConfig {
     @Value("${trekk.jms.transactionTimeout}")
     private Integer transactionTimeout = 300;
 
-    @Value("${srvappserver.username}")
+    @Value("${SRVTREKK_USERNAME}")
     private String qmUsername;
 
-    @Value("${srvappserver.password:}")
+    @Value("${SRVTREKK_PASSWORD}")
     private String qmPassword;
 
     @Value("${TREKK_TREKK_INN_QUEUENAME}")
@@ -109,6 +110,7 @@ public class JmsConfig {
         connectionFactory.setCCSID(1208);
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_ENCODING, MQConstants.MQENC_NATIVE);
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_CHARACTER_SET, 1208);
+        connectionFactory.setBooleanProperty(JmsConstants.USER_AUTHENTICATION_MQCSP, true);
 
         UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
         adapter.setTargetConnectionFactory(connectionFactory);

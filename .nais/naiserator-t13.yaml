@@ -1,8 +1,8 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: trekk
-  namespace: t13
+  name: sokos-trekk-t13
+  namespace: okonomi
   labels:
     team: okonomi
 spec:

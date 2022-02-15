@@ -39,11 +39,11 @@ spec:
       mountPath: /var/run/secrets/nais.io/srvtrekk
   env:
     - name: MQGATEWAY01_HOSTNAME
-      value: d26apvl257.test.local
+      value: d26apvl298.test.local
     - name: MQGATEWAY01_PORT
       value: "1412"
     - name: MQGATEWAY01_NAME
-      value: MTXLSC01
+      value: MTLS01
     - name: TREKK_CHANNEL_NAME
       value: T13_TREKK
     - name: TREKK_TREKK_INN_QUEUENAME

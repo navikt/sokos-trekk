@@ -11,13 +11,13 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TrekkAggreatorTest {
 
-    private TrekkAggreator trekkAggreator = new TrekkAggreator();
+    private final TrekkAggreator trekkAggreator = new TrekkAggreator();
 
     private Exchange newExchange;
     private Exchange oldExchange;

@@ -10,6 +10,7 @@ import org.apache.camel.component.jms.JmsEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter;
 
 import javax.jms.ConnectionFactory;
@@ -113,7 +114,7 @@ public class JmsConfig {
         connectionFactory.setBooleanProperty(JmsConstants.USER_AUTHENTICATION_MQCSP, true);
 
         UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
-        adapter.setTargetConnectionFactory(connectionFactory);
+        adapter.setTargetConnectionFactory(new CachingConnectionFactory(connectionFactory));
         adapter.setUsername(qmUsername);
         adapter.setPassword(qmPassword);
 

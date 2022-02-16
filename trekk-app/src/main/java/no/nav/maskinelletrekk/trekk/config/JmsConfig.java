@@ -114,11 +114,11 @@ public class JmsConfig {
         connectionFactory.setBooleanProperty(JmsConstants.USER_AUTHENTICATION_MQCSP, true);
 
         UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
-        adapter.setTargetConnectionFactory(new CachingConnectionFactory(connectionFactory));
+        adapter.setTargetConnectionFactory(connectionFactory);
         adapter.setUsername(qmUsername);
         adapter.setPassword(qmPassword);
 
-        return adapter;
+        return new CachingConnectionFactory(adapter);
     }
 
     @Bean

@@ -4,6 +4,8 @@ import io.micrometer.core.instrument.Metrics;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import static no.nav.maskinelletrekk.trekk.config.Metrikker.TAG_LABEL_QUEUE;
 
 @Service
 public class TrekkRoute extends RouteBuilder {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrekkRoute.class);
 
     public static final String BEHANDLE_TREKK_ROUTE = "direct:behandleTrekk";
     public static final String BEHANDLE_TREKK_ROUTE_ID = "behandleTrekk";
@@ -59,6 +63,7 @@ public class TrekkRoute extends RouteBuilder {
                 .logStackTrace(true)
                 .process(exchange -> {
                     Throwable throwable = exchange.getProperty(exchange.EXCEPTION_CAUGHT, Throwable.class);
+                    LOGGER.error("Feilet i TrekkRoute med {} og melding: {}", throwable.getClass().getSimpleName(), throwable.getMessage());
                     Metrics.counter(MELDING_TIL_BOQ_COUNTER, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
                             .increment();
                 })

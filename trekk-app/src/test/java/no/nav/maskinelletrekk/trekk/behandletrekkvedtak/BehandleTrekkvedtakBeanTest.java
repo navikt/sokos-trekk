@@ -1,16 +1,11 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
-import com.google.common.base.Verify;
 import no.nav.maskinelletrekk.trekk.helper.XmlHelper;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.Trekk;
 import no.nav.maskinelletrekk.trekk.v1.TrekkResponse;
-import no.nav.maskinelletrekk.trekk.v1.Trekkalternativ;
-import no.nav.maskinelletrekk.trekk.v1.TypeKjoring;
 import no.nav.maskinelletrekk.trekk.v1.builder.ArenaVedtakBuilder;
-import no.nav.maskinelletrekk.trekk.v1.builder.TrekkBuilder;
-import no.nav.maskinelletrekk.trekk.v1.builder.TrekkRequestBuilder;
 import no.nav.maskinelletrekk.trekk.ytelsevedtak.YtelseVedtakService;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,10 +28,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anySet;
+import static org.mockito.Matchers.anySetOf;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BehandleTrekkvedtakBeanTest {
@@ -81,7 +76,7 @@ public class BehandleTrekkvedtakBeanTest {
     @Test
     public void skalBeslutteOSDersomSumOSErStorreEnnSumArena() {
         Map<String, List<ArenaVedtak>> tid = opprettSvar(FNR_1, DAGSATS_1, DAGSATS_2);
-        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySet(), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
+        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySetOf(String.class), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
 
         Trekk trekk = behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 
@@ -95,8 +90,8 @@ public class BehandleTrekkvedtakBeanTest {
 
         requestFromXml = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_2_XML);
 
-        Map<String, List<ArenaVedtak>> tid = opprettSvar(FNR_1);
-        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySet(), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
+        Map<String, List<ArenaVedtak>> tid = opprettSvar(FNR_2);
+        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySetOf(String.class), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
 
         Trekk trekk = behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 
@@ -108,7 +103,7 @@ public class BehandleTrekkvedtakBeanTest {
     }
 
     @Test
-    public void verifiserFomTom() throws Exception {
+    public void verifiserFomTom() {
 
 
         ArgumentCaptor <LocalDate> fomCaptor = ArgumentCaptor.forClass(LocalDate.class);
@@ -116,7 +111,7 @@ public class BehandleTrekkvedtakBeanTest {
 
         behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 
-        Mockito.verify(ytelseVedtakService).hentYtelseskontrakt(anySet(), fomCaptor.capture(), tomCaptor.capture());
+        Mockito.verify(ytelseVedtakService).hentYtelseskontrakt(anySetOf(String.class), fomCaptor.capture(), tomCaptor.capture());
 
         assertEquals(fomCaptor.getValue(), LocalDate.now(clock));
         assertEquals(tomCaptor.getValue(), YearMonth.now(clock).plusMonths(1).atEndOfMonth());

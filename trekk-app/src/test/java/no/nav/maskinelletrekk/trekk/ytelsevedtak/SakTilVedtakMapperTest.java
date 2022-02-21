@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SakTilVedtakMapperTest {
 
@@ -27,7 +27,8 @@ public class SakTilVedtakMapperTest {
     private static final String FAGSYSTEM_SAK_ID = "fag1";
     private static final String RETTIGHETSTYPE_1 = "RT1";
     private static final String RETTIGHETSTYPE_2 = "443";
-    private static final String TEMA = "tema1";
+    private static final String TEMA_1 = "tema1";
+    private static final String TEMA_2 = "tema2";
     private static final int JANUARY = 1;
     private static final int FEBRUARY = 2;
     private static final LocalDate FOM_1 = LocalDate.of(2018, JANUARY, 1);
@@ -35,7 +36,7 @@ public class SakTilVedtakMapperTest {
     private static final LocalDate FOM_2 = LocalDate.of(2018, FEBRUARY, 1);
     private static final LocalDate TOM_2 = LocalDate.of(2018, FEBRUARY, 28);
 
-    private SakTilVedtakMapper mapper = new SakTilVedtakMapper();
+    private final SakTilVedtakMapper mapper = new SakTilVedtakMapper();
 
     @Test
     public void skalMappeFraSakTilArenaVedtak() throws Exception {
@@ -52,7 +53,7 @@ public class SakTilVedtakMapperTest {
 
         Sak sak = new Sak();
         sak.setFagsystemSakId(FAGSYSTEM_SAK_ID);
-        sak.setTema(opprettTema(TEMA));
+        sak.setTema(opprettTema(TEMA_1));
         sak.getVedtakListe().addAll(Arrays.asList(
                 vedtak1,
                 vedtak2
@@ -69,22 +70,18 @@ public class SakTilVedtakMapperTest {
 
         assertThat(arenaVedtak1.getDagsats().doubleValue(), equalTo(DAGSATS_1));
         assertThat(arenaVedtak1.getRettighetType(), equalTo(RETTIGHETSTYPE_1));
-        assertThat(arenaVedtak1.getTema(), equalTo(TEMA));
+        assertThat(arenaVedtak1.getTema(), equalTo(TEMA_1));
         assertThat(arenaVedtak1.getVedtaksperiode().getFom(), equalTo(FOM_1));
         assertThat(arenaVedtak1.getVedtaksperiode().getTom(), equalTo(TOM_1));
         assertThat(arenaVedtak2.getDagsats().doubleValue(), equalTo(DAGSATS_2));
         assertThat(arenaVedtak2.getRettighetType(), equalTo(RETTIGHETSTYPE_2));
-        assertThat(arenaVedtak2.getTema(), equalTo(TEMA));
+        assertThat(arenaVedtak2.getTema(), equalTo(TEMA_1));
         assertThat(arenaVedtak2.getVedtaksperiode().getFom(), equalTo(FOM_2));
         assertThat(arenaVedtak2.getVedtaksperiode().getTom(), equalTo(TOM_2));
     }
 
     @Test
     public void skalHaandtereTomDato() throws Exception {
-
-        Periode periode = new Periode();
-        periode.setFom(null);
-        periode.setTom(null);
 
         Vedtak vedtak1 = new Vedtak();
         vedtak1.setDagsats(DAGSATS_1);
@@ -93,7 +90,7 @@ public class SakTilVedtakMapperTest {
 
         Sak sak = new Sak();
         sak.setFagsystemSakId(FAGSYSTEM_SAK_ID);
-        sak.setTema(opprettTema(TEMA));
+        sak.setTema(opprettTema(TEMA_2));
         sak.getVedtakListe().addAll(Collections.singletonList(
                 vedtak1
         ));

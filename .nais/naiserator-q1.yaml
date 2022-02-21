@@ -1,8 +1,8 @@
 kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
-  name: trekk
-  namespace: q1
+  name: sokos-trekk
+  namespace: okonomi
   labels:
     team: okonomi
 spec:
@@ -38,22 +38,16 @@ spec:
     - kvPath: /serviceuser/data/dev/srvtrekk
       mountPath: /var/run/secrets/nais.io/srvtrekk
   env:
+    - name: MQGATEWAY01_HOSTNAME
+      value: b27apvl219.preprod.local
     - name: MQGATEWAY01_PORT
       value: "1413"
     - name: MQGATEWAY01_NAME
-      value: MQ1LSC01
-    - name: MQGATEWAY01_HOSTNAME
-      value: b27apvl172.preprod.local
-    - name: TREKK_CHANNEL_QUEUEMANAGER
-      value: mq://b27apvl172.preprod.local:1413/MQ1LSC01
+      value: MQLS01
     - name: TREKK_CHANNEL_NAME
       value: Q1_TREKK
     - name: TREKK_TREKK_INN_QUEUENAME
       value: QA.Q1_TREKK.TREKK_INN
-    - name: TREKK_TREKK_INN_QUEUEMANAGER
-      value: mq://b27apvl172.preprod.local:1413/MQ1LSC01
-    - name: TREKK_TREKK_INN_BOQ_QUEUEMANAGER
-      value: mq://b27apvl172.preprod.local:1413/MQ1LSC01
     - name: TREKK_TREKK_INN_BOQ_QUEUENAME
       value: Q1_TREKK.TREKK_INN_BOQ
     - name: OB04_TREKK_REPLY_QUEUENAME

@@ -3,12 +3,14 @@ package no.nav.maskinelletrekk.trekk.config;
 import com.ibm.mq.constants.MQConstants;
 import com.ibm.mq.jms.MQQueue;
 import com.ibm.mq.jms.MQXAConnectionFactory;
+import com.ibm.msg.client.jms.JmsConstants;
 import com.ibm.msg.client.wmq.WMQConstants;
 import org.apache.camel.component.jms.JmsConfiguration;
 import org.apache.camel.component.jms.JmsEndpoint;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter;
 
 import javax.jms.ConnectionFactory;
@@ -24,10 +26,10 @@ public class JmsConfig {
     @Value("${trekk.jms.transactionTimeout}")
     private Integer transactionTimeout = 300;
 
-    @Value("${srvappserver.username}")
+    @Value("${SRVTREKK_USERNAME}")
     private String qmUsername;
 
-    @Value("${srvappserver.password:}")
+    @Value("${SRVTREKK_PASSWORD}")
     private String qmPassword;
 
     @Value("${TREKK_TREKK_INN_QUEUENAME}")
@@ -76,7 +78,7 @@ public class JmsConfig {
 
     @Bean("trekkInnBoq")
     public JmsEndpoint trekkInnBoqEndpoint(Queue trekkInnBoqQueue,
-                                        JmsConfiguration jmsConfiguration) throws JMSException {
+                                           JmsConfiguration jmsConfiguration) throws JMSException {
         JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkInnBoqQueue);
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;
@@ -92,7 +94,7 @@ public class JmsConfig {
 
     @Bean("trekkReplyBatch")
     public JmsEndpoint trekkReplyBatchEndpoint(Queue trekkReplyBatchQueue,
-                                          JmsConfiguration jmsConfiguration) throws JMSException {
+                                               JmsConfiguration jmsConfiguration) throws JMSException {
         JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkReplyBatchQueue);
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;
@@ -109,13 +111,14 @@ public class JmsConfig {
         connectionFactory.setCCSID(1208);
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_ENCODING, MQConstants.MQENC_NATIVE);
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_CHARACTER_SET, 1208);
+        connectionFactory.setBooleanProperty(JmsConstants.USER_AUTHENTICATION_MQCSP, true);
 
         UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
         adapter.setTargetConnectionFactory(connectionFactory);
         adapter.setUsername(qmUsername);
         adapter.setPassword(qmPassword);
 
-        return adapter;
+        return new CachingConnectionFactory(adapter);
     }
 
     @Bean

@@ -78,7 +78,7 @@ public class JmsConfig {
 
     @Bean("trekkInnBoq")
     public JmsEndpoint trekkInnBoqEndpoint(Queue trekkInnBoqQueue,
-                                        JmsConfiguration jmsConfiguration) throws JMSException {
+                                           JmsConfiguration jmsConfiguration) throws JMSException {
         JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkInnBoqQueue);
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;
@@ -94,7 +94,7 @@ public class JmsConfig {
 
     @Bean("trekkReplyBatch")
     public JmsEndpoint trekkReplyBatchEndpoint(Queue trekkReplyBatchQueue,
-                                          JmsConfiguration jmsConfiguration) throws JMSException {
+                                               JmsConfiguration jmsConfiguration) throws JMSException {
         JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkReplyBatchQueue);
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;
@@ -113,12 +113,7 @@ public class JmsConfig {
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_CHARACTER_SET, 1208);
         connectionFactory.setBooleanProperty(JmsConstants.USER_AUTHENTICATION_MQCSP, true);
 
-        UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
-        adapter.setTargetConnectionFactory(connectionFactory);
-        adapter.setUsername(qmUsername);
-        adapter.setPassword(qmPassword);
-
-        return new CachingConnectionFactory(adapter);
+        return new CachingConnectionFactory(connectionFactory);
     }
 
     @Bean
@@ -128,6 +123,8 @@ public class JmsConfig {
         jmsConfiguration.setTransacted(true);
         jmsConfiguration.setTransactionTimeout(transactionTimeout);
         jmsConfiguration.setConcurrentConsumers(concurrentConsumers);
+        jmsConfiguration.setUsername(qmUsername);
+        jmsConfiguration.setPassword(qmPassword);
 
         return jmsConfiguration;
     }

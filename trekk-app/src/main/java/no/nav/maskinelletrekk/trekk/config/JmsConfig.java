@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.connection.CachingConnectionFactory;
+import org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapter;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -112,7 +113,12 @@ public class JmsConfig {
         connectionFactory.setIntProperty(WMQConstants.JMS_IBM_CHARACTER_SET, 1208);
         connectionFactory.setBooleanProperty(JmsConstants.USER_AUTHENTICATION_MQCSP, true);
 
-        return new CachingConnectionFactory(connectionFactory);
+        UserCredentialsConnectionFactoryAdapter adapter = new UserCredentialsConnectionFactoryAdapter();
+        adapter.setTargetConnectionFactory(connectionFactory);
+        adapter.setUsername(qmUsername);
+        adapter.setPassword(qmPassword);
+
+        return new CachingConnectionFactory(adapter);
     }
 
     @Bean
@@ -122,8 +128,6 @@ public class JmsConfig {
         jmsConfiguration.setTransacted(true);
         jmsConfiguration.setTransactionTimeout(transactionTimeout);
         jmsConfiguration.setConcurrentConsumers(concurrentConsumers);
-        jmsConfiguration.setUsername(qmUsername);
-        jmsConfiguration.setPassword(qmPassword);
 
         return jmsConfiguration;
     }

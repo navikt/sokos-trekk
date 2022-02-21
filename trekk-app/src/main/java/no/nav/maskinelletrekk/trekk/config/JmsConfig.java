@@ -78,7 +78,7 @@ public class JmsConfig {
 
     @Bean("trekkInnBoq")
     public JmsEndpoint trekkInnBoqEndpoint(Queue trekkInnBoqQueue,
-                                        JmsConfiguration jmsConfiguration) throws JMSException {
+                                           JmsConfiguration jmsConfiguration) throws JMSException {
         JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkInnBoqQueue);
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;
@@ -94,7 +94,7 @@ public class JmsConfig {
 
     @Bean("trekkReplyBatch")
     public JmsEndpoint trekkReplyBatchEndpoint(Queue trekkReplyBatchQueue,
-                                          JmsConfiguration jmsConfiguration) throws JMSException {
+                                               JmsConfiguration jmsConfiguration) throws JMSException {
         JmsEndpoint jmsEndpoint = JmsEndpoint.newInstance(trekkReplyBatchQueue);
         jmsEndpoint.setConfiguration(jmsConfiguration);
         return jmsEndpoint;

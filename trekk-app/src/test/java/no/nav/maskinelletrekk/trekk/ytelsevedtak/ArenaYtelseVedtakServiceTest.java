@@ -22,7 +22,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -34,11 +34,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -127,7 +127,7 @@ public class ArenaYtelseVedtakServiceTest {
 
     @Test
     public void skalKonvertereTrekkRequestTilPersonListeMedIdentOgPeriode() throws Exception {
-        when(ytelseVedtakService.finnYtelseVedtakListe(any())).thenReturn(new FinnYtelseVedtakListeResponse());
+        when(ytelseVedtakService.finnYtelseVedtakListe(any(FinnYtelseVedtakListeRequest.class))).thenReturn(new FinnYtelseVedtakListeResponse());
         Trekk requestFromXml = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_XML);
 
         List<TrekkRequest> trekkRequestList = requestFromXml.getTrekkRequest();
@@ -143,7 +143,7 @@ public class ArenaYtelseVedtakServiceTest {
 
     @Test
     public void skalReturnereTomListeDersomSvarFraArenaErTomt2() throws Exception {
-        when(ytelseVedtakService.finnYtelseVedtakListe(any()))
+        when(ytelseVedtakService.finnYtelseVedtakListe(any(FinnYtelseVedtakListeRequest.class)))
                 .thenReturn(new FinnYtelseVedtakListeResponse());
 
         List<TrekkRequest> trekkRequestList = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_XML).getTrekkRequest();

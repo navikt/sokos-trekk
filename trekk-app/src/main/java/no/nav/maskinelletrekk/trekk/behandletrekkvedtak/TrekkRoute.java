@@ -1,6 +1,7 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
 import io.micrometer.core.instrument.Metrics;
+import org.apache.camel.CamelExecutionException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.jaxb.JaxbDataFormat;
 import org.apache.camel.spi.DataFormat;
@@ -55,6 +56,20 @@ public class TrekkRoute extends RouteBuilder {
 
     @Override
     public void configure() {
+
+        onException(CamelExecutionException.class)
+                .handled(true)
+                .useOriginalMessage()
+                .marshal(TREKK_FORMAT)
+                .process(exchange -> {
+                    Throwable throwable = exchange.getProperty(exchange.EXCEPTION_CAUGHT, Throwable.class);
+                    LOGGER.error("Feilet i TrekkRoute med {} og melding: {}",
+                            throwable.getCause().getClass().getSimpleName(),
+                            throwable.getCause().getMessage());
+                    Metrics.counter(MELDING_TIL_BOQ_COUNTER, TAG_EXCEPTION_NAME, throwable.getClass().getSimpleName())
+                            .increment();
+                })
+                .to(TREKK_INN_BOQ);
 
         onException(Throwable.class)
                 .handled(true)

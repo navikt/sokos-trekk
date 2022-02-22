@@ -1,8 +1,6 @@
 package no.nav.maskinelletrekk.trekk.behandletrekkvedtak;
 
-import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Metrics;
-import no.nav.maskinelletrekk.trekk.config.Metrikker;
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak;
 import no.nav.maskinelletrekk.trekk.v1.Beslutning;
 import no.nav.maskinelletrekk.trekk.v1.System;
@@ -19,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
+import static java.math.RoundingMode.HALF_UP;
 import static no.nav.maskinelletrekk.trekk.config.Metrikker.BESLUTNING_COUNTER;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.ABETAL;
 import static no.nav.maskinelletrekk.trekk.v1.Beslutning.BEGGE;
@@ -136,7 +134,7 @@ public class VedtakBeregning implements Function<TrekkRequest, TrekkResponse> {
                 .map(ArenaVedtak::getDagsats)
                 .reduce(ZERO, BigDecimal::add)
                 .multiply(FAKTOR_MND)
-                .setScale(SUM_SCALE, ROUND_HALF_UP);
+                .setScale(SUM_SCALE, HALF_UP);
     }
 
 }

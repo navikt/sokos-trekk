@@ -14,7 +14,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -30,8 +30,8 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anySetOf;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anySet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BehandleTrekkvedtakBeanTest {
@@ -76,7 +76,7 @@ public class BehandleTrekkvedtakBeanTest {
     @Test
     public void skalBeslutteOSDersomSumOSErStorreEnnSumArena() {
         Map<String, List<ArenaVedtak>> tid = opprettSvar(FNR_1, DAGSATS_1, DAGSATS_2);
-        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySetOf(String.class), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
+        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySet(), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
 
         Trekk trekk = behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 
@@ -91,7 +91,7 @@ public class BehandleTrekkvedtakBeanTest {
         requestFromXml = XmlHelper.getRequestFromXml(TREKK_V1_REQUEST_2_XML);
 
         Map<String, List<ArenaVedtak>> tid = opprettSvar(FNR_2);
-        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySetOf(String.class), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
+        Mockito.when(ytelseVedtakService.hentYtelseskontrakt(anySet(), any(LocalDate.class), any(LocalDate.class))).thenReturn(tid);
 
         Trekk trekk = behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 
@@ -111,7 +111,7 @@ public class BehandleTrekkvedtakBeanTest {
 
         behandleTrekkvedtak.behandleTrekkvedtak(requestFromXml);
 
-        Mockito.verify(ytelseVedtakService).hentYtelseskontrakt(anySetOf(String.class), fomCaptor.capture(), tomCaptor.capture());
+        Mockito.verify(ytelseVedtakService).hentYtelseskontrakt(anySet(), fomCaptor.capture(), tomCaptor.capture());
 
         assertEquals(fomCaptor.getValue(), LocalDate.now(clock));
         assertEquals(tomCaptor.getValue(), YearMonth.now(clock).plusMonths(1).atEndOfMonth());

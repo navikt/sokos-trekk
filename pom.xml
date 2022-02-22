@@ -37,7 +37,7 @@
         <java.version>1.8</java.version>
         <!-- Logging -->
         <logback.version>1.2.10</logback.version>
-        <logstash-logback-encoder-version>5.1</logstash-logback-encoder-version>
+        <logstash-logback-encoder-version>7.0.1</logstash-logback-encoder-version>
         <!-- Metrikker -->
         <micrometer.version>1.6.1</micrometer.version>
         <!-- Maven -->
@@ -52,14 +52,14 @@
         <!-- Spring -->
         <spring.boot.version>2.6.3</spring.boot.version>
         <!-- Apache CXF -->
-        <apache.cxf.version>3.4.5</apache.cxf.version>
+        <apache.cxf.version>3.4.4</apache.cxf.version>
         <!-- Camel -->
-        <camel.version>3.6.0</camel.version>
+        <camel.version>3.7.7</camel.version>
         <!-- IBM MQ -->
         <ibm.mq.version>9.2.1.0</ibm.mq.version>
         <!-- Test Frameworks -->
         <junit.version>4.13.2</junit.version>
-        <mockito.version>1.9.5</mockito.version>
+        <mockito.version>4.3.1</mockito.version>
     </properties>
 
     <dependencyManagement>
@@ -224,7 +224,7 @@
         <!-- Test Frameworks -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>

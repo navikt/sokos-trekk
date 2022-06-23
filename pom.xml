@@ -50,7 +50,7 @@
         <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
         <!-- Spring -->
-        <spring.boot.version>2.6.3</spring.boot.version>
+        <spring.boot.version>2.6.6</spring.boot.version>
         <!-- Apache CXF -->
         <apache.cxf.version>3.4.4</apache.cxf.version>
         <!-- Camel -->

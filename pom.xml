@@ -52,7 +52,7 @@
         <!-- Spring -->
         <spring.boot.version>2.6.3</spring.boot.version>
         <!-- Apache CXF -->
-        <apache.cxf.version>3.4.4</apache.cxf.version>
+        <apache.cxf.version>3.4.10</apache.cxf.version>
         <!-- Camel -->
         <camel.version>3.7.7</camel.version>
         <!-- IBM MQ -->

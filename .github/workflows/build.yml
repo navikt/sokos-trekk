@@ -9,6 +9,10 @@ on:
 env:
   IMAGE: docker.pkg.github.com/${{ github.repository }}/sokos-trekk:${{ github.sha }}
 
+permissions:
+  contents: "write"
+  id-token: "write"
+
 jobs:
   build:
     name: Build and push Docker container
@@ -70,7 +74,7 @@ jobs:
 
   deploy-prod:
     name: Deploy to prod-fss
-    needs: [build, deploy-q1]
+    needs: [ build, deploy-q1 ]
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:

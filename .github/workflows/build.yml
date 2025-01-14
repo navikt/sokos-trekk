@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-java@v4
         with:
@@ -85,19 +87,19 @@ jobs:
           TIMEOUT: 10m
           PRINT_PAYLOAD: true
 
-#  deploy-prod:
-#    name: Deploy to prod-fss
-#    needs: [ build, deploy-q1 ]
-#    if: github.ref == 'refs/heads/master'
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v1
-#      - uses: nais/deploy/actions/deploy@v2
-#        env:
-#          IMAGE: ${{ needs.build.outputs.image }}
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: prod-fss
-#          RESOURCE: .nais/naiserator-p.yaml
-#          TIMEOUT: 10m
-#          PRINT_PAYLOAD: true
+  deploy-prod:
+    name: Deploy to prod-fss
+    needs: [ build, deploy-q1 ]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          IMAGE: ${{ needs.build.outputs.image }}
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: .nais/naiserator-p.yaml
+          TIMEOUT: 10m
+          PRINT_PAYLOAD: true
 

@@ -30,7 +30,7 @@ spec:
       memory: 2024Mi
     requests:
       cpu: 100m
-      memory: 512Mi
+      memory: 1024Mi
   vault:
     enabled: true
     paths:

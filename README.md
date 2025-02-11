@@ -1,2 +1,1 @@
-# SOKOS Trekk
-
+# sokos-trekk

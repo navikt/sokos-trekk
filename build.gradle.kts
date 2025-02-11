@@ -100,6 +100,7 @@ dependencies {
     // Tjenestespesifikasjon
     implementation("no.nav.sokos.tjenestespesifikasjoner:nav-maskinelletrekk-trekk-v1:$tjenestespesifikasjonVersion")
     implementation("no.nav.sokos.tjenestespesifikasjoner:nav-ytelsevedtak-v1-tjenestespesifikasjon:$tjenestespesifikasjonVersion")
+    implementation("no.nav.tjenestespesifikasjoner:nav-ytelsevedtak-v1-tjenestespesifikasjon:2641.575768a")
 
     // Monitorering
     implementation("io.ktor:ktor-server-metrics-micrometer-jvm:$ktorVersion")

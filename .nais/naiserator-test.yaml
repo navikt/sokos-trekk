@@ -48,8 +48,8 @@ spec:
           namespace: aura
           cluster: dev-gcp
   webproxy: true
-  vault:
-    enabled: true
+  envFrom:
+    - secret: sokos-trekk-serviceuser-credentials
 
   env:
     - name: USE_AUTHENTICATION

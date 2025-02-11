@@ -73,21 +73,22 @@ object PropertiesConfig {
         val port: Int = get("MQ_PORT").toInt(),
         val mqQueueManagerName: String = get("MQ_QUEUE_MANAGER_NAME"),
         val mqChannelName: String = getOrEmpty("MQ_CHANNEL_NAME"),
-        val serviceUsername: String = getOrEmpty("SRVTREKK_USERNAME"),
-        val servicePassword: String = getOrEmpty("SRVTREKK_PASSWORD"),
-        val userAuth: Boolean = true,
         val trekkInnQueueName: String = getOrEmpty("MQ_TREKK_INN_QUEUE_NAME"),
         val trekkInnBoqQueueName: String = getOrEmpty("MQ_TREKK_INN_BOQ_QUEUE_NAME"),
         val trekkReplyQueueName: String = getOrEmpty("MQ_TREKK_REPLY_QUEUE_NAME"),
         val trekkReplyBatchQueueName: String = getOrEmpty("MQ_TREKK_REPLY_BATCH_QUEUE_NAME"),
         val mqListenerEnabled: Boolean = get("MQ_LISTENER_ENABLED").toBoolean(),
+        val userAuth: Boolean = true,
+    )
+
+    data class ServiceUserProperties(
+        val serviceUsername: String = getOrEmpty("SRVTREKK_USERNAME"),
+        val servicePassword: String = getOrEmpty("SRVTREKK_PASSWORD"),
     )
 
     data class SoapProperties(
         val stsUrl: String = get("SECURITY_TOKENSERVICE_URL"),
         val ytelsevedtakV1EndpointUrl: String = get("VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL"),
-        val srvTrekkUsername: String = get("SRVTREKK_USERNAME"),
-        val srvTrekkPassword: String = get("SRVTREKK_PASSWORD"),
     )
 
     enum class Profile {

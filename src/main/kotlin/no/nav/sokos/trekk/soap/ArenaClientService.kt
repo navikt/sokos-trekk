@@ -17,8 +17,8 @@ import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeRequest
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeResponse
 
-private const val NAMESPACE = "http://nav.no/tjeneste/virksomhet/ytelsevedtak/v1/Binding"
-private const val WSDL_URL = "wsdl/no/nav/tjeneste/virksomhet/ytelsevedtak/v1/Binding.wsdl"
+private const val NAMESPACE = "http://nav.no/tjeneste/virksomhet/ytelseVedtak/v1"
+private const val WSDL_URL = "wsdl/no/nav/tjeneste/virksomhet/ytelsevedtak/v1/YtelseVedtakV1.wsdl"
 private const val YTELSE_VEDTAK_SERVICE_NAME = "YtelseVedtak_v1"
 private const val YTELSE_VEDTAK_ENDPOINT_NAME = "YtelseVedtak_v1Port"
 
@@ -29,7 +29,10 @@ class ArenaClientService(
     stsClient: STSClient =
         STSClientConfig.stsClient(
             PropertiesConfig.SoapProperties().stsUrl,
-            Pair(PropertiesConfig.SoapProperties().srvTrekkUsername, PropertiesConfig.SoapProperties().srvTrekkPassword),
+            Pair(
+                PropertiesConfig.ServiceUserProperties().serviceUsername,
+                PropertiesConfig.ServiceUserProperties().servicePassword,
+            ),
         ),
 ) {
     private val loggingFeature =

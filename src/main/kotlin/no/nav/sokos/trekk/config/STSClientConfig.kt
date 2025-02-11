@@ -38,7 +38,6 @@ object STSClientConfig {
                     SecurityConstants.USERNAME to credentials.first,
                     SecurityConstants.PASSWORD to credentials.second,
                 )
-
             setPolicy(bus.resolvePolicy(STS_CLIENT_AUTHENTICATION_POLICY))
         }
     }

@@ -56,10 +56,11 @@ val kotliqueryVersion = "1.9.1"
 val testcontainersVersion = "1.20.4"
 val vaultVersion = "1.3.10"
 val activemqVersion = "2.39.0"
-val cxfVersion = "4.1.0"
+val cxfVersion = "4.0.5"
 val ibmmqVersion = "9.4.1.1"
 val glassfishJaxbVersion = "4.0.5"
 val tjenestespesifikasjonVersion = "1.0_20250211133838_7726a80"
+val commonVersion = "3.2025.01.14_14.19-79b3041cae56"
 
 dependencies {
 
@@ -86,11 +87,7 @@ dependencies {
     implementation("com.ibm.mq:com.ibm.mq.jakarta.client:$ibmmqVersion")
 
     // SOAP
-    implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-transports-http:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion") {
+    implementation("no.nav.common:cxf:$commonVersion") {
         exclude(group = "org.opensaml")
     }
 
@@ -100,7 +97,6 @@ dependencies {
     // Tjenestespesifikasjon
     implementation("no.nav.sokos.tjenestespesifikasjoner:nav-maskinelletrekk-trekk-v1:$tjenestespesifikasjonVersion")
     implementation("no.nav.sokos.tjenestespesifikasjoner:nav-ytelsevedtak-v1-tjenestespesifikasjon:$tjenestespesifikasjonVersion")
-    implementation("no.nav.tjenestespesifikasjoner:nav-ytelsevedtak-v1-tjenestespesifikasjon:2641.575768a")
 
     // Monitorering
     implementation("io.ktor:ktor-server-metrics-micrometer-jvm:$ktorVersion")

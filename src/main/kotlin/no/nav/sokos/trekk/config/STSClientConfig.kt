@@ -8,6 +8,7 @@ import org.apache.cxf.endpoint.Client
 import org.apache.cxf.frontend.ClientProxy
 import org.apache.cxf.rt.security.SecurityConstants
 import org.apache.cxf.ws.policy.PolicyBuilder
+import org.apache.cxf.ws.policy.PolicyBuilderImpl
 import org.apache.cxf.ws.policy.PolicyEngine
 import org.apache.cxf.ws.policy.attachment.reference.RemoteReferenceResolver
 import org.apache.cxf.ws.security.trust.STSClient
@@ -25,14 +26,13 @@ object STSClientConfig {
         credentials: Pair<String, String>,
         callIdGenerator: () -> String = { ULID.randomULID() },
     ): STSClient {
-        val bus = BusFactory.getDefaultBus()
+        val bus: Bus = BusFactory.getDefaultBus(true)
+
         return STSClient(bus).apply {
             isEnableAppliesTo = false
             isAllowRenewing = false
-
             location = stsUrl
             outInterceptors = listOf(CallIdInterceptor(callIdGenerator))
-
             properties =
                 mapOf(
                     SecurityConstants.USERNAME to credentials.first,
@@ -60,16 +60,20 @@ object STSClientConfig {
     ) {
         requestContext[SecurityConstants.STS_CLIENT] = stsClient
         requestContext[SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT] = true
-
         setClientEndpointPolicy(bus.resolvePolicy(policyUri))
     }
 
     private fun Bus.resolvePolicy(policyUri: String): Policy {
-        val registry = getExtension(PolicyEngine::class.java).registry
-        val resolved = registry.lookup(policyUri)
+        val registry = getExtension(PolicyEngine::class.java)?.registry
+        val resolved = registry?.lookup(policyUri)
+
+        if (getExtension(PolicyBuilder::class.java) == null) {
+            setExtension(PolicyBuilderImpl(), PolicyBuilder::class.java)
+        }
 
         val policyBuilder = getExtension(PolicyBuilder::class.java)
         val remoteReferenceResolver = RemoteReferenceResolver("", policyBuilder)
+
         return resolved ?: remoteReferenceResolver.resolveReference(policyUri)
     }
 

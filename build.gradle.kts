@@ -56,7 +56,7 @@ val kotliqueryVersion = "1.9.1"
 val testcontainersVersion = "1.20.4"
 val vaultVersion = "1.3.10"
 val activemqVersion = "2.39.0"
-val cxfVersion = "4.0.5"
+val cxfVersion = "4.1.0"
 val ibmmqVersion = "9.4.1.1"
 val glassfishJaxbVersion = "4.0.5"
 val tjenestespesifikasjonVersion = "1.0_20250211133838_7726a80"
@@ -87,7 +87,12 @@ dependencies {
     implementation("com.ibm.mq:com.ibm.mq.jakarta.client:$ibmmqVersion")
 
     // SOAP
-    implementation("no.nav.common:cxf:$commonVersion") {
+    implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
+    implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
+    implementation("org.apache.cxf:cxf-rt-transports-http:$cxfVersion")
+    implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
+    implementation("org.apache.cxf:cxf-rt-security:$cxfVersion")
+    implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion") {
         exclude(group = "org.opensaml")
     }
 

@@ -1,6 +1,7 @@
 import kotlinx.kover.gradle.plugin.dsl.tasks.KoverReport
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -34,7 +35,7 @@ repositories {
             }
         }
     }
-
+    maven { url = uri("https://build.shibboleth.net/maven/releases/") }
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
 }
 
@@ -90,11 +91,7 @@ dependencies {
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-transports-http:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-security:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion") {
-        exclude(group = "org.opensaml")
-    }
+    implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
 
     // Jaxb
     runtimeOnly("org.glassfish.jaxb:jaxb-runtime:$glassfishJaxbVersion")
@@ -182,6 +179,11 @@ tasks {
         finalizedBy(koverHtmlReport)
         mergeServiceFiles {
             setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
+        }
+        // Make sure the cxf service files are handled correctly so that the SOAP services work.
+        transform(ServiceFileTransformer::class.java) {
+            setPath("META-INF/cxf")
+            include("bus-extensions.txt")
         }
     }
 

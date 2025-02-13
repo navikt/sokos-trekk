@@ -7,13 +7,9 @@ import com.ibm.msg.client.jakarta.wmq.WMQConstants
 import jakarta.jms.ConnectionFactory
 
 private const val UTF_8_WITH_PUA = 1208
-const val MQ_BATCH_SIZE = 200
 
 object MQConfig {
-    fun connectionFactory(
-        mqProperties: PropertiesConfig.MQProperties = PropertiesConfig.MQProperties(),
-        serviceUserProperties: PropertiesConfig.ServiceUserProperties = PropertiesConfig.ServiceUserProperties(),
-    ): ConnectionFactory =
+    fun connectionFactory(mqProperties: PropertiesConfig.MQProperties = PropertiesConfig.MQProperties()): ConnectionFactory =
         JmsFactoryFactory.getInstance(JAKARTA_WMQ_PROVIDER).createConnectionFactory().apply {
             setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, WMQConstants.WMQ_CM_CLIENT)
             setStringProperty(WMQConstants.WMQ_QUEUE_MANAGER, mqProperties.mqQueueManagerName)
@@ -25,7 +21,7 @@ object MQConfig {
             setIntProperty(WMQConstants.JMS_IBM_ENCODING, MQConstants.MQENC_NATIVE)
             setIntProperty(WMQConstants.JMS_IBM_CHARACTER_SET, UTF_8_WITH_PUA)
             setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, mqProperties.userAuth)
-            setStringProperty(WMQConstants.USERID, serviceUserProperties.serviceUsername)
-            setStringProperty(WMQConstants.PASSWORD, serviceUserProperties.servicePassword)
+            setStringProperty(WMQConstants.USERID, mqProperties.username)
+            setStringProperty(WMQConstants.PASSWORD, mqProperties.password)
         }
 }

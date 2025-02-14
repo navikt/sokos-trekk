@@ -14,7 +14,9 @@ fun Application.routingConfig(
     routing {
         internalNaisRoutes(applicationState)
         authenticate(useAuthentication, AUTHENTICATION_NAME) {
-            trekkApi()
+            if (PropertiesConfig.isDev() || PropertiesConfig.isLocal()) {
+                trekkApi()
+            }
         }
     }
 }

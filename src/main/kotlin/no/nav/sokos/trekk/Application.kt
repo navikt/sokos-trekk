@@ -22,9 +22,7 @@ private fun Application.module() {
     commonConfig()
     applicationLifecycleConfig(applicationState)
     securityConfig(useAuthentication)
-    if (PropertiesConfig.isDev() || PropertiesConfig.isLocal()) {
-        routingConfig(useAuthentication, applicationState)
-    }
+    routingConfig(useAuthentication, applicationState)
 
     if (PropertiesConfig.MQProperties().mqListenerEnabled) {
         JmsListenerService().start()

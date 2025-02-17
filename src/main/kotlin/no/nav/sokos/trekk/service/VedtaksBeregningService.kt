@@ -55,7 +55,7 @@ class VedtaksBeregningService(
     private fun kalkulerSumArena(arenaVedtakList: List<ArenaVedtak>): BigDecimal {
         return arenaVedtakList
             .map { it.dagsats }
-            .fold(BigDecimal.ZERO) { acc, dagsats -> acc + dagsats }
+            .fold(BigDecimal.ZERO, BigDecimal::add)
             .multiply(FAKTOR_MND.toBigDecimal())
             .setScale(SUM_SCALE, RoundingMode.HALF_UP)
     }
@@ -65,8 +65,8 @@ class VedtaksBeregningService(
         sumOs: BigDecimal,
     ): Beslutning {
         return when {
+            sumArena > BigDecimal.ZERO && sumOs > BigDecimal.ZERO -> Beslutning.BEGGE
             sumArena > BigDecimal.ZERO -> Beslutning.ABETAL
-            sumOs > BigDecimal.ZERO && sumArena > BigDecimal.ZERO -> Beslutning.BEGGE
             sumOs > BigDecimal.ZERO -> Beslutning.OS
             else -> Beslutning.INGEN
         }
@@ -76,10 +76,10 @@ class VedtaksBeregningService(
         sumArena: BigDecimal,
         sumOs: BigDecimal,
         trekkSats: BigDecimal,
-        system: System,
+        system: System?,
     ): Beslutning {
         return when {
-            (system == System.J && sumArena >= trekkSats && sumArena != BigDecimal.ZERO) || (sumArena >= sumOs && sumArena > BigDecimal.ZERO) -> Beslutning.ABETAL
+            (system == System.J && sumArena >= trekkSats && sumArena.compareTo(BigDecimal.ZERO) != 0) || (sumArena >= sumOs && sumArena > BigDecimal.ZERO) -> Beslutning.ABETAL
             sumOs > sumArena -> Beslutning.OS
             else -> Beslutning.INGEN
         }

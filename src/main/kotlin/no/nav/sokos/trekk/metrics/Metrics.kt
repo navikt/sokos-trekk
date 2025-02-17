@@ -6,6 +6,7 @@ import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.core.metrics.Counter
 
 private const val METRICS_NAMESPACE = "trekk"
+const val TAG_EXCEPTION_NAME = "exception_name"
 
 object Metrics {
     val prometheusMeterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
@@ -40,7 +41,7 @@ object Metrics {
             .builder()
             .name("${METRICS_NAMESPACE}_feilmelding_fra_arena_counterr")
             .help("Antall feilmeldinger returnert fra Arena")
-            .labelNames("exception_name")
+            .labelNames(TAG_EXCEPTION_NAME)
             .withoutExemplars()
             .register(prometheusMeterRegistry.prometheusRegistry)
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FinnYtelseVedtakListeResponse>
+    <!--Zero or more repetitions:-->
+    <personYtelseListe>
+        <ident>12312312312</ident>
+        <!--1 or more repetitions:-->
+        <sakListe>
+            <fagsystemSakId>321</fagsystemSakId>
+            <tema>DAG</tema>
+            <!--1 or more repetitions:-->
+            <vedtakListe>
+                <vedtaksperiode>
+                    <fom>2017-10-01</fom>
+                    <tom>2018-09-30</tom>
+                </vedtaksperiode>
+                <rettighetstype>PERM</rettighetstype>
+                <dagsats>100.00</dagsats>
+            </vedtakListe>
+        </sakListe>
+    </personYtelseListe>
+</FinnYtelseVedtakListeResponse>

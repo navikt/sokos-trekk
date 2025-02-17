@@ -60,8 +60,7 @@ val activemqVersion = "2.39.0"
 val cxfVersion = "4.1.0"
 val ibmmqVersion = "9.4.1.1"
 val glassfishJaxbVersion = "4.0.5"
-val tjenestespesifikasjonVersion = "1.0_20250211133838_7726a80"
-val commonVersion = "3.2025.01.14_14.19-79b3041cae56"
+val tjenestespesifikasjonVersion = "1.0_20250218124429_8804209"
 
 dependencies {
 
@@ -70,6 +69,7 @@ dependencies {
     implementation("io.ktor:ktor-server-call-id-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
 
     // Ktor client
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")

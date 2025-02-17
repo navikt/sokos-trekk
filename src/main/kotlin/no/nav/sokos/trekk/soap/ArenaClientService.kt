@@ -2,6 +2,8 @@ package no.nav.sokos.trekk.soap
 
 import javax.xml.namespace.QName
 
+import kotlinx.serialization.json.Json
+
 import mu.KotlinLogging
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.ext.logging.event.LogMessageFormatter
@@ -22,6 +24,7 @@ private const val YTELSE_VEDTAK_SERVICE_NAME = "YtelseVedtak_v1"
 private const val YTELSE_VEDTAK_ENDPOINT_NAME = "YtelseVedtak_v1Port"
 
 private val secureLogger = KotlinLogging.logger("secureLogger")
+private val logger = KotlinLogging.logger {}
 
 class ArenaClientService(
     private val soapProperties: PropertiesConfig.SoapProperties = PropertiesConfig.SoapProperties(),
@@ -31,7 +34,7 @@ class ArenaClientService(
             setVerbose(true)
             setPrettyLogging(true)
         }.also {
-            it.setSender { event -> secureLogger.info("SOAP melding -> ${LogMessageFormatter.format(event)}") }
+            it.setSender { event -> logger.debug { "SOAP melding -> ${LogMessageFormatter.format(event)}" } }
         }
 
     private val ytelsesVedtakSoapClient: YtelseVedtakV1 =
@@ -53,7 +56,11 @@ class ArenaClientService(
         )
 
     fun finnYtelseVedtakListe(request: FinnYtelseVedtakListeRequest): FinnYtelseVedtakListeResponse {
-        secureLogger.info { "FinnYtelseVedtakListeRequest: $request" }
-        return ytelsesVedtakSoapClient.finnYtelseVedtakListe(request)
+        val json = Json { encodeDefaults = true }
+        secureLogger.info { "FinnYtelseVedtakListeRequest: ${json.encodeToString(request)}" }
+        val response = ytelsesVedtakSoapClient.finnYtelseVedtakListe(request)
+
+        secureLogger.info { "FinnYtelseVedtakListeResponse: ${json.encodeToString(response)}" }
+        return response
     }
 }

@@ -1,63 +1,82 @@
-kind: Application
-apiVersion: nais.io/v1alpha1
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+
 metadata:
   name: sokos-trekk
   namespace: okonomi
   labels:
     team: okonomi
 spec:
-  image: {{image}}
-  ingresses:
-  - https://trekk-q1.intern.dev.nav.no
-  liveness:
-    path: /isAlive
-    initialDelay: 30
-    periodSeconds: 5
-    failureThreshold: 30
-  prometheus:
-    enabled: true
-    path: /actuator/prometheus
-  readiness:
-    path: /isReady
-    initialDelay: 30
-    periodSeconds: 5
-    failureThreshold: 30
+  image: "{{{ image }}}"
+  port: 8080
   replicas:
     min: 1
     max: 1
+    cpuThresholdPercentage: 75
+  liveness:
+    path: /internal/isAlive
+    initialDelay: 5
+    timeout: 5
+    periodSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /internal/isReady
+    initialDelay: 5
+    periodSeconds: 5
+    timeout: 5
   resources:
     limits:
       memory: 2024Mi
     requests:
-      cpu: 100m
+      cpu: 500m
       memory: 1024Mi
-  vault:
+  ingresses:
+    - https://sokos-trekk.intern.dev.nav.no
+  prometheus:
     enabled: true
-    paths:
-    - kvPath: /serviceuser/data/dev/srvtrekk
-      mountPath: /var/run/secrets/nais.io/srvtrekk
+    path: /actuator/prometheus
+  secureLogs:
+    enabled: true
+  azure:
+    application:
+      enabled: true
+      allowAllUsers: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: azure-token-generator
+          namespace: aura
+          cluster: dev-gcp
+  webproxy: true
+  envFrom:
+    - secret: sokos-trekk-serviceuser-credentials
+
   env:
-    - name: MQGATEWAY01_HOSTNAME
+    - name: USE_AUTHENTICATION
+      value: "true"
+
+    # MQ
+    - name: MQ_HOSTNAME
       value: b27apvl219.preprod.local
-    - name: MQGATEWAY01_PORT
+    - name: MQ_PORT
       value: "1413"
-    - name: MQGATEWAY01_NAME
+    - name: MQ_QUEUE_MANAGER_NAME
       value: MQLS01
-    - name: TREKK_CHANNEL_NAME
+    - name: MQ_CHANNEL_NAME
       value: Q1_TREKK
-    - name: TREKK_TREKK_INN_QUEUENAME
+    - name: MQ_TREKK_INN_QUEUE_NAME
       value: QA.Q1_TREKK.TREKK_INN
-    - name: TREKK_TREKK_INN_BOQ_QUEUENAME
+    - name: MQ_TREKK_INN_BOQ_QUEUE_NAME
       value: Q1_TREKK.TREKK_INN_BOQ
-    - name: OB04_TREKK_REPLY_QUEUENAME
+    - name: MQ_TREKK_REPLY_QUEUE_NAME
       value: QA.Q1_231.OB04_TREKK_REPLY
-    - name: OB04_TREKK_REPLY_BATCH_QUEUENAME
+    - name: MQ_TREKK_REPLY_BATCH_QUEUE_NAME
       value: QA.Q1_231.OB04_TREKK_REPLY_BATCH
-    - name: SRVTREKK_USERNAME
-      value: srvtrekk
-    - name: SECURITYTOKENSERVICE_URL
+    - name: MQ_LISTENER_ENABLED
+      value: "true"
+
+    # SOQP
+    - name: SECURITY_TOKENSERVICE_URL
       value: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
     - name: VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL
       value: https://arena-q1.adeo.no/ail_ws/YtelseVedtak_v1
-    - name: SPRING_PROFILES_ACTIVE
-      value: default,prod

@@ -10,7 +10,6 @@ on:
         options:
           - q1
           - qx
-          - test
 
 env:
   TZ: Europe/Oslo

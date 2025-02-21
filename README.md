@@ -2,25 +2,59 @@
 
 ## Innholdsoversikt
 
-* [Innledning](#innledning)
-* [Flyt](#flyt)
-* [Database](#database)
-* [Integrasjoner mot Arena](#integrasjon-mot-arena)
-* [Integrasjoner mot OS](#integrasjon-mot-os)
+* [1. Funksjonelle Krav](#1-Funksjonelle-Krav)
+* [2. Utviklingsmiljø](#2-Utviklingsmiljø)
+* [3. Programvarearkitektur](#3-Programvarearkitektur)
+  * [Integrasjon mot Arena](#Integrasjon-mot-Arena)
+  * [Integrasjon mot OS](#Integrasjon-mot-OS)
+  * [Forklaring til melding fra OS på TREKK_INN kø:](#Forklaring-til-melding-fra-OS-på-TREKK_INN-kø)
+  * [Forklaring til melding til OS på TREKK_REPLY kø:](#Forklaring-til-melding-til-OS-på-TREKK_REPLY-kø)
+* [4. Deployment](#4-Deployment)
+* [5. Autentisering](#5-Autentisering)
+* [6. Drift og støtte](#6-Drift-og-støtte)
+* [7. Henvendelser](#7-Henvendelser)
 
 ---
 
-## Innledning
-
-`sokos-trekk` er en java-applikasjon som kjører på NAIS.
+# 1. Funksjonelle Krav
 
 Applikasjonens oppgave er å lese inn en liste med trekkvedtak fra Oppdragssystemet og fra ARENA og sammenligne disse.
 
 Ut fra denne sammenligningen gjøres en beslutning på hvor et trekk skal effektueres. Dette kan være OS, Abetal, begge eller ingen.
 
-## Flyt
+# 2. Utviklingsmiljø
 
-Flyten i `sokos-trekk` som følger:
+### Forutsetninger
+
+* Java 21
+* Gradle
+* [Kotest](https://plugins.jetbrains.com/plugin/14080-kotest) plugin for å kjøre tester
+
+### Bygge prosjekt
+
+```
+./gradlew clean build shadowJar
+```
+
+### Lokal utvikling
+
+For å kjøre applikasjonen lokalt må du bruke VDI.
+
+- Kjør scriptet [setupLocalEnvironment.sh](setupLocalEnvironment.sh)
+  ```
+  chmod 755 setupLocalEnvironment.sh && ./setupLocalEnvironment.sh
+  ```
+  Denne vil opprette [default.properties](defaults.properties) med alle environment variabler du trenger for å kjøre
+  applikasjonen som er definert i [PropertiesConfig](src/main/kotlin/no/nav/sokos/spk/mottak/config/PropertiesConfig.kt).
+
+### Miljøer
+
+`sokos-trekk` kjøres i følgende miljøer:
+- q1
+- qx
+- prod
+
+# 3. Programvarearkitektur
 
 ````mermaid
 flowchart LR
@@ -37,11 +71,7 @@ flowchart LR
 * Trekk går gjennom ytelsene mottatt fra Oppdragssystemet og sammenligner med ytelsene i Arena. Det gjøres ut fra dette en besluttning om hvor hvert trekk skal effektueres
 * Trekklisten med tilhørende beslutning returneres, via TREKK_REPLY kø, til Oppdragssystemet.
 
-## Database
-
-Ingen avhengigheter til database.
-
-## Integrasjon mot Arena
+### Integrasjon mot Arena
 
 Trekk kaller YtelseVedtak_v1 webservice (SOAP) hos Arena. Se definisjon av tjenesten: Trekk - Tjenester som konsumeres.
 En ytelsesVedtak-request vil inneholde en ident (fødselsnummer), en periode og en temaliste.
@@ -73,7 +103,7 @@ Eksempel på request til Arena:
 </v1:finnYtelseVedtakListe>
 ```
 
-## Integrasjon mot OS
+### Integrasjon mot OS
 
 Trekk leser meldinger fra OS på køen TREKK_INN og skriver meldinger til OS på køen TREKK_REPLY. Disse meldingene vil valideres mot følgende XSD
 
@@ -324,3 +354,68 @@ Eksempel på XML på TREKK_REPLY kø
     </trekkResponse>
 </trekk>
 ```
+
+# 4. Deployment
+
+Distribusjon av tjenesten er gjort med bruk av Github Actions.
+[sokos-trekk CI / CD](https://github.com/navikt/sokos-trekk/actions)
+
+Push/merge til main branch direkte er ikke mulig. Det må opprettes PR og godkjennes før merge til main branch.
+Når PR er merged til main branch vil Github Actions bygge og deploye til dev-fss og prod-fss.
+Har også mulighet for å deploye manuelt til testmiljø ved å deploye PR.
+
+# 5. Autentisering
+
+Applikasjonen bruker [AzureAD](https://docs.nais.io/security/auth/azure-ad/). 
+Dette er kun ment for at utvikler skal kunne teste trekk-komponenten i dev miljø.
+
+# 6. Drift og støtte
+
+### Logging
+
+https://logs.adeo.no.
+
+Feilmeldinger og infomeldinger som ikke innheholder sensitive data logges til data view `Applikasjonslogger`.  
+Sensetive meldinger logges til data view `Securelogs` [sikker-utvikling/logging](https://sikkerhet.nav.no/docs/sikker-utvikling/logging)).
+
+- Filter for Produksjon
+    * application:sokos-trekk AND envclass:p
+
+- Filter for Dev
+    * application:sokos-trekk AND envclass:q
+
+### Kubectl
+
+For dev-fss:
+
+```shell script
+kubectl config use-context dev-fss
+kubectl get pods -n okonomi | grep sokos-trekk
+kubectl logs -f sokos-spk-mottak-<POD-ID> --namespace okonomi -c sokos-trekk
+```
+
+For prod-fss:
+
+```shell script
+kubectl config use-context prod-fss
+kubectl get pods -n okonomi | grep sokos-trekk
+kubectl logs -f sokos-spk-mottak-<POD-ID> --namespace okonomi -c sokos-trekk
+```
+
+### Alarmer
+
+Vi bruker [nais-alerts](https://doc.nais.io/observability/alerts) for å sette opp alarmer.
+Disse finner man konfigurert i [.nais/alerts-dev.yaml](.nais/alerts-dev.yaml) filen og [.nais/alerts-prod.yaml](.nais/alerts-prod.yaml).
+Alarmene blir publisert i Slack kanalen [#team-mob-alerts-dev](https://nav-it.slack.com/archives/C042SF2FEQM) og [#team-mob-alerts-prod](https://nav-it.slack.com/archives/C042ESY71GX).
+
+### Grafana
+
+- [sokos-trekk](url)
+
+---
+
+# 7. Henvendelser
+
+Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på Github.
+Interne henvendelser kan sendes via Slack i kanalen [#po-utbetaling](https://nav-it.slack.com/archives/CKZADNFBP)
+

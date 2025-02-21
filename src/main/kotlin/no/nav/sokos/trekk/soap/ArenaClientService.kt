@@ -2,8 +2,6 @@ package no.nav.sokos.trekk.soap
 
 import javax.xml.namespace.QName
 
-import kotlinx.serialization.json.Json
-
 import mu.KotlinLogging
 import org.apache.cxf.ext.logging.LoggingFeature
 import org.apache.cxf.ext.logging.event.LogMessageFormatter
@@ -14,6 +12,7 @@ import ulid.ULID
 import no.nav.sokos.trekk.config.PropertiesConfig
 import no.nav.sokos.trekk.config.ServiceUserConfig
 import no.nav.sokos.trekk.config.wrapInStsClient
+import no.nav.sokos.trekk.util.JaxbUtils.toXml
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeRequest
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeResponse
@@ -56,11 +55,11 @@ class ArenaClientService(
         )
 
     fun finnYtelseVedtakListe(request: FinnYtelseVedtakListeRequest): FinnYtelseVedtakListeResponse {
-        val json = Json { encodeDefaults = true }
-        secureLogger.info { "FinnYtelseVedtakListeRequest: ${json.encodeToString(request)}" }
-        val response = ytelsesVedtakSoapClient.finnYtelseVedtakListe(request)
+        secureLogger.info { "FinnYtelseVedtakListeRequest: ${request.toXml(NAMESPACE)}" }
 
-        secureLogger.info { "FinnYtelseVedtakListeResponse: ${json.encodeToString(response)}" }
+        val response = ytelsesVedtakSoapClient.finnYtelseVedtakListe(request)
+        secureLogger.info { "FinnYtelseVedtakListeResponse: ${response.toXml(NAMESPACE)}" }
+
         return response
     }
 }

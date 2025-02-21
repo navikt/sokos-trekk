@@ -5,10 +5,10 @@
 * [1. Funksjonelle Krav](#1-Funksjonelle-Krav)
 * [2. Utviklingsmiljø](#2-Utviklingsmiljø)
 * [3. Programvarearkitektur](#3-Programvarearkitektur)
-  * [Integrasjon mot Arena](#Integrasjon-mot-Arena)
-  * [Integrasjon mot OS](#Integrasjon-mot-OS)
-  * [Forklaring til melding fra OS på TREKK_INN kø:](#Forklaring-til-melding-fra-OS-på-TREKK_INN-kø)
-  * [Forklaring til melding til OS på TREKK_REPLY kø:](#Forklaring-til-melding-til-OS-på-TREKK_REPLY-kø)
+    * [Integrasjon mot Arena](#Integrasjon-mot-Arena)
+    * [Integrasjon mot OS](#Integrasjon-mot-OS)
+    * [Forklaring til melding fra OS på TREKK_INN kø:](#Forklaring-til-melding-fra-OS-på-TREKK_INN-kø)
+    * [Forklaring til melding til OS på TREKK_REPLY kø:](#Forklaring-til-melding-til-OS-på-TREKK_REPLY-kø)
 * [4. Deployment](#4-Deployment)
 * [5. Autentisering](#5-Autentisering)
 * [6. Drift og støtte](#6-Drift-og-støtte)
@@ -45,24 +45,25 @@ For å kjøre applikasjonen lokalt må du bruke VDI.
   chmod 755 setupLocalEnvironment.sh && ./setupLocalEnvironment.sh
   ```
   Denne vil opprette [default.properties](defaults.properties) med alle environment variabler du trenger for å kjøre
-  applikasjonen som er definert i [PropertiesConfig](src/main/kotlin/no/nav/sokos/spk/mottak/config/PropertiesConfig.kt).
+  applikasjonen som er definert i [PropertiesConfig](src/main/kotlin/no/nav/sokos/trekk/config/PropertiesConfig.kt).
 
 ### Miljøer
 
 `sokos-trekk` kjøres i følgende miljøer:
+
 - q1
 - qx
 - prod
 
 # 3. Programvarearkitektur
 
-````mermaid
+```mermaid
 flowchart LR
     osout("OS") -- TREKK_INN (MQ) --> trekk("sokos-trekk")
     trekk -- Soap --> arena("Arena")
     arena -- Soap --> trekk
     trekk -- TREKK_REPLY (MQ) --> osinn("OS")
-````
+```
 
 * Oppdragssystemet legger en melding på TREKK_INN-kø.
 * `sokos-trekk` leser meldingen på kø.
@@ -180,17 +181,17 @@ Trekk leser meldinger fra OS på køen TREKK_INN og skriver meldinger til OS på
 
     <xsd:simpleType name="TypeKjoring">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="INNL"/><!-- Innlesing av nytt trekk -->
-            <xsd:enumeration value="PERI"/><!-- Periodisk kontroll av trekk -->
-            <xsd:enumeration value="REME"/><!-- Returmelding til trekkinnmelder ved ingen ytelse -->
+            <xsd:enumeration value="INNL"/>
+            <xsd:enumeration value="PERI"/>
+            <xsd:enumeration value="REME"/>
         </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="System">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="J"/> <!-- Abetal  -->
-            <xsd:enumeration value="N"/> <!-- OS      -->
-            <xsd:enumeration value="B"/> <!-- Begge   -->
+            <xsd:enumeration value="J"/>
+            <xsd:enumeration value="N"/>
+            <xsd:enumeration value="B"/>
         </xsd:restriction>
     </xsd:simpleType>
 
@@ -253,14 +254,14 @@ Forklaring på feltene i XML:
         <td style="vertical-align: top">typeKjoring</td>
         <td>
             Type kjøring i OS med følgende gyldige verdier:<br><br>
-            <li><b>INNL</b> - innlesing av nytt trekk.</li>
-            <li><b>PERI</b> - Periodisk kontroll av trekk.</li>
-            <li><b>REME</b> - Returmelding til trekkinnmelder ved ingen ytelse.</li>
+            <li><b>INNL</b> - innlesing av nytt trekk</li>
+            <li><b>PERI</b> - Periodisk kontroll av trekk</li>
+            <li><b>REME</b> - Returmelding til trekkinnmelder ved ingen ytelse</li>
         </td>
     </tr>
     <tr>
         <td style="vertical-align: top">+trekkRequest</td>
-        <td>En liste med TrekkRequest fra OS. Må inneholde minst 1, kan maksimalt inneholde 1000.</td>
+        <td>En liste med TrekkRequest fra OS. Må inneholde minst 1, kan maksimalt inneholde 1000</td>
     </tr>
 </table>
 
@@ -270,7 +271,7 @@ Forklaring på feltene i XML:
     </tr>
     <tr>
         <td>offnr</td>
-        <td>Fødselsnummer på bruker.</td>
+        <td>Fødselsnummer på bruker</td>
     </tr>
     <tr>
         <td>trekkvedtakId</td>
@@ -287,11 +288,11 @@ Forklaring på feltene i XML:
     </tr>
     <tr>
         <td>trekkSats</td>
-        <td>Sats på trekket. Max beløp det kan trekkes i en måned.</td>
+        <td>Sats på trekket. Max beløp det kan trekkes i en måned</td>
     </tr>
     <tr>
         <td>totalSatsOS</td>
-        <td>Totalsats for alle trekkvedtak i OS.</td>
+        <td>Totalsats for alle trekkvedtak i OS</td>
     </tr>
 </table>
 
@@ -355,6 +356,156 @@ Eksempel på XML på TREKK_REPLY kø
 </trekk>
 ```
 
+Forklaring på feltene i XML:
+
+<table>
+    <tr>
+        <th style="text-align: left" colspan="2">Trekk</th>        
+    </tr>
+    <tr>
+        <td style="vertical-align: top">typeKjoring</td>
+        <td>
+            Type kjøring i OS med følgende gyldige verdier:<br><br>
+            <li><b>INNL</b> - innlesing av nytt trekk.</li>
+            <li><b>PERI</b> - Periodisk kontroll av trekk.</li>
+            <li><b>REME</b> - Returmelding til trekkinnmelder ved ingen ytelse.</li>
+        </td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">+trekkRequest</td>
+        <td>En liste med TrekkRequest fra OS. Må inneholde minst 1, kan maksimalt inneholde 1000.</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th style="text-align: left" colspan="2">TrekkResponse</th>        
+    </tr>
+    <tr>
+        <td>trekkvedtakId</td>
+        <td>Oppdragssystemets trekkvedtakId</td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">beslutning</td>
+        <td>
+            Beslutning om hvor trekket skal effektueres:<br><br>
+            <li>OS: totalSatsOS er høyere eller lik totalSatsArena</li>
+            <li>ABETAL: totalSatsArena er høyere enn totalSatsOS</li>
+            <li>BEGGE: Brukes ved prosenttrekk hvor ytelse i OS er større enn 0</li>
+            <li>INGEN: Brukes kun dersom det ikke finnes vedtak verken i OS eller ARENA</li>
+        </td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">abetal</td>
+        <td>
+            Hvor har trekket vært effektuert tidligere. Gyldige verdier:<br><br>
+            <li>J (effektuert i Abetal)</li>
+            <li>N (effektuert i OS)</li>
+            <li>M (Manuelt registrert trekk, ikke effektuert tidligere)</li>
+        </td>
+    </tr>
+    <tr>
+        <td>totalSatsOS</td>
+        <td>Den totale satsen for alle trekkvedtak i OS for perioden</td>
+    </tr>
+    <tr>
+        <td>totalSatsArena</td>
+        <td>Den totale satsen for alle trekkvedtak i Arena for perioden</td>
+    </tr>
+    <tr>
+        <td>+vedtak</td>
+        <td>En liste (maks 1000) med ArenaVedtak fra ARENA. Listen kan være tom</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th style="text-align: left" colspan="2">ArenaVedtak</th>        
+    </tr>
+    <tr>
+        <td style="vertical-align: top">vedtaksperiode</td>
+        <td>
+            <li>Periode: fom (YYYY-MM-DD)</li>
+            <li>Periode: tom (YYYY-MM-DD)</li>
+        </td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">tema</td>
+        <td>
+            Vedtakets rettighetstype. Lovlige verdier vil være avhengig av sakens tema:
+            <table>
+            <tr>
+                <th>Tema</th>
+                <th>Rettighettype kode</th>
+                <th>Rettighettype navn</th>
+            </tr>
+            <tr>
+                <td>AAP</td>
+                <td>AAP</td>
+                <td>Arbeidsavklaringspenger</td>
+            </tr>
+            <tr>
+                <td>IND</td>
+                <td>BASI</td>
+                <td>Tiltakspenger (basisytelse før 2014)</td>
+            </tr>
+            <tr>
+                <td>IND</td>
+                <td>BASI</td>
+                <td>Barnetillegg</td>
+            </tr>
+            <tr>
+                <td>DAG</td>
+                <td>DAGO</td>
+                <td>Ordinære dagpenger</td>  
+            </tr>
+            <tr>
+                <td>DAG</td>
+                <td>FISK</td>
+                <td>Dagp. v/perm fra fiskeindustri</td>
+            </tr>
+            <tr>
+                <td>DAG</td>
+                <td>LONN</td>
+                <td>Lønnsgarantimidler - dagpenger</td>
+            </tr>
+            <tr>
+                <td>DAG</td>
+                <td>PERM</td>
+                <td>Dagpenger under permitteringer</td>
+            </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="vertical-align: top">dagsats</td>
+        <td>Fastsatt dagsats med barnetillegg etter eventuell samordning med andre ytelser. For individstønad vil barnetillegg ha et eget vedtak. Selve vedtaket om tiltakspenger er uten barnetillegg.</td>
+    </tr>
+</table>
+
+### Beslutningstaking
+
+Trekk med dag- eller månedssats sendes aldri inn til Trekk-applikasjonen dersom OS kan trekke beløpet fullt ut, enten det er et nytt trekk eller trekket allerede er aktivt i OS.
+
+```mermaid
+sequenceDiagram
+  participant Oppdrag as OppdragZ
+  participant JmsListener as JmsListener
+  participant JmsSender as JmsSender
+  participant BTS as BehandleTrekkvedtakSerice
+  participant VBS as VedtaksBeregningService
+  participant ARENA as Arena
+  
+  Oppdrag ->>+ JmsListener: Motta informasjon fra TREKK_INN kø
+  JmsListener ->>+ BTS: Send Trekk til behandleTrekk
+  BTS ->>+ ARENA: Hent YtelseVedtak fra Arena gjennom SOAP
+  ARENA ->>+ BTS: Motta ArenaVedtak til behandleTrekk
+  BTS ->>+  VBS: Vurdere YtelseVedtak med ArenadVedtak 
+  VBS ->>+ BTS: Returnere status (Abetal, Begge, OS, Ingen) 
+  BTS ->>+ JmsSender: Send TrekkResponse 
+  JmsSender ->>+ Oppdrag: Motta Trekk med TrekkResponse
+```
+
 # 4. Deployment
 
 Distribusjon av tjenesten er gjort med bruk av Github Actions.
@@ -366,7 +517,7 @@ Har også mulighet for å deploye manuelt til testmiljø ved å deploye PR.
 
 # 5. Autentisering
 
-Applikasjonen bruker [AzureAD](https://docs.nais.io/security/auth/azure-ad/). 
+Applikasjonen bruker [AzureAD](https://docs.nais.io/security/auth/azure-ad/).
 Dette er kun ment for at utvikler skal kunne teste trekk-komponenten i dev miljø.
 
 # 6. Drift og støtte
@@ -391,7 +542,7 @@ For dev-fss:
 ```shell script
 kubectl config use-context dev-fss
 kubectl get pods -n okonomi | grep sokos-trekk
-kubectl logs -f sokos-spk-mottak-<POD-ID> --namespace okonomi -c sokos-trekk
+kubectl logs -f sokos-trekk-<POD-ID> --namespace okonomi -c sokos-trekk
 ```
 
 For prod-fss:
@@ -399,7 +550,7 @@ For prod-fss:
 ```shell script
 kubectl config use-context prod-fss
 kubectl get pods -n okonomi | grep sokos-trekk
-kubectl logs -f sokos-spk-mottak-<POD-ID> --namespace okonomi -c sokos-trekk
+kubectl logs -f sokos-trekk-<POD-ID> --namespace okonomi -c sokos-trekk
 ```
 
 ### Alarmer

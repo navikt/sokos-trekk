@@ -7,7 +7,7 @@ metadata:
   labels:
     team: okonomi
 spec:
-  image: "{{{ image }}}"
+  image: {{image}}
   port: 8080
   replicas:
     min: 1
@@ -26,7 +26,7 @@ spec:
     timeout: 5
   resources:
     limits:
-      memory: 2024Mi
+      memory: 1024Mi
     requests:
       cpu: 500m
       memory: 1024Mi

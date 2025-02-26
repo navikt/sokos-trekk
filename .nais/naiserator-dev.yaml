@@ -2,7 +2,7 @@ apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 
 metadata:
-  name: sokos-trekk-qx
+  name: sokos-trekk
   namespace: okonomi
   labels:
     team: okonomi
@@ -31,7 +31,7 @@ spec:
       cpu: 500m
       memory: 1024Mi
   ingresses:
-    - https://sokos-trekk-qx.intern.dev.nav.no
+    - https://sokos-trekk.intern.dev.nav.no
   prometheus:
     enabled: true
     path: /actuator/prometheus
@@ -63,20 +63,20 @@ spec:
     - name: MQ_QUEUE_MANAGER_NAME
       value: MQLS01
     - name: MQ_CHANNEL_NAME
-      value: QX_TREKK
+      value: Q1_TREKK
     - name: MQ_TREKK_INN_QUEUE_NAME
-      value: QA.QX_TREKK.TREKK_INN
+      value: QA.Q1_TREKK.TREKK_INN
     - name: MQ_TREKK_INN_BOQ_QUEUE_NAME
-      value: QA.QX_TREKK.TREKK_INN_BOQ
+      value: Q1_TREKK.TREKK_INN_BOQ
     - name: MQ_TREKK_REPLY_QUEUE_NAME
-      value: QA.QX_231.OB04_TREKK_REPLY
+      value: QA.Q1_231.OB04_TREKK_REPLY
     - name: MQ_TREKK_REPLY_BATCH_QUEUE_NAME
-      value: QA.QX_231.OB04_TREKK_REPLY_BATCH
+      value: QA.Q1_231.OB04_TREKK_REPLY_BATCH
     - name: MQ_LISTENER_ENABLED
       value: "true"
 
     # SOQP
     - name: SECURITY_TOKENSERVICE_URL
-      value: https://sts-q3.preprod.local/SecurityTokenServiceProvider/
+      value: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
     - name: VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL
-      value: https://arena-q0.adeo.no/ail_ws/YtelseVedtak_v1
+      value: https://arena-q1.adeo.no/ail_ws/YtelseVedtak_v1

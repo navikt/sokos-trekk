@@ -51,12 +51,11 @@ val kotestVersion = "6.0.0.M1"
 val wiremockVersion = "3.10.0"
 val kotlinxSerializationVersion = "1.8.0"
 val kotlinxDatetimeVersion = "0.6.1"
-val mockOAuth2ServerVersion = "2.1.10"
 val mockkVersion = "1.13.16"
-val kotliqueryVersion = "1.9.1"
-val testcontainersVersion = "1.20.4"
+
 val vaultVersion = "1.3.10"
-val activemqVersion = "2.39.0"
+val aallamUlidVersion = "1.3.0"
+
 val cxfVersion = "4.1.0"
 val ibmmqVersion = "9.4.1.1"
 val glassfishJaxbVersion = "4.0.5"
@@ -114,17 +113,13 @@ dependencies {
     implementation("com.natpryce:konfig:$natpryceVersion")
 
     // Util
-    implementation("com.aallam.ulid:ulid-kotlin:1.3.0")
+    implementation("com.aallam.ulid:ulid-kotlin:$aallamUlidVersion")
 
     // Test
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    testImplementation("no.nav.security:mock-oauth2-server:$mockOAuth2ServerVersion")
-    testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
-    testImplementation("org.apache.activemq:artemis-jakarta-server:$activemqVersion")
-    testImplementation("org.wiremock:wiremock:$wiremockVersion")
 }
 
 // Vulnerability fix because of id("org.jlleitschuh.gradle.ktlint") version "12.1.2"

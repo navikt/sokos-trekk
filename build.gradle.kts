@@ -7,8 +7,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.1.0"
-    kotlin("plugin.serialization") version "2.1.0"
+    kotlin("jvm") version "2.1.10"
+    kotlin("plugin.serialization") version "2.1.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
@@ -39,18 +39,18 @@ repositories {
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
 }
 
-val ktorVersion = "3.0.3"
+val ktorVersion = "3.1.1"
 val jschVersion = "0.2.22"
-val logbackVersion = "1.5.16"
+val logbackVersion = "1.5.17"
 val logstashVersion = "8.0"
-val micrometerVersion = "1.14.3"
+val micrometerVersion = "1.14.4"
 val kotlinLoggingVersion = "3.0.5"
 val janionVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.0.0.M1"
+val kotestVersion = "6.0.0.M2"
 val wiremockVersion = "3.10.0"
 val kotlinxSerializationVersion = "1.8.0"
-val kotlinxDatetimeVersion = "0.6.1"
+val kotlinxDatetimeVersion = "0.6.2"
 val mockkVersion = "1.13.16"
 
 val vaultVersion = "1.3.10"

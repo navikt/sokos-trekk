@@ -23,7 +23,7 @@ object Metrics {
     val soapArenaRequestCounter: Counter =
         Counter
             .builder()
-            .name("${METRICS_NAMESPACE}_requests_til_arena_counter")
+            .name("${METRICS_NAMESPACE}_request_til_arena_counter")
             .help("Antall SOAP-requests til Arena")
             .withoutExemplars()
             .register(prometheusMeterRegistry.prometheusRegistry)
@@ -48,7 +48,7 @@ object Metrics {
     val mqTrekkInnMetricCounter: Counter =
         Counter
             .builder()
-            .name("${METRICS_NAMESPACE}_trekk_inn_mq_producer")
+            .name("${METRICS_NAMESPACE}_mq_trekk_inn_queue")
             .help("Counts the number of trekk sent to OppdragZ through MQ")
             .withoutExemplars()
             .register(prometheusMeterRegistry.prometheusRegistry)
@@ -56,7 +56,7 @@ object Metrics {
     val mqTrekkInnBoqMetricCounter: Counter =
         Counter
             .builder()
-            .name("${METRICS_NAMESPACE}_trekk_inn_boq_mq_producer")
+            .name("${METRICS_NAMESPACE}_mq_trekk_inn_boq_queue")
             .help("Counts the number of trekkInnBoq sent to OppdragZ through MQ")
             .withoutExemplars()
             .register(prometheusMeterRegistry.prometheusRegistry)
@@ -64,7 +64,7 @@ object Metrics {
     val mqBatchReplyMetricCounter: Counter =
         Counter
             .builder()
-            .name("${METRICS_NAMESPACE}_mq_batch_reply_producer")
+            .name("${METRICS_NAMESPACE}_mq_trekk_batch_reply_queue")
             .help("Counts the number of batch replies sent to OppdragZ through MQ")
             .withoutExemplars()
             .register(prometheusMeterRegistry.prometheusRegistry)
@@ -72,7 +72,7 @@ object Metrics {
     val mqReplyMetricCounter: Counter =
         Counter
             .builder()
-            .name("${METRICS_NAMESPACE}_mq_reply_producer")
+            .name("${METRICS_NAMESPACE}_mq_trekk_reply_queue")
             .help("Counts the number of replies sent to OppdragZ through MQ")
             .withoutExemplars()
             .register(prometheusMeterRegistry.prometheusRegistry)

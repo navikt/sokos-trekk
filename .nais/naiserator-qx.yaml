@@ -34,7 +34,7 @@ spec:
     - https://sokos-trekk-qx.intern.dev.nav.no
   prometheus:
     enabled: true
-    path: /internal/prometheus
+    path: /internal/metrics
   secureLogs:
     enabled: true
   azure:

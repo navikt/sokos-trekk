@@ -45,12 +45,6 @@ spec:
     application:
       enabled: true
       allowAllUsers: true
-  accessPolicy:
-    inbound:
-      rules:
-        - application: azure-token-generator
-          namespace: aura
-          cluster: dev-gcp
   webproxy: true
   envFrom:
     - secret: sokos-trekk-serviceuser-credentials

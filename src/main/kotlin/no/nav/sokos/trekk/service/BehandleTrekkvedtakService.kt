@@ -14,9 +14,6 @@ import no.nav.maskinelletrekk.trekk.v1.Trekk
 import no.nav.maskinelletrekk.trekk.v1.TypeKjoring
 import no.nav.sokos.trekk.config.PropertiesConfig
 import no.nav.sokos.trekk.metrics.Metrics
-import no.nav.sokos.trekk.metrics.Metrics.soapArenaErrorCounter
-import no.nav.sokos.trekk.metrics.Metrics.soapArenaRequestCounter
-import no.nav.sokos.trekk.metrics.Metrics.soapArenaResponseCounter
 import no.nav.sokos.trekk.metrics.TAG_EXCEPTION_NAME
 import no.nav.sokos.trekk.mq.JmsProducerService
 import no.nav.sokos.trekk.soap.ArenaClientService
@@ -104,13 +101,13 @@ class BehandleTrekkvedtakService(
                     temaListe.addAll(TEMA_CODE.map { Tema().apply { value = it } }.toCollection(ArrayList()))
                 }
 
-            soapArenaRequestCounter.inc()
+            Metrics.soapArenaRequestCounter.inc()
             val response = arenaClientService.finnYtelseVedtakListe(request)
-            soapArenaResponseCounter.inc()
+            Metrics.soapArenaResponseCounter.inc()
 
             response.mapToAreanVedtak()
         }.onFailure { exception ->
-            soapArenaErrorCounter.labelValues(TAG_EXCEPTION_NAME).inc()
+            Metrics.soapArenaErrorCounter.labelValues(TAG_EXCEPTION_NAME).inc()
             throw exception
         }.getOrThrow()
     }

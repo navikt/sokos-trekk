@@ -49,7 +49,7 @@ spec:
     inbound:
       rules:
         - application: azure-token-generator
-          namespace: aura
+          namespace: nais
           cluster: dev-gcp
   webproxy: true
   envFrom:

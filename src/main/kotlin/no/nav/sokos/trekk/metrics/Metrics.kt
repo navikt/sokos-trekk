@@ -39,7 +39,7 @@ object Metrics {
     val soapArenaErrorCounter: Counter =
         Counter
             .builder()
-            .name("${METRICS_NAMESPACE}_feilmelding_fra_arena_counterr")
+            .name("${METRICS_NAMESPACE}_feilmelding_fra_arena_counter")
             .help("Antall feilmeldinger returnert fra Arena")
             .labelNames(TAG_EXCEPTION_NAME)
             .withoutExemplars()
@@ -74,6 +74,14 @@ object Metrics {
             .builder()
             .name("${METRICS_NAMESPACE}_mq_trekk_reply_queue")
             .help("Counts the number of replies sent to OppdragZ through MQ")
+            .withoutExemplars()
+            .register(prometheusMeterRegistry.prometheusRegistry)
+
+    val behandletTrekkMetricCounter: Counter =
+        Counter
+            .builder()
+            .name("${METRICS_NAMESPACE}_behandlet_trekk_counter")
+            .help("Counts the number of trekk behandlet")
             .withoutExemplars()
             .register(prometheusMeterRegistry.prometheusRegistry)
 }

@@ -70,7 +70,7 @@ class BehandleTrekkvedtakService(
                 }
                 logger.info { "Send trekkvedtak: ${response.trekkResponse.map { it.trekkvedtakId }} til OppdragZ." }
             }
-
+            Metrics.behandletTrekkMetricCounter.inc(response.trekkResponse.size.toLong())
             response
         }.onFailure { exception ->
             logger.error(exception) { "Behandling av trekkvedtak feilet" }

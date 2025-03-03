@@ -10,7 +10,7 @@ plugins {
     kotlin("jvm") version "2.1.10"
     kotlin("plugin.serialization") version "2.1.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
 }
 
@@ -51,13 +51,13 @@ val kotestVersion = "6.0.0.M2"
 val wiremockVersion = "3.10.0"
 val kotlinxSerializationVersion = "1.8.0"
 val kotlinxDatetimeVersion = "0.6.2"
-val mockkVersion = "1.13.16"
+val mockkVersion = "1.13.17"
 
 val vaultVersion = "1.3.10"
 val aallamUlidVersion = "1.3.0"
 
 val cxfVersion = "4.1.0"
-val ibmmqVersion = "9.4.1.1"
+val ibmmqVersion = "9.4.2.0"
 val glassfishJaxbVersion = "4.0.5"
 val tjenestespesifikasjonVersion = "1.0_20250218124429_8804209"
 

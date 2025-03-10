@@ -56,7 +56,7 @@ val mockkVersion = "1.13.17"
 val vaultVersion = "1.3.10"
 val aallamUlidVersion = "1.3.0"
 
-val cxfVersion = "4.1.0"
+val cxfVersion = "4.1.1"
 val ibmmqVersion = "9.4.2.0"
 val glassfishJaxbVersion = "4.0.5"
 val tjenestespesifikasjonVersion = "1.0_20250218124429_8804209"

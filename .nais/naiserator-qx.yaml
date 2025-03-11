@@ -57,7 +57,7 @@ spec:
 
   env:
     - name: USE_AUTHENTICATION
-      value: "true"
+      value: "false"
 
     # MQ
     - name: MQ_HOSTNAME

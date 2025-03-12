@@ -6,4 +6,6 @@ import javax.xml.datatype.XMLGregorianCalendar
 
 object Utils {
     fun LocalDate.toXMLGregorianCalendar(): XMLGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(this.toString())
+
+    fun XMLGregorianCalendar.toLocalDate(): LocalDate = toGregorianCalendar().toZonedDateTime().toLocalDate()
 }

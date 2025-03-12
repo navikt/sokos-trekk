@@ -13,6 +13,7 @@ import no.nav.maskinelletrekk.arenamock.v1.ArenaMockData
 import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak
 import no.nav.maskinelletrekk.trekk.v1.Periode
 import no.nav.sokos.trekk.service.SUM_SCALE
+import no.nav.sokos.trekk.util.Utils.toLocalDate
 import no.nav.sokos.trekk.util.Utils.toXMLGregorianCalendar
 
 private val logger = KotlinLogging.logger {}
@@ -53,6 +54,7 @@ object ArenaMockService {
         fromDate: LocalDate,
         toDate: LocalDate,
     ): Map<String, List<ArenaVedtak>> {
+        logger.info("[ARENA-MOCK]: Bruk ArenaMockService")
         val periode: Periode =
             if (kjoreDato != null) {
                 logger.info("[ARENA-MOCK]: Kjøredato er satt til $kjoreDato")
@@ -69,6 +71,8 @@ object ArenaMockService {
         if (areanaMockDataMap.isNotEmpty()) {
             return fnrSet.mapNotNull { fnr ->
                 areanaMockDataMap[fnr]?.filter { vedtak -> erInnenforPeriode(vedtak.vedtaksperiode, periode) }
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.also { logger.info { "[ARENA-MOCK]: Hentet ${it.size} Arena-vedtak for bruker $fnr og periode ${periode.fom.toLocalDate()} til ${periode.tom.toLocalDate()}" } }
             }.associateBy { it.first().rettighetType }
         }
 
@@ -80,34 +84,15 @@ object ArenaMockService {
         arenaVedtaksPeriode: Periode,
         requestPeriode: Periode,
     ): Boolean {
-        val fom = arenaVedtaksPeriode.fom.toGregorianCalendar().toZonedDateTime().toLocalDate()
-        val tom = arenaVedtaksPeriode.tom?.toGregorianCalendar()?.toZonedDateTime()?.toLocalDate()
-        val requestFom = requestPeriode.fom.toGregorianCalendar().toZonedDateTime().toLocalDate()
-        val requestTom = requestPeriode.tom.toGregorianCalendar().toZonedDateTime().toLocalDate()
+        val fom = arenaVedtaksPeriode.fom.toLocalDate()
+        val tom = arenaVedtaksPeriode.tom?.toLocalDate()
+        val requestFom = requestPeriode.fom.toLocalDate()
+        val requestTom = requestPeriode.tom.toLocalDate()
 
-        return if (tom == null) {
-            fom.isBefore(requestTom) || fom.isEqual(requestTom)
-        } else {
-            erVedtakPeriodeStorreEnnRequestPeriode(fom, tom, requestFom, requestTom) ||
-                erVedtakDatoInnenforRequestPeriode(tom, requestFom, requestTom) ||
-                erVedtakDatoInnenforRequestPeriode(fom, requestFom, requestTom)
-        }
-    }
-
-    private fun erVedtakPeriodeStorreEnnRequestPeriode(
-        fom: LocalDate,
-        tom: LocalDate,
-        requestFom: LocalDate,
-        requestTom: LocalDate,
-    ): Boolean {
-        return fom.isBefore(requestFom) && tom.isAfter(requestFom)
-    }
-
-    private fun erVedtakDatoInnenforRequestPeriode(
-        dato: LocalDate,
-        requestFom: LocalDate,
-        requestTom: LocalDate,
-    ): Boolean {
-        return (dato.isAfter(requestFom) || dato.isEqual(requestFom)) && (dato.isBefore(requestTom) || dato.isEqual(requestTom))
+        return tom?.let {
+            (fom.isBefore(requestFom) && it.isAfter(requestFom)) ||
+                (it.isAfter(requestFom) || it.isEqual(requestFom)) && (it.isBefore(requestTom) || it.isEqual(requestTom)) ||
+                (fom.isAfter(requestFom) || fom.isEqual(requestFom)) && (fom.isBefore(requestTom) || fom.isEqual(requestTom))
+        } ?: (fom.isBefore(requestTom) || fom.isEqual(requestTom))
     }
 }

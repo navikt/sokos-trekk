@@ -9,7 +9,7 @@ kubectl config use-context dev-fss
 kubectl config set-context --current --namespace=okonomi
 
 # Get AZURE system variables
-envValue=$(kubectl exec -it $(kubectl get pods | grep sokos-trekk | cut -f1 -d' ') -c sokos-trekk -- env | egrep "^AZURE|^OB04_TREKK|^MQGATEWAY01|^TREKK|^SRVTREKK|^SECURITYTOKENSERVICE_URL")
+envValue=$(kubectl exec -it $(kubectl get pods | grep sokos-trekk | cut -f1 -d' ') -c sokos-trekk -- env | egrep "^AZURE|^MQ_|^TREKK|^SRVTREKK")
 
 # Set AZURE as local environment variables
 rm -f defaults.properties

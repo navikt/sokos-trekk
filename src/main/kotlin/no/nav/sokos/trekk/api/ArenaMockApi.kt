@@ -1,6 +1,5 @@
 package no.nav.sokos.trekk.api
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 import io.ktor.http.HttpStatusCode
@@ -12,7 +11,6 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import mu.KotlinLogging
 
-import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak
 import no.nav.sokos.trekk.arenamock.ArenaMockService
 import no.nav.sokos.trekk.config.PropertiesConfig
 
@@ -24,7 +22,6 @@ fun Route.arenaMockApi() {
             logger.info { "Mottar mock data:" }
             call.respond(
                 DataResponse(
-                    testData = ArenaMockService.areanaMockDataMap,
                     xml = ArenaMockService.mockDataXml,
                     fasitEnv = PropertiesConfig.Configuration().naisAppName,
                 ),
@@ -36,7 +33,7 @@ fun Route.arenaMockApi() {
             logger.info { "Mottar mock data: $xmlContent" }
             try {
                 ArenaMockService.lagreArenaMockData(xmlContent)
-                call.respond(HttpStatusCode.OK)
+                call.respond(HttpStatusCode.OK, "OK")
             } catch (e: Exception) {
                 logger.error(e) { "Feil ved parsing" }
                 call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
@@ -46,4 +43,4 @@ fun Route.arenaMockApi() {
 }
 
 @Serializable
-data class DataResponse(val testData: Map<String, List<@Contextual ArenaVedtak>>, val xml: String?, val fasitEnv: String)
+data class DataResponse(val xml: String?, val fasitEnv: String)

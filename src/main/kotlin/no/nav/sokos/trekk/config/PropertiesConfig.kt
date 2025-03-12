@@ -34,6 +34,8 @@ object PropertiesConfig {
                 "MQ_TREKK_INN_BOQ_QUEUE_NAME" to "Q1_TREKK.TREKK_INN_BOQ",
                 "MQ_TREKK_REPLY_QUEUE_NAME" to "QA.Q1_231.OB04_TREKK_REPLY",
                 "MQ_TREKK_REPLY_BATCH_QUEUE_NAME" to "QA.Q1_231.OB04_TREKK_REPLY_BATCH",
+                "SECURITY_TOKENSERVICE_URL" to "https://sts-q1.preprod.local/SecurityTokenServiceProvider/",
+                "VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL" to "https://arena-q1.adeo.no/ail_ws/YtelseVedtak_v1",
             ),
         )
 

@@ -17,6 +17,7 @@ object PropertiesConfig {
                 "NAIS_NAMESPACE" to "okonomi",
                 "USE_AUTHENTICATION" to "true",
                 "MQ_LISTENER_ENABLED" to "true",
+                "USE_ARENAMOCK" to "false",
             ),
         )
 
@@ -59,6 +60,7 @@ object PropertiesConfig {
         val profile: Profile = Profile.valueOf(get("APPLICATION_PROFILE")),
         val useAuthentication: Boolean = getOrEmpty("USE_AUTHENTICATION").toBoolean(),
         val azureAdProperties: AzureAdProperties = AzureAdProperties(),
+        val useArenaMock: Boolean = getOrEmpty("USE_ARENAMOCK").toBoolean(),
     )
 
     data class AzureAdProperties(

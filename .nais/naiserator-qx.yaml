@@ -57,7 +57,9 @@ spec:
 
   env:
     - name: USE_AUTHENTICATION
-      value: "false"
+      value: "true"
+    - name: USE_ARENAMOCK
+      value: "true"
 
     # MQ
     - name: MQ_HOSTNAME

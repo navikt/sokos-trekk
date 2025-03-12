@@ -17,6 +17,7 @@ object PropertiesConfig {
                 "NAIS_NAMESPACE" to "okonomi",
                 "USE_AUTHENTICATION" to "true",
                 "MQ_LISTENER_ENABLED" to "true",
+                "USE_ARENAMOCK" to "false",
             ),
         )
 
@@ -33,6 +34,8 @@ object PropertiesConfig {
                 "MQ_TREKK_INN_BOQ_QUEUE_NAME" to "Q1_TREKK.TREKK_INN_BOQ",
                 "MQ_TREKK_REPLY_QUEUE_NAME" to "QA.Q1_231.OB04_TREKK_REPLY",
                 "MQ_TREKK_REPLY_BATCH_QUEUE_NAME" to "QA.Q1_231.OB04_TREKK_REPLY_BATCH",
+                "SECURITY_TOKENSERVICE_URL" to "https://sts-q1.preprod.local/SecurityTokenServiceProvider/",
+                "VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL" to "https://arena-q1.adeo.no/ail_ws/YtelseVedtak_v1",
             ),
         )
 
@@ -59,6 +62,7 @@ object PropertiesConfig {
         val profile: Profile = Profile.valueOf(get("APPLICATION_PROFILE")),
         val useAuthentication: Boolean = getOrEmpty("USE_AUTHENTICATION").toBoolean(),
         val azureAdProperties: AzureAdProperties = AzureAdProperties(),
+        val useArenaMock: Boolean = getOrEmpty("USE_ARENAMOCK").toBoolean(),
     )
 
     data class AzureAdProperties(

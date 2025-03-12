@@ -12,6 +12,7 @@ import no.nav.maskinelletrekk.trekk.v1.ArenaVedtak
 import no.nav.maskinelletrekk.trekk.v1.ObjectFactory
 import no.nav.maskinelletrekk.trekk.v1.Trekk
 import no.nav.maskinelletrekk.trekk.v1.TypeKjoring
+import no.nav.sokos.trekk.arenamock.ArenaMockService
 import no.nav.sokos.trekk.config.PropertiesConfig
 import no.nav.sokos.trekk.metrics.Metrics
 import no.nav.sokos.trekk.metrics.TAG_EXCEPTION_NAME
@@ -50,7 +51,11 @@ class BehandleTrekkvedtakService(
             logger.info { "Starter behandling av ${trekkRequestList.size} trekkvedtak." }
 
             val fnrSet = trekkRequestList.map { it.offnr }.toSet()
-            val ytelseVedtakMap = hentYtelsesVedtak(fnrSet, fromDate, toDate)
+            val ytelseVedtakMap =
+                when {
+                    PropertiesConfig.Configuration().useArenaMock -> ArenaMockService.hentYtelsesVedtak(fnrSet, fromDate, toDate)
+                    else -> hentYtelsesVedtak(fnrSet, fromDate, toDate)
+                }
 
             val trekkResponseList = trekkRequestList.map { VedtaksBeregningService(ytelseVedtakMap).invoke(it) }
 

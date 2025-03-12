@@ -5,6 +5,7 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.routing
 
+import no.nav.sokos.trekk.api.arenaMockApi
 import no.nav.sokos.trekk.api.trekkApi
 
 fun Application.routingConfig(
@@ -13,10 +14,11 @@ fun Application.routingConfig(
 ) {
     routing {
         internalNaisRoutes(applicationState)
-        authenticate(useAuthentication, AUTHENTICATION_NAME) {
-            if (PropertiesConfig.isDev() || PropertiesConfig.isLocal()) {
+        if (PropertiesConfig.isDev() || PropertiesConfig.isLocal()) {
+            authenticate(useAuthentication, AUTHENTICATION_NAME) {
                 trekkApi()
             }
+            arenaMockApi()
         }
     }
 }

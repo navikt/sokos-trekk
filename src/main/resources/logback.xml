@@ -47,4 +47,7 @@
     </if>
 
     <logger name="no.nav.sokos.trekk" level="INFO"/>
+
+    <!-- Suppress all warnings and errors for net.shibboleth.utilities.java.support.primitive.StringSupport -->
+    <logger name="net.shibboleth.utilities.java.support.primitive.StringSupport" level="OFF"/>
 </configuration>

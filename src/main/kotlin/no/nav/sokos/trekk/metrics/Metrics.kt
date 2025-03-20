@@ -1,6 +1,5 @@
 package no.nav.sokos.trekk.metrics
 
-import io.micrometer.core.instrument.Timer
 import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.core.metrics.Counter
@@ -10,15 +9,6 @@ const val TAG_EXCEPTION_NAME = "exception_name"
 
 object Metrics {
     val prometheusMeterRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
-
-    val timer: (metricName: String, className: String, method: String) -> Timer = { metricName, className, method ->
-        Timer
-            .builder("${METRICS_NAMESPACE}_$metricName")
-            .tag("className", className)
-            .tag("method", method)
-            .description("Timer for database operations")
-            .register(prometheusMeterRegistry)
-    }
 
     val soapArenaRequestCounter: Counter =
         Counter

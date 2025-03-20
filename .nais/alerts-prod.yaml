@@ -66,6 +66,7 @@ spec:
             alert_type: customgit pu
 ---
 
+
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:

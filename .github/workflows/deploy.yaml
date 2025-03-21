@@ -19,7 +19,10 @@ on:
       - '.github/workflows/alerts.yaml'
       - '.nais/alerts-dev.yaml'
       - '.nais/alerts-prod.yaml'
+      - '.nais/wiremock-qx.yaml'
       - '.github/dependabot.yaml'
+      - '.github/workflows/deploy-wiremock.yaml'
+      - '.test/Dockerfile'
 
 env:
   TZ: Europe/Oslo

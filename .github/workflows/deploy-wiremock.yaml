@@ -5,18 +5,7 @@ on:
     paths:
       - '.nais/wiremock-qx.yaml'
       - '.github/workflows/deploy-wiremock.yaml'
-  workflow_call:
-    inputs:
-      image-tag:
-        required: false
-        type: string
-        description: Docker image tag
-        default: 'latest'
-    outputs:
-      image:
-        description: Google Artifact Registery image
-        value: ${{ jobs.build-push-image.outputs.image }}
-
+      - '.test/Dockerfile'
 env:
   TZ: Europe/Oslo
 
@@ -42,10 +31,10 @@ jobs:
           team: okonomi
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          dockerfile: { docker_context }/.test/Dockerfile
+          dockerfile: .test/Dockerfile
           tag: ${{ inputs.image-tag }}
     outputs:
-      image: ${{ steps.docker-build-push.outputs.image }}
+      image: ${{ needs.docker-build-push.outputs.image }}
 
   deploy-dev-qx:
     needs: build-push-image

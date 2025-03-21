@@ -12,6 +12,12 @@
         </encoder>
     </appender>
 
+    <!-- Add this TurboFilter to filter specific message -->
+    <turboFilter class="ch.qos.logback.classic.turbo.MessageFilter">
+        <OnMatch>DENY</OnMatch>
+        <Message>This will be removed in the next major version of this software; replacement is net.shibboleth.shared.primitive.StringSupport</Message>
+    </turboFilter>
+
     <appender name="secureLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/secure-logs/secure.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
@@ -47,7 +53,4 @@
     </if>
 
     <logger name="no.nav.sokos.trekk" level="INFO"/>
-
-    <!-- Suppress all warnings and errors for net.shibboleth.utilities.java.support.primitive.StringSupport -->
-    <logger name="net.shibboleth.utilities.java.support.primitive.StringSupport" level="OFF"/>
 </configuration>

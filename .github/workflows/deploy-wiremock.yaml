@@ -1,0 +1,63 @@
+name: Auto-deploy wiremock
+
+on:
+  push: # Deploys automatically to dev-fss if there is a change in wiremock file.
+    paths:
+      - '.nais/wiremock-qx.yaml'
+      - '.github/workflows/deploy-wiremock.yaml'
+  workflow_call:
+    inputs:
+      image-tag:
+        required: false
+        type: string
+        description: Docker image tag
+        default: 'latest'
+    outputs:
+      image:
+        description: Google Artifact Registery image
+        value: ${{ jobs.build-push-image.outputs.image }}
+
+env:
+  TZ: Europe/Oslo
+
+permissions:
+  contents: "write"
+  id-token: "write"
+
+jobs:
+  build-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build Docker Image
+        uses: docker/setup-buildx-action@v3
+
+      - name: Push Docker Image to GAR
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: okonomi
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          dockerfile: { docker_context }/.test/Dockerfile
+          tag: ${{ inputs.image-tag }}
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+
+  deploy-dev-qx:
+    needs: build-push-image
+    name: 'Deploy Wiremock to dev-fss-qx'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'Deploy to dev-fss'
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cluster: dev-fss
+          team: okonomi
+          resource: ".nais/wiremock-qx.yaml"
+          image: ${{ needs.build.outputs.image }}

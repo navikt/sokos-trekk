@@ -51,6 +51,19 @@ jobs:
       cluster: dev-fss
       resource: .nais/naiserator-qx.yaml
       image: ${{ needs.build.outputs.image }}
+  deploy-wiremock-qx:
+    needs: [build, deploy-qx]
+    name: Deploy to dev-fss-qx
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'Deploy to dev-fss'
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLUSTER: dev-fss
+          TEAM: okonomi
+          RESOURCE: ".nais/wiremock.yaml"
 
   deploy-prod:
     needs: [build, deploy-dev, deploy-qx]

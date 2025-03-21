@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wiremock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wiremock
+  template:
+    metadata:
+      labels:
+        app: wiremock
+    spec:
+      containers:
+        - name: wiremock
+          image: wiremock/wiremock:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: wiremock-config
+              mountPath: /home/wiremock
+      volumes:
+        - name: wiremock-config
+          configMap:
+            name: wiremock-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wiremock
+spec:
+  selector:
+    app: wiremock
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

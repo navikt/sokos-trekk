@@ -52,8 +52,8 @@ jobs:
       resource: .nais/naiserator-qx.yaml
       image: ${{ needs.build.outputs.image }}
   deploy-wiremock-qx:
-    needs: [build, deploy-qx]
-    name: Deploy to dev-fss-qx
+    needs: [build, deploy-dev]
+    name: Deploy wiremock to dev-fss-qx
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

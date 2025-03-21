@@ -18,9 +18,8 @@ spec:
     requests:
       cpu: 500m
       memory: 500Mi
-  service:
-    port: 8080
-    protocol: wiremock
+  ingresses:
+    - https://sokos-trekk-wiremock-qx.intern.dev.nav.no
   accessPolicy:
     inbound:
       rules:

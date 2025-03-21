@@ -1,7 +1,7 @@
 name: Auto-deploy wiremock
 
 on:
-  push: # Deploys automatically to dev-fss if there is a change in wiremock file.
+  push:
     paths:
       - '.nais/wiremock-qx.yaml'
       - '.github/workflows/deploy-wiremock.yaml'
@@ -34,7 +34,7 @@ jobs:
           dockerfile: .test/Dockerfile
           tag: ${{ inputs.image-tag }}
     outputs:
-      image: ${{ needs.docker-build-push.outputs.image }}
+      image: ${{ steps.docker-build-push.outputs.image }}
 
   deploy-dev-qx:
     needs: build-push-image
@@ -45,8 +45,8 @@ jobs:
       - name: 'Deploy to dev-fss'
         uses: nais/deploy/actions/deploy@v2
         env:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          cluster: dev-fss
-          team: okonomi
-          resource: ".nais/wiremock-qx.yaml"
-          image: ${{ needs.build.outputs.image }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLUSTER: dev-fss
+          TEAM: okonomi
+          RESOURCE: ".nais/wiremock-qx.yaml"
+          VAR: image=${{ needs.build-push-image.outputs.image }}

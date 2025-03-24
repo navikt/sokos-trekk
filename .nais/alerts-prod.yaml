@@ -63,7 +63,7 @@ spec:
             namespace: okonomi
             severity: warning
             sokos_trekk_type: sokos-trekk
-            alert_type: customgit pu
+            alert_type: custom
 ---
 
 

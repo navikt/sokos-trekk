@@ -22,7 +22,7 @@ on:
       - '.nais/wiremock-qx.yaml'
       - '.github/dependabot.yaml'
       - '.github/workflows/deploy-wiremock.yaml'
-      - '.test/Dockerfile'
+      - '.nais/wiremock/Dockerfile'
 
 env:
   TZ: Europe/Oslo

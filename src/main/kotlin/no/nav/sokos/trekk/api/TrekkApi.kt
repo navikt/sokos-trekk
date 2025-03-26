@@ -19,7 +19,7 @@ private val logger = KotlinLogging.logger {}
 fun Route.trekkApi(behandleTrekkvedtakService: BehandleTrekkvedtakService = BehandleTrekkvedtakService()) {
     route("/api/trekk") {
         post("/behandle") {
-            logger.info { "Behandle trekk data" }
+            logger.info { "Behandle trekk data." }
 
             val xmlContent = call.receiveText()
             val trekk =

@@ -70,7 +70,10 @@ class BehandleTrekkvedtakService(
             if (replyToQueue) {
                 val replyXML = JaxbUtils.marshalTrekk(response)
                 when (typeKjoring) {
-                    TypeKjoring.PERI -> producer.send(replyXML, replyBatchQueue, Metrics.mqBatchReplyMetricCounter)
+                    TypeKjoring.PERI,
+                    TypeKjoring.REME,
+                    -> producer.send(replyXML, replyBatchQueue, Metrics.mqBatchReplyMetricCounter)
+
                     else -> producer.send(replyXML, replyQueue, Metrics.mqReplyMetricCounter)
                 }
                 logger.info { "Send trekkvedtak: ${response.trekkResponse.map { it.trekkvedtakId }} til OppdragZ." }

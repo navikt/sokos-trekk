@@ -12,12 +12,12 @@
         </encoder>
     </appender>
 
-    <!-- Add this TurboFilter to filter specific message -->
-    <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
-        <Name>DeprecationFilter</Name>
-        <OnMatch>DENY</OnMatch>
-        <OnMismatch>NEUTRAL</OnMismatch>
-        <Marker>Java class 'net.shibboleth.utilities.java.support.primitive.StringSupport'</Marker>
+    <turboFilter class="ch.qos.logback.core.filter.EvaluatorFilter">
+        <evaluator class="ch.qos.logback.core.boolex.EventEvaluatorBase">
+            <expression>message.contains("net.shibboleth.utilities.java.support.primitive.StringSupport")</expression>
+        </evaluator>
+        <onMatch>DENY</onMatch>
+        <onMismatch>NEUTRAL</onMismatch>
     </turboFilter>
 
     <appender name="secureLog" class="ch.qos.logback.core.rolling.RollingFileAppender">

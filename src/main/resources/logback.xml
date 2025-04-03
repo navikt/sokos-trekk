@@ -1,6 +1,12 @@
 <configuration debug="true">
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="no.nav.sokos.trekk.config.GeneratedExpressionEvaluator">
+            </evaluator>
+            <OnMismatch>NEUTRAL</OnMismatch>
+            <OnMatch>DENY</OnMatch>
+        </filter>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
     </appender>
 
@@ -11,14 +17,6 @@
             </pattern>
         </encoder>
     </appender>
-
-    <turboFilter class="ch.qos.logback.core.filter.EvaluatorFilter">
-        <evaluator class="ch.qos.logback.core.boolex.EventEvaluatorBase">
-            <expression>message.contains("net.shibboleth.utilities.java.support.primitive.StringSupport")</expression>
-        </evaluator>
-        <onMatch>DENY</onMatch>
-        <onMismatch>NEUTRAL</onMismatch>
-    </turboFilter>
 
     <appender name="secureLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>/secure-logs/secure.log</file>

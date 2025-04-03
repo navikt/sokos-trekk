@@ -105,9 +105,9 @@ dependencies {
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:$kotlinLoggingVersion")
-    runtimeOnly("org.codehaus.janino:janino:$janinoVersion")
-    runtimeOnly("ch.qos.logback:logback-classic:$logbackVersion")
-    runtimeOnly("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
+    implementation("org.codehaus.janino:janino:$janinoVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
 
     // Config
     implementation("com.natpryce:konfig:$natpryceVersion")

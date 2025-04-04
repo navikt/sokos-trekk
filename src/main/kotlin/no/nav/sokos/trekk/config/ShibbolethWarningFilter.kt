@@ -11,7 +11,6 @@ class ShibbolethWarningFilter : EventEvaluatorBase<ILoggingEvent>() {
     @Throws(NullPointerException::class, EvaluationException::class)
     override fun evaluate(event: ILoggingEvent): Boolean {
         val message = event.message
-        return message.contains("net.shibboleth.utilities.java.support.primitive.StringSupport") &&
-            message.contains("This will be removed in the next major version")
+        return message.contains("net.shibboleth.utilities.java.support.primitive.StringSupport")
     }
 }

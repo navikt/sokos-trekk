@@ -57,6 +57,10 @@
         </else>
     </if>
 
-    <logger name="net.shibboleth.utilities.java.support.primitive.StringSupport" level="OFF"/>
+    <!-- Add specific logger configurations for the Shibboleth-related classes -->
+    <logger name="net.shibboleth" level="ERROR" />
+    <logger name="net.shibboleth.utilities.java.support" level="ERROR" />
+    <logger name="net.shibboleth.shared.primitive" level="ERROR" />
+
     <logger name="no.nav.sokos.trekk" level="INFO"/>
 </configuration>

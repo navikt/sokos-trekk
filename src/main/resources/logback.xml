@@ -57,10 +57,6 @@
         </else>
     </if>
 
-    <!-- Add specific logger configurations for the Shibboleth-related classes -->
-    <logger name="net.shibboleth" level="ERROR" />
-    <logger name="net.shibboleth.utilities.java.support" level="ERROR" />
-    <logger name="net.shibboleth.shared.primitive" level="ERROR" />
-
+    <logger name="com.ibm.mq.jmqi.remote.impl.RemoteSession" level="ERROR" />
     <logger name="no.nav.sokos.trekk" level="INFO"/>
 </configuration>

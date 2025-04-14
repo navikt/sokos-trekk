@@ -49,21 +49,6 @@ spec:
             sokos_trekk_type: sokos-trekk
             alert_type: custom
 
-        - alert: Applikasjonen logger høy andel warnings
-          expr:
-            'sum(max_over_time(log_messages_errors{namespace="okonomi",app="sokos-trekk",level="Warning"}[5m])
-              or vector(0)) -
-              sum(max_over_time(log_messages_errors{namespace="okonomi",app="sokos-trekk",level="Warning"}[5m]
-              offset 5m) or vector(0)) > 5'
-          for: 2m
-          annotations:
-            action: "<https://logs.adeo.no/app/discover#/?_g=(time:(from:now-1d,to:now))&_a=(filters:!((query:(match_phrase:(application:'sokos-trekk'))),(query:(match_phrase:(cluster:'dev-fss'))),(query:(match_phrase:(level:'Warning')))))|Sjekk loggene>"
-            summary: "`kubectl logs -l app=sokos-trekk -n okonomi` for logger"
-          labels:
-            namespace: okonomi
-            severity: warning
-            sokos_trekk_type: sokos-trekk
-            alert_type: custom
 ---
 
 apiVersion: monitoring.coreos.com/v1alpha1

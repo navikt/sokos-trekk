@@ -59,7 +59,7 @@ val aallamUlidVersion = "1.3.0"
 val cxfVersion = "4.1.1"
 val ibmmqVersion = "9.4.2.0"
 val glassfishJaxbVersion = "4.0.5"
-val tjenestespesifikasjonVersion = "1.0_20250218124429_8804209"
+val tjenestespesifikasjonVersion = "1.0_20250414143240_7082707"
 
 dependencies {
 
@@ -223,6 +223,6 @@ tasks {
     }
 
     withType<Wrapper> {
-        gradleVersion = "8.13"
+        gradleVersion = "8.14"
     }
 }

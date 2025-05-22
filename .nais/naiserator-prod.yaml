@@ -44,7 +44,6 @@ spec:
   azure:
     application:
       enabled: true
-      allowAllUsers: true
   webproxy: true
   envFrom:
     - secret: sokos-trekk-serviceuser-credentials

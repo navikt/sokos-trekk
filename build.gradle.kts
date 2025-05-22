@@ -40,7 +40,6 @@ repositories {
 }
 
 val ktorVersion = "3.1.3"
-val jschVersion = "0.2.22"
 val logbackVersion = "1.5.18"
 val logstashVersion = "8.1"
 val micrometerVersion = "1.15.0"
@@ -48,12 +47,10 @@ val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
 val kotestVersion = "6.0.0.M4"
-val wiremockVersion = "3.10.0"
 val kotlinxSerializationVersion = "1.8.1"
 val kotlinxDatetimeVersion = "0.6.2"
 val mockkVersion = "1.14.2"
 
-val vaultVersion = "1.3.10"
 val aallamUlidVersion = "1.3.0"
 
 val cxfVersion = "4.1.1"
@@ -65,7 +62,6 @@ dependencies {
 
     // Ktor server
     implementation("io.ktor:ktor-server-call-logging-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-call-id-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-status-pages:$ktorVersion")

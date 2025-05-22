@@ -1,7 +1,5 @@
 package no.nav.sokos.trekk.config
 
-import java.util.UUID
-
 import kotlinx.serialization.json.Json
 
 import io.ktor.http.HttpStatusCode
@@ -9,8 +7,6 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.metrics.micrometer.MicrometerMetrics
-import io.ktor.server.plugins.callid.CallId
-import io.ktor.server.plugins.callid.callIdMdc
 import io.ktor.server.plugins.calllogging.CallLogging
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
@@ -28,19 +24,9 @@ import org.slf4j.event.Level
 
 import no.nav.sokos.trekk.metrics.Metrics
 
-const val SECURE_LOGGER = "secureLogger"
-
-private const val TRACE_ID_HEADER = "trace_id"
-
 fun Application.commonConfig() {
-    install(CallId) {
-        header(TRACE_ID_HEADER)
-        generate { UUID.randomUUID().toString() }
-        verify { callId: String -> callId.isNotEmpty() }
-    }
     install(CallLogging) {
         level = Level.INFO
-        callIdMdc(TRACE_ID_HEADER)
         filter { call -> call.request.path().startsWith("/api") }
         disableDefaultColors()
     }

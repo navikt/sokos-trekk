@@ -16,6 +16,7 @@ import no.nav.sokos.trekk.config.PropertiesConfig
 import no.nav.sokos.trekk.metrics.Metrics.mqTrekkInnBoqMetricCounter
 import no.nav.sokos.trekk.metrics.Metrics.mqTrekkInnMetricCounter
 import no.nav.sokos.trekk.service.BehandleTrekkvedtakService
+import no.nav.sokos.trekk.util.TraceUtils
 
 private val logger = KotlinLogging.logger {}
 
@@ -40,18 +41,20 @@ class JmsListenerService(
 
     private fun onTrekkInnMessage(message: Message) {
         val jmsMessage = message.getBody(String::class.java)
-        runCatching {
-            logger.debug { "Mottatt Trekk fra OppdragZ. Meldingsinnhold: $jmsMessage" }
-            behandleTrekkvedtakService.behandleTrekkvedtak(
-                xmlContent = jmsMessage,
-                fromDate = LocalDate.now(),
-                toDate = LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()),
-            )
-            message.acknowledge()
-            mqTrekkInnMetricCounter.inc()
-        }.onFailure { exception ->
-            logger.error(exception) { "Prosessering av utbetalingsmeldingretur feilet. ${message.jmsMessageID}" }
-            producer.send(jmsMessage, trekkInnBoqQueue, mqTrekkInnBoqMetricCounter)
+        TraceUtils.withTracerId {
+            runCatching {
+                logger.debug { "Mottatt Trekk fra OppdragZ. Meldingsinnhold: $jmsMessage" }
+                behandleTrekkvedtakService.behandleTrekkvedtak(
+                    xmlContent = jmsMessage,
+                    fromDate = LocalDate.now(),
+                    toDate = LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()),
+                )
+                message.acknowledge()
+                mqTrekkInnMetricCounter.inc()
+            }.onFailure { exception ->
+                logger.error(exception) { "Prosessering av utbetalingsmeldingretur feilet. ${message.jmsMessageID}" }
+                producer.send(jmsMessage, trekkInnBoqQueue, mqTrekkInnBoqMetricCounter)
+            }
         }
     }
 }

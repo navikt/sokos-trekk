@@ -10,7 +10,7 @@ plugins {
     kotlin("jvm") version "2.1.21"
     kotlin("plugin.serialization") version "2.1.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
+    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
 }
 
@@ -53,7 +53,7 @@ val mockkVersion = "1.14.2"
 
 val aallamUlidVersion = "1.3.0"
 
-val cxfVersion = "4.1.1"
+val cxfVersion = "4.1.2"
 val ibmmqVersion = "9.4.2.1"
 val glassfishJaxbVersion = "4.0.5"
 val tjenestespesifikasjonVersion = "1.0_20250414143240_7082707"
@@ -122,7 +122,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
-// Vulnerability fix because of id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+// Vulnerability fix because of id("org.jlleitschuh.gradle.ktlint") uses ch.qos.logback:logback-classic:1.3.5
 configurations.ktlint {
     resolutionStrategy.force("ch.qos.logback:logback-classic:$logbackVersion")
 }

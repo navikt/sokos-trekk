@@ -1,7 +1,9 @@
 package no.nav.sokos.trekk.util
 
 import io.opentelemetry.api.GlobalOpenTelemetry
+import io.opentelemetry.api.trace.StatusCode
 import io.opentelemetry.api.trace.Tracer
+import io.opentelemetry.context.Context
 import io.opentelemetry.instrumentation.api.incubator.log.LoggingContextConstants
 import org.slf4j.MDC
 

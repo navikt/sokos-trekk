@@ -39,10 +39,10 @@ repositories {
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
 }
 
-val ktorVersion = "3.1.3"
+val ktorVersion = "3.2.0"
 val logbackVersion = "1.5.18"
 val logstashVersion = "8.1"
-val micrometerVersion = "1.15.0"
+val micrometerVersion = "1.15.1"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"

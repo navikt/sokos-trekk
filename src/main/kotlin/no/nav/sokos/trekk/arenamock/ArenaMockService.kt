@@ -26,26 +26,31 @@ object ArenaMockService {
     fun lagreArenaMockData(xmlContent: String) {
         val arenaMockData = JAXB.unmarshal(ByteArrayInputStream(xmlContent.toByteArray(StandardCharsets.UTF_8)), ArenaMockData::class.java)
         mockDataXml = xmlContent
-        kjoreDato = arenaMockData.kjoreDato?.toGregorianCalendar()?.toZonedDateTime()?.toLocalDate()
+        kjoreDato =
+            arenaMockData.kjoreDato
+                ?.toGregorianCalendar()
+                ?.toZonedDateTime()
+                ?.toLocalDate()
         areanaMockDataMap.clear()
         areanaMockDataMap.putAll(
-            arenaMockData.personYtelse.flatMap { personYtelse ->
-                personYtelse.sak.flatMap { sak ->
-                    sak.vedtak.map { vedtak ->
-                        personYtelse.ident to
-                            ArenaVedtak().apply {
-                                dagsats = vedtak.dagsats.toBigDecimal().setScale(SUM_SCALE, RoundingMode.HALF_UP)
-                                rettighetType = vedtak.rettighetstype.value()
-                                tema = sak.tema.value()
-                                vedtaksperiode =
-                                    Periode().apply {
-                                        fom = vedtak.vedtaksperiode.fom
-                                        tom = vedtak.vedtaksperiode.tom
-                                    }
-                            }
+            arenaMockData.personYtelse
+                .flatMap { personYtelse ->
+                    personYtelse.sak.flatMap { sak ->
+                        sak.vedtak.map { vedtak ->
+                            personYtelse.ident to
+                                ArenaVedtak().apply {
+                                    dagsats = vedtak.dagsats.toBigDecimal().setScale(SUM_SCALE, RoundingMode.HALF_UP)
+                                    rettighetType = vedtak.rettighetstype.value()
+                                    tema = sak.tema.value()
+                                    vedtaksperiode =
+                                        Periode().apply {
+                                            fom = vedtak.vedtaksperiode.fom
+                                            tom = vedtak.vedtaksperiode.tom
+                                        }
+                                }
+                        }
                     }
-                }
-            }.groupBy({ it.first }, { it.second }),
+                }.groupBy({ it.first }, { it.second }),
         )
     }
 
@@ -59,8 +64,18 @@ object ArenaMockService {
             if (kjoreDato != null) {
                 logger.info("[ARENA-MOCK]: Kjøredato er satt til $kjoreDato")
                 Periode().apply {
-                    fom = YearMonth.from(kjoreDato).plusMonths(1).atDay(1).toXMLGregorianCalendar()
-                    tom = YearMonth.from(kjoreDato).plusMonths(1).atEndOfMonth().toXMLGregorianCalendar()
+                    fom =
+                        YearMonth
+                            .from(kjoreDato)
+                            .plusMonths(1)
+                            .atDay(1)
+                            .toXMLGregorianCalendar()
+                    tom =
+                        YearMonth
+                            .from(kjoreDato)
+                            .plusMonths(1)
+                            .atEndOfMonth()
+                            .toXMLGregorianCalendar()
                 }
             } else {
                 Periode().apply {
@@ -69,11 +84,13 @@ object ArenaMockService {
                 }
             }
         if (areanaMockDataMap.isNotEmpty()) {
-            return fnrSet.mapNotNull { fnr ->
-                areanaMockDataMap[fnr]?.filter { vedtak -> erInnenforPeriode(vedtak.vedtaksperiode, periode) }
-                    ?.takeIf { it.isNotEmpty() }
-                    ?.also { logger.info { "[ARENA-MOCK]: Hentet ${it.size} Arena-vedtak for bruker $fnr og periode ${periode.fom.toLocalDate()} til ${periode.tom.toLocalDate()}" } }
-            }.associateBy { it.first().rettighetType }
+            return fnrSet
+                .mapNotNull { fnr ->
+                    areanaMockDataMap[fnr]
+                        ?.filter { vedtak -> erInnenforPeriode(vedtak.vedtaksperiode, periode) }
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.also { logger.info { "[ARENA-MOCK]: Hentet ${it.size} Arena-vedtak for bruker $fnr og periode ${periode.fom.toLocalDate()} til ${periode.tom.toLocalDate()}" } }
+                }.associateBy { it.first().rettighetType }
         }
 
         logger.warn("[ARENA-MOCK]: Mangler testdata!")
@@ -91,8 +108,10 @@ object ArenaMockService {
 
         return tom?.let {
             (fom.isBefore(requestFom) && it.isAfter(requestFom)) ||
-                (it.isAfter(requestFom) || it.isEqual(requestFom)) && (it.isBefore(requestTom) || it.isEqual(requestTom)) ||
-                (fom.isAfter(requestFom) || fom.isEqual(requestFom)) && (fom.isBefore(requestTom) || fom.isEqual(requestTom))
+                (it.isAfter(requestFom) || it.isEqual(requestFom)) &&
+                (it.isBefore(requestTom) || it.isEqual(requestTom)) ||
+                (fom.isAfter(requestFom) || fom.isEqual(requestFom)) &&
+                (fom.isBefore(requestTom) || fom.isEqual(requestTom))
         } ?: (fom.isBefore(requestTom) || fom.isEqual(requestTom))
     }
 }

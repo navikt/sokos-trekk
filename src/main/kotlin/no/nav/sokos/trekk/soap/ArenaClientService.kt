@@ -29,30 +29,32 @@ class ArenaClientService(
     private val soapProperties: PropertiesConfig.SoapProperties = PropertiesConfig.SoapProperties(),
 ) {
     private val loggingFeature =
-        LoggingFeature().apply {
-            setVerbose(true)
-            setPrettyLogging(true)
-        }.also {
-            it.setSender { event -> logger.debug { "SOAP melding -> ${LogMessageFormatter.format(event)}" } }
-        }
+        LoggingFeature()
+            .apply {
+                setVerbose(true)
+                setPrettyLogging(true)
+            }.also {
+                it.setSender { event -> logger.debug { "SOAP melding -> ${LogMessageFormatter.format(event)}" } }
+            }
 
     private val ytelsesVedtakSoapClient: YtelseVedtakV1 =
-        JaxWsProxyFactoryBean().apply {
-            address = soapProperties.ytelsevedtakV1EndpointUrl
-            wsdlURL = WSDL_URL
-            serviceName = QName(NAMESPACE, YTELSE_VEDTAK_SERVICE_NAME)
-            endpointName = QName(NAMESPACE, YTELSE_VEDTAK_ENDPOINT_NAME)
-            serviceClass = YtelseVedtakV1::class.java
-            features = listOf(WSAddressingFeature(), loggingFeature)
-            outInterceptors.add(CallIdInterceptor { ULID.randomULID() })
-        }.wrapInStsClient(
-            soapProperties.stsUrl,
-            ServiceUserConfig(
-                soapProperties.serviceUsername,
-                soapProperties.servicePassword,
-            ),
-            true,
-        )
+        JaxWsProxyFactoryBean()
+            .apply {
+                address = soapProperties.ytelsevedtakV1EndpointUrl
+                wsdlURL = WSDL_URL
+                serviceName = QName(NAMESPACE, YTELSE_VEDTAK_SERVICE_NAME)
+                endpointName = QName(NAMESPACE, YTELSE_VEDTAK_ENDPOINT_NAME)
+                serviceClass = YtelseVedtakV1::class.java
+                features = listOf(WSAddressingFeature(), loggingFeature)
+                outInterceptors.add(CallIdInterceptor { ULID.randomULID() })
+            }.wrapInStsClient(
+                soapProperties.stsUrl,
+                ServiceUserConfig(
+                    soapProperties.serviceUsername,
+                    soapProperties.servicePassword,
+                ),
+                true,
+            )
 
     fun finnYtelseVedtakListe(request: FinnYtelseVedtakListeRequest): FinnYtelseVedtakListeResponse {
         secureLogger.info { "FinnYtelseVedtakListeRequest: ${request.toXml(NAMESPACE)}" }

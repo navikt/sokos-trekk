@@ -43,4 +43,7 @@ fun Route.arenaMockApi() {
 }
 
 @Serializable
-data class DataResponse(val xml: String?, val fasitEnv: String)
+data class DataResponse(
+    val xml: String?,
+    val fasitEnv: String,
+)

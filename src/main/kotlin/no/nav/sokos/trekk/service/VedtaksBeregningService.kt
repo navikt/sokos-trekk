@@ -52,36 +52,33 @@ class VedtaksBeregningService(
         return arenaVedtakList
     }
 
-    private fun kalkulerSumArena(arenaVedtakList: List<ArenaVedtak>): BigDecimal {
-        return arenaVedtakList
+    private fun kalkulerSumArena(arenaVedtakList: List<ArenaVedtak>): BigDecimal =
+        arenaVedtakList
             .map { it.dagsats }
             .fold(BigDecimal.ZERO, BigDecimal::add)
             .multiply(FAKTOR_MND.toBigDecimal())
             .setScale(SUM_SCALE, RoundingMode.HALF_UP)
-    }
 
     private fun besluttProsenttrekk(
         sumArena: BigDecimal,
         sumOs: BigDecimal,
-    ): Beslutning {
-        return when {
+    ): Beslutning =
+        when {
             sumArena > BigDecimal.ZERO && sumOs > BigDecimal.ZERO -> Beslutning.BEGGE
             sumArena > BigDecimal.ZERO -> Beslutning.ABETAL
             sumOs > BigDecimal.ZERO -> Beslutning.OS
             else -> Beslutning.INGEN
         }
-    }
 
     private fun besluttLopendeOgSaldotrekk(
         sumArena: BigDecimal,
         sumOs: BigDecimal,
         trekkSats: BigDecimal,
         system: System?,
-    ): Beslutning {
-        return when {
+    ): Beslutning =
+        when {
             (system == System.J && sumArena >= trekkSats && sumArena.compareTo(BigDecimal.ZERO) != 0) || (sumArena >= sumOs && sumArena > BigDecimal.ZERO) -> Beslutning.ABETAL
             sumOs > sumArena -> Beslutning.OS
             else -> Beslutning.INGEN
         }
-    }
 }

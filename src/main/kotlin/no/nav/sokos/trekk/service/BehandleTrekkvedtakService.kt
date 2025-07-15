@@ -41,8 +41,8 @@ class BehandleTrekkvedtakService(
         fromDate: LocalDate,
         toDate: LocalDate,
         replyToQueue: Boolean = true,
-    ): Trekk {
-        return runCatching {
+    ): Trekk =
+        runCatching {
             val trekk = unmarshalTrekk(xmlContent)
 
             val typeKjoring = trekk.typeKjoring
@@ -84,14 +84,13 @@ class BehandleTrekkvedtakService(
             logger.error(exception) { "Behandling av trekkvedtak feilet" }
             throw exception
         }.getOrThrow()
-    }
 
     private fun hentYtelsesVedtak(
         fnrSet: Set<String>,
         fromDate: LocalDate,
         toDate: LocalDate,
-    ): Map<String, List<ArenaVedtak>> {
-        return runCatching {
+    ): Map<String, List<ArenaVedtak>> =
+        runCatching {
             val request =
                 FinnYtelseVedtakListeRequest().apply {
                     personListe.addAll(
@@ -118,25 +117,24 @@ class BehandleTrekkvedtakService(
             Metrics.soapArenaErrorCounter.labelValues(TAG_EXCEPTION_NAME).inc()
             throw exception
         }.getOrThrow()
-    }
 }
 
-fun FinnYtelseVedtakListeResponse.mapToAreanVedtak(): Map<String, List<ArenaVedtak>> {
-    return this.personYtelseListe.flatMap { personYtelse ->
-        personYtelse.sakListe.flatMap { sak ->
-            sak.vedtakListe.map { vedtak ->
-                personYtelse.ident to
-                    ArenaVedtak().apply {
-                        dagsats = vedtak.dagsats.toBigDecimal().setScale(SUM_SCALE, RoundingMode.HALF_UP)
-                        rettighetType = vedtak.rettighetstype.value
-                        tema = sak.tema.value
-                        vedtaksperiode =
-                            no.nav.maskinelletrekk.trekk.v1.Periode().apply {
-                                fom = vedtak.vedtaksperiode.fom
-                                tom = vedtak.vedtaksperiode.tom
-                            }
-                    }
+fun FinnYtelseVedtakListeResponse.mapToAreanVedtak(): Map<String, List<ArenaVedtak>> =
+    this.personYtelseListe
+        .flatMap { personYtelse ->
+            personYtelse.sakListe.flatMap { sak ->
+                sak.vedtakListe.map { vedtak ->
+                    personYtelse.ident to
+                        ArenaVedtak().apply {
+                            dagsats = vedtak.dagsats.toBigDecimal().setScale(SUM_SCALE, RoundingMode.HALF_UP)
+                            rettighetType = vedtak.rettighetstype.value
+                            tema = sak.tema.value
+                            vedtaksperiode =
+                                no.nav.maskinelletrekk.trekk.v1.Periode().apply {
+                                    fom = vedtak.vedtaksperiode.fom
+                                    tom = vedtak.vedtaksperiode.tom
+                                }
+                        }
+                }
             }
-        }
-    }.groupBy({ it.first }, { it.second })
-}
+        }.groupBy({ it.first }, { it.second })

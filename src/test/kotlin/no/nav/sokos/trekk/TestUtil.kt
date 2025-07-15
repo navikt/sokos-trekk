@@ -17,7 +17,8 @@ object TestUtil {
     }
 
     fun String.unmarshalFinnYtelseVedtakListeResponse(): FinnYtelseVedtakListeResponse =
-        JAXBContext.newInstance(FinnYtelseVedtakListeResponse::class.java)
+        JAXBContext
+            .newInstance(FinnYtelseVedtakListeResponse::class.java)
             .createUnmarshaller()
             .unmarshal(
                 XMLInputFactory.newInstance().createXMLStreamReader(StreamSource(StringReader(this))),

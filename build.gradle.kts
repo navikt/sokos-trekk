@@ -39,7 +39,7 @@ repositories {
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
 }
 
-val ktorVersion = "3.2.1"
+val ktorVersion = "3.2.2"
 val logbackVersion = "1.5.18"
 val logstashVersion = "8.1"
 val micrometerVersion = "1.15.2"
@@ -49,15 +49,15 @@ val natpryceVersion = "1.6.10.0"
 val kotestVersion = "6.0.0.M5"
 val kotlinxSerializationVersion = "1.9.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
-val mockkVersion = "1.14.4"
+val mockkVersion = "1.14.5"
 
 val aallamUlidVersion = "1.4.0"
 
 val cxfVersion = "4.1.2"
 val ibmmqVersion = "9.4.3.0"
 val glassfishJaxbVersion = "4.0.5"
-val tjenestespesifikasjonVersion = "1.0_20250414143240_7082707"
-val opentelemetryVersion = "2.17.1-alpha"
+val tjenestespesifikasjonVersion = "1.0_20250715173022_23638f4"
+val opentelemetryVersion = "2.18.0-alpha"
 
 dependencies {
 

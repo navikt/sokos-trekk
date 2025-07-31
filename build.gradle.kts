@@ -45,18 +45,18 @@ val micrometerVersion = "1.15.2"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.0.0.M5"
+val kotestVersion = "6.0.0.M6"
 val kotlinxSerializationVersion = "1.9.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.5"
 
-val aallamUlidVersion = "1.4.0"
+val aallamUlidVersion = "1.5.0"
 
 val cxfVersion = "4.1.2"
 val ibmmqVersion = "9.4.3.0"
 val glassfishJaxbVersion = "4.0.5"
 val tjenestespesifikasjonVersion = "1.0_20250715173022_23638f4"
-val opentelemetryVersion = "2.18.0-alpha"
+val opentelemetryVersion = "2.18.1-alpha"
 
 dependencies {
 

@@ -38,14 +38,14 @@ repositories {
     maven { url = uri("https://build.shibboleth.net/maven/releases/") }
 }
 
-val ktorVersion = "3.2.2"
+val ktorVersion = "3.2.3"
 val logbackVersion = "1.5.18"
 val logstashVersion = "8.1"
 val micrometerVersion = "1.15.2"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.0.0.M6"
+val kotestVersion = "6.0.0.M10"
 val kotlinxSerializationVersion = "1.9.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.5"

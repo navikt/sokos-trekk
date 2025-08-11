@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.2.0"
     kotlin("plugin.serialization") version "2.2.0"
-    id("com.gradleup.shadow") version "9.0.1"
+    id("com.gradleup.shadow") version "9.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "13.0.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
 }
@@ -171,12 +171,10 @@ tasks {
             attributes["Main-Class"] = "no.nav.sokos.trekk.ApplicationKt"
         }
         finalizedBy(koverHtmlReport)
-        mergeServiceFiles {
-            setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
-        }
+        mergeServiceFiles()
         // Make sure the cxf service files are handled correctly so that the SOAP services work.
         transform(ServiceFileTransformer::class.java) {
-            setPath("META-INF/cxf")
+            path = "META-INF/cxf"
             include("bus-extensions.txt")
         }
     }

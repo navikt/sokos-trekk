@@ -171,6 +171,8 @@ tasks {
             attributes["Main-Class"] = "no.nav.sokos.trekk.ApplicationKt"
         }
         finalizedBy(koverHtmlReport)
+
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
         mergeServiceFiles()
         // Make sure the cxf service files are handled correctly so that the SOAP services work.
         transform(ServiceFileTransformer::class.java) {

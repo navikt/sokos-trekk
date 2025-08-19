@@ -59,10 +59,10 @@ For å kjøre applikasjonen lokalt må du bruke VDI.
 
 ```mermaid
 flowchart LR
-    osout("OS") -- TREKK_INN (MQ) --> trekk("sokos-trekk")
-    trekk -- Soap --> arena("Arena")
-    arena -- Soap --> trekk
-    trekk -- TREKK_REPLY (MQ) --> osinn("OS")
+    osout("OS") -- TREKK_INN (MQ ) --> trekk("sokos-trekk")
+trekk -- Soap --> arena("Arena")
+arena -- Soap --> trekk
+trekk -- TREKK_REPLY ( MQ ) --> osinn("OS")
 ```
 
 * Oppdragssystemet legger en melding på TREKK_INN-kø.
@@ -489,21 +489,20 @@ Trekk med dag- eller månedssats sendes aldri inn til Trekk-applikasjonen dersom
 
 ```mermaid
 sequenceDiagram
-  participant Oppdrag as OppdragZ
-  participant JmsListener as JmsListener
-  participant JmsSender as JmsSender
-  participant BTS as BehandleTrekkvedtakSerice
-  participant VBS as VedtaksBeregningService
-  participant ARENA as Arena
-  
-  Oppdrag ->>+ JmsListener: Motta informasjon fra TREKK_INN kø
-  JmsListener ->>+ BTS: Send Trekk til behandleTrekk
-  BTS ->>+ ARENA: Hent YtelseVedtak fra Arena gjennom SOAP
-  ARENA ->>+ BTS: Motta ArenaVedtak til behandleTrekk
-  BTS ->>+  VBS: Vurdere YtelseVedtak med ArenadVedtak 
-  VBS ->>+ BTS: Returnere status (Abetal, Begge, OS, Ingen) 
-  BTS ->>+ JmsSender: Send TrekkResponse 
-  JmsSender ->>+ Oppdrag: Motta Trekk med TrekkResponse
+    participant Oppdrag as OppdragZ
+    participant JmsListener as JmsListener
+    participant JmsSender as JmsSender
+    participant BTS as BehandleTrekkvedtakSerice
+    participant VBS as VedtaksBeregningService
+    participant ARENA as Arena
+    Oppdrag ->>+ JmsListener: Motta informasjon fra TREKK_INN kø
+    JmsListener ->>+ BTS: Send Trekk til behandleTrekk
+    BTS ->>+ ARENA: Hent YtelseVedtak fra Arena gjennom SOAP
+    ARENA ->>+ BTS: Motta ArenaVedtak til behandleTrekk
+    BTS ->>+ VBS: Vurdere YtelseVedtak med ArenadVedtak
+    VBS ->>+ BTS: Returnere status (Abetal, Begge, OS, Ingen)
+    BTS ->>+ JmsSender: Send TrekkResponse
+    JmsSender ->>+ Oppdrag: Motta Trekk med TrekkResponse
 ```
 
 # 4. Deployment
@@ -555,9 +554,18 @@ kubectl logs -f sokos-trekk-<POD-ID> --namespace okonomi -c sokos-trekk
 
 ### Alarmer
 
-Vi bruker [nais-alerts](https://doc.nais.io/observability/alerts) for å sette opp alarmer.
-Disse finner man konfigurert i [.nais/alerts-dev.yaml](.nais/alerts-dev.yaml) filen og [.nais/alerts-prod.yaml](.nais/alerts-prod.yaml).
-Alarmene blir publisert i Slack kanalen [#team-mob-alerts-dev](https://nav-it.slack.com/archives/C042SF2FEQM) og [#team-mob-alerts-prod](https://nav-it.slack.com/archives/C042ESY71GX).
+Applikasjonen bruker [Grafana Alerting](https://grafana.nav.cloud.nais.io/alerting/) for overvåkning og varsling.
+Dette er konfigurert via NAIS sin [alerting-integrasjon](https://doc.nais.io/observability/alerts).
+
+Alarmene overvåker metrics som:
+
+- HTTP-feilrater
+- JVM-metrikker
+
+Varsler blir sendt til følgende Slack-kanaler:
+
+- Dev-miljø: [#team-mob-alerts-dev](https://nav-it.slack.com/archives/C042SF2FEQM)
+- Prod-miljø: [#team-mob-alerts-prod](https://nav-it.slack.com/archives/C042ESY71GX)
 
 ### Grafana
 

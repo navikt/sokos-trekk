@@ -27,8 +27,8 @@ Ut fra denne sammenligningen gjøres en beslutning på hvor et trekk skal effekt
 ### Forutsetninger
 
 * Java 21
-* Gradle
-* [Kotest](https://plugins.jetbrains.com/plugin/14080-kotest) plugin for å kjøre tester
+* [Gradle](https://gradle.org/)
+* [Kotest IntelliJ Plugin](https://plugins.jetbrains.com/plugin/14080-kotest)
 
 ### Bygge prosjekt
 
@@ -523,16 +523,8 @@ Dette er kun ment for at utvikler skal kunne teste trekk-komponenten i dev milj�
 
 ### Logging
 
-https://logs.adeo.no.
-
-Feilmeldinger og infomeldinger som ikke innheholder sensitive data logges til data view `Applikasjonslogger`.  
-Sensetive meldinger logges til data view `Securelogs` [sikker-utvikling/logging](https://sikkerhet.nav.no/docs/sikker-utvikling/logging)).
-
-- Filter for Produksjon
-    * application:sokos-trekk AND envclass:p
-
-- Filter for Dev
-    * application:sokos-trekk AND envclass:q
+Feilmeldinger og infomeldinger som ikke innheholder sensitive data logges til [Grafana Loki](https://docs.nais.io/observability/logging/#grafana-loki).  
+Sensitive meldinger logges til [Team Logs](https://doc.nais.io/observability/logging/how-to/team-logs/).
 
 ### Kubectl
 

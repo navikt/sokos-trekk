@@ -47,13 +47,6 @@ For å kjøre applikasjonen lokalt må du bruke VDI.
   Denne vil opprette [default.properties](defaults.properties) med alle environment variabler du trenger for å kjøre
   applikasjonen som er definert i [PropertiesConfig](src/main/kotlin/no/nav/sokos/trekk/config/PropertiesConfig.kt).
 
-### Miljøer
-
-`sokos-trekk` kjøres i følgende miljøer:
-
-- q1
-- qx
-- prod
 
 # 3. Programvarearkitektur
 

@@ -1,7 +1,5 @@
 import kotlinx.kover.gradle.plugin.dsl.tasks.KoverReport
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -9,9 +7,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.2.10"
     kotlin("plugin.serialization") version "2.2.10"
-    id("com.gradleup.shadow") version "9.0.2"
     id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.1"
+
+    application
 }
 
 group = "no.nav.sokos"
@@ -126,6 +125,10 @@ configurations.ktlint {
     resolutionStrategy.force("ch.qos.logback:logback-classic:$logbackVersion")
 }
 
+application {
+    mainClass.set("no.nav.sokos.trekk.ApplicationKt")
+}
+
 sourceSets {
     main {
         java {
@@ -164,22 +167,22 @@ tasks {
         }
     }
 
-    withType<ShadowJar>().configureEach {
-        enabled = true
-        archiveFileName.set("app.jar")
-        manifest {
-            attributes["Main-Class"] = "no.nav.sokos.trekk.ApplicationKt"
-        }
-        finalizedBy(koverHtmlReport)
-
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        mergeServiceFiles()
-        // Make sure the cxf service files are handled correctly so that the SOAP services work.
-        transform(ServiceFileTransformer::class.java) {
-            path = "META-INF/cxf"
-            include("bus-extensions.txt")
-        }
-    }
+//    withType<ShadowJar>().configureEach {
+//        enabled = true
+//        archiveFileName.set("app.jar")
+//        manifest {
+//            attributes["Main-Class"] = "no.nav.sokos.trekk.ApplicationKt"
+//        }
+//        finalizedBy(koverHtmlReport)
+//
+//        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+//        mergeServiceFiles()
+//        // Make sure the cxf service files are handled correctly so that the SOAP services work.
+//        transform(ServiceFileTransformer::class.java) {
+//            path = "META-INF/cxf"
+//            include("bus-extensions.txt")
+//        }
+//    }
 
     withType<Test>().configureEach {
         useJUnitPlatform()
@@ -211,10 +214,6 @@ tasks {
         description = "Copy pre-commit hook to .git/hooks"
         group = "git hooks"
         outputs.upToDateWhen { false }
-    }
-
-    named("jar") {
-        enabled = false
     }
 
     named("build") {

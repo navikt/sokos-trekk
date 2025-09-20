@@ -1,11 +1,23 @@
-name: Auto-deploy wiremock
+name: Deploy wiremock
 
 on:
   push:
-    paths:
-      - '.nais/wiremock/wiremock-qx.yaml'
-      - '.github/workflows/deploy-wiremock.yaml'
-      - '.nais/wiremock/Dockerfile'
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'LICENCE'
+      - 'CODEOWNERS'
+      - '.gitignore'
+      - '.editorconfig'
+      - 'setupLocalEnvironment.sh'
+      - 'dokumentasjon/**'
+      - '.github/workflows/build-pr.yaml'
+      - '.github/workflows/deploy.yaml'
+      - '.github/workflows/manual-deploy.yaml'
+      - '.github/workflows/security.yaml'
+      - '.github/dependabot.yaml'
+
 env:
   TZ: Europe/Oslo
 
@@ -46,5 +58,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CLUSTER: dev-fss
           TEAM: okonomi
-          RESOURCE: ".nais/wiremock-qx.yaml"
+          RESOURCE: ".nais/wiremock/wiremock-qx.yaml"
           VAR: image=${{ needs.build-push-image.outputs.image }}

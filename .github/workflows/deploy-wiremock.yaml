@@ -3,7 +3,7 @@ name: Auto-deploy wiremock
 on:
   push:
     paths:
-      - '.nais/wiremock-qx.yaml'
+      - '.nais/wiremock/wiremock-qx.yaml'
       - '.github/workflows/deploy-wiremock.yaml'
       - '.nais/wiremock/Dockerfile'
 env:

@@ -1,0 +1,43 @@
+name: Deploy application manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        type: choice
+        options:
+          - q1
+          - qx
+
+env:
+  TZ: Europe/Oslo
+
+permissions:
+  contents: "write"
+  id-token: "write"
+
+jobs:
+  run-application-tests:
+    name: Run tests
+    uses: navikt/mob-gha-workflows/.github/workflows/gradle-run-test.yaml@new_workflow_release
+
+  assemble-build-push-image-dev:
+    needs: [ run-application-tests ]
+    name: Assemble application & build/push image dev
+    uses: navikt/mob-gha-workflows/.github/workflows/gradle-assemble-build-push-image.yaml@new_workflow_release
+    secrets: inherit
+    with:
+      gradle-task: './gradlew build shadowJar -x test --configuration-cache'
+      dockerfile: './.nais/dev/Dockerfile'
+      image-tag: 'snapshot'
+
+  deploy-dev:
+    needs: [ assemble-build-push-image-dev ]
+    name: Deploy to dev-gcp-${{ inputs.environment }}
+    uses: navikt/mob-gha-workflows/.github/workflows/nais-app-deploy.yaml@main
+    with:
+      cluster: dev-gcp
+      resource: .nais/dev/naiserator-${{ inputs.environment }}.yaml
+      image: ${{ needs.assemble-build-push-image-dev.outputs.image }}

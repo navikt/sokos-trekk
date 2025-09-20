@@ -13,7 +13,7 @@ on:
       - 'setupLocalEnvironment.sh'
       - 'dokumentasjon/**'
       - '.github/workflows/build-pr.yaml'
-      - 'manual-deploy.yaml'
+      - 'manual-deploy-dev.yaml'
       - '.github/workflows/manual-deploy-dev-qx.yaml'
       - '.github/workflows/security.yaml'
       - '../../.nais/wiremock/wiremock-qx.yaml'

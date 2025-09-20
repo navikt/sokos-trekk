@@ -11,7 +11,7 @@ on:
       - 'setupLocalEnvironment.sh'
       - 'dokumentasjon/**'
       - '.github/workflows/deploy.yaml'
-      - 'manual-deploy.yaml'
+      - 'manual-deploy-dev.yaml'
       - '.github/workflows/security.yaml'
       - '.github/dependabot.yaml'
 

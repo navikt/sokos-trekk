@@ -14,7 +14,7 @@ on:
       - 'dokumentasjon/**'
       - '.github/workflows/build-pr.yaml'
       - '.github/workflows/deploy.yaml'
-      - 'manual-deploy-dev.yaml'
+      - 'manual-deploy.yaml'
       - '.github/workflows/security.yaml'
       - '.github/dependabot.yaml'
 

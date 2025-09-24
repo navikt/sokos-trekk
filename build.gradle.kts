@@ -194,6 +194,18 @@ tasks {
         reports.forEach { report -> report.required.value(false) }
     }
 
+    withType<Wrapper> {
+        gradleVersion = "9.1.0"
+    }
+
+    named("jar") {
+        enabled = false
+    }
+
+    named("build") {
+        dependsOn("copyPreCommitHook")
+    }
+
     register<Copy>("copyPreCommitHook") {
         from(".scripts/pre-commit")
         into(".git/hooks")
@@ -211,17 +223,5 @@ tasks {
         description = "Copy pre-commit hook to .git/hooks"
         group = "git hooks"
         outputs.upToDateWhen { false }
-    }
-
-    named("jar") {
-        enabled = false
-    }
-
-    named("build") {
-        dependsOn("copyPreCommitHook")
-    }
-
-    withType<Wrapper> {
-        gradleVersion = "9.0.0"
     }
 }

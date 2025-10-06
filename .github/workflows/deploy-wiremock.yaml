@@ -21,22 +21,18 @@ on:
 env:
   TZ: Europe/Oslo
 
-permissions:
-  contents: "write"
-  id-token: "write"
-
 jobs:
   build-push-image:
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - name: Build Docker Image
-        uses: docker/setup-buildx-action@v3
-
-      - name: Push Docker Image to GAR
+      - name: Push Wiremock-image and push to GAR
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
@@ -45,18 +41,17 @@ jobs:
           tag: ${{ inputs.image-tag }}
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
-
+      
   deploy-dev-qx:
-    needs: build-push-image
-    name: 'Deploy Wiremock to dev-fss-qx'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: 'Deploy to dev-fss'
-        uses: nais/deploy/actions/deploy@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CLUSTER: dev-fss
-          TEAM: okonomi
-          RESOURCE: ".nais/wiremock/wiremock-qx.yaml"
-          VAR: image=${{ needs.build-push-image.outputs.image }}
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+      deployments: write
+    needs: [ build-push-image ]
+    name: Deploy wiremock to dev-fss-qx
+    uses: navikt/mob-gha-workflows/.github/workflows/nais-deploy.yaml@main
+    with:
+      cluster: dev-fss
+      resource: .nais/wiremock/wiremock-qx.yaml
+      image: ${{ needs.build-push-image.outputs.image }}

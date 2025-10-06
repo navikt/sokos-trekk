@@ -16,8 +16,10 @@ on:
       - '.github/dependabot.yaml'
 
 jobs:
-  build-pr:
-    name: Build and test
+  build-test-pr:
+    permissions:
+      contents: read
+    name: Build & test application
     uses: navikt/mob-gha-workflows/.github/workflows/gradle-run-test.yaml@main
     with:
       gradle-task: './gradlew build shadowJar --configuration-cache'

@@ -38,7 +38,7 @@ repositories {
     maven { url = uri("https://build.shibboleth.net/maven/releases/") }
 }
 
-val ktorVersion = "3.3.0"
+val ktorVersion = "3.3.1"
 val logbackVersion = "1.5.19"
 val logstashVersion = "8.1"
 val micrometerVersion = "1.15.4"
@@ -55,7 +55,7 @@ val aallamUlidVersion = "1.5.0"
 val cxfVersion = "4.1.3"
 val ibmmqVersion = "9.4.3.1"
 val glassfishJaxbVersion = "4.0.6"
-val tjenestespesifikasjonVersion = "1.0_20250925121216_22d0e01"
+val tjenestespesifikasjonVersion = "1.0_20251006130758_015dee0"
 val opentelemetryVersion = "2.20.1-alpha"
 
 dependencies {

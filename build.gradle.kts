@@ -10,7 +10,7 @@ plugins {
     kotlin("jvm") version "2.2.21"
     kotlin("plugin.serialization") version "2.2.21"
     id("com.gradleup.shadow") version "9.2.2"
-    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.jetbrains.kotlinx.kover") version "0.9.3"
 }
 
@@ -39,24 +39,24 @@ repositories {
 }
 
 val ktorVersion = "3.3.2"
-val logbackVersion = "1.5.20"
+val logbackVersion = "1.5.21"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.16.0"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.0.4"
+val kotestVersion = "6.0.5"
 val kotlinxSerializationVersion = "1.9.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.6"
 
 val aallamUlidVersion = "1.5.0"
 
-val cxfVersion = "4.1.3"
+val cxfVersion = "4.1.4"
 val ibmmqVersion = "9.4.4.0"
 val glassfishJaxbVersion = "4.0.6"
 val tjenestespesifikasjonVersion = "1.0_20251006130758_015dee0"
-val opentelemetryVersion = "2.21.0-alpha"
+val opentelemetryVersion = "2.22.0-alpha"
 
 dependencies {
 

@@ -55,7 +55,7 @@ val aallamUlidVersion = "1.5.0"
 val cxfVersion = "4.1.4"
 val ibmmqVersion = "9.4.4.0"
 val glassfishJaxbVersion = "4.0.6"
-val tjenestespesifikasjonVersion = "1.0_20251006130758_015dee0"
+val tjenestespesifikasjonVersion = "1.0_20251124093520_1e57298"
 val opentelemetryVersion = "2.22.0-alpha"
 
 dependencies {

@@ -31,6 +31,8 @@ jobs:
       contents: read
     name: Run application tests
     uses: navikt/mob-gha-workflows/.github/workflows/gradle-run-test.yaml@main
+    with:
+      java-version: '21'
 
   assemble-build-push-image-dev:
     permissions:
@@ -44,6 +46,7 @@ jobs:
       gradle-task: './gradlew build shadowJar -x test --configuration-cache'
       image-suffix: 'dev'
       dockerfile: './.nais/dev/Dockerfile'
+      java-version: '21'
 
   assemble-build-push-image-prod:
     permissions:
@@ -56,6 +59,7 @@ jobs:
     with:
       gradle-task: './gradlew build shadowJar -x test --configuration-cache'
       dockerfile: './.nais/prod/Dockerfile'
+      java-version: '21'
 
   deploy-dev-q1:
     permissions:

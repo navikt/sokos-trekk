@@ -39,7 +39,7 @@ repositories {
 }
 
 val ktorVersion = "3.3.3"
-val logbackVersion = "1.5.21"
+val logbackVersion = "1.5.22"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.16.1"
 val kotlinLoggingVersion = "3.0.5"
@@ -56,7 +56,7 @@ val cxfVersion = "4.1.4"
 val ibmmqVersion = "9.4.4.0"
 val glassfishJaxbVersion = "4.0.6"
 val tjenestespesifikasjonVersion = "1.0_20251208100419_f041bdd"
-val opentelemetryVersion = "2.22.0-alpha"
+val opentelemetryVersion = "2.23.0-alpha"
 
 dependencies {
 

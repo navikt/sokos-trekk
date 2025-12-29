@@ -53,9 +53,9 @@ val mockkVersion = "1.14.7"
 val aallamUlidVersion = "1.5.0"
 
 val cxfVersion = "4.1.4"
-val ibmmqVersion = "9.4.4.0"
+val ibmmqVersion = "9.4.4.1"
 val glassfishJaxbVersion = "4.0.6"
-val tjenestespesifikasjonVersion = "1.0_20251208100419_f041bdd"
+val tjenestespesifikasjonVersion = "1.0_20251217153210_84e9478"
 val opentelemetryVersion = "2.23.0-alpha"
 
 dependencies {

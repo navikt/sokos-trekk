@@ -57,6 +57,7 @@ jobs:
     uses: navikt/mob-gha-workflows/.github/workflows/gradle-assemble-build-push-image.yaml@main
     secrets: inherit
     with:
+      generate-dependency-graph: true
       gradle-task: './gradlew build shadowJar -x test --configuration-cache'
       dockerfile: './.nais/prod/Dockerfile'
       java-version: '21'

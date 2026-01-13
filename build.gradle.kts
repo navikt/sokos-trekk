@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
-    id("com.gradleup.shadow") version "9.3.0"
+    id("com.gradleup.shadow") version "9.3.1"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.jetbrains.kotlinx.kover") version "0.9.4"
 }
@@ -39,7 +39,7 @@ repositories {
 }
 
 val ktorVersion = "3.3.3"
-val logbackVersion = "1.5.23"
+val logbackVersion = "1.5.24"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.16.1"
 val kotlinLoggingVersion = "3.0.5"

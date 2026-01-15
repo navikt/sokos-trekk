@@ -18,12 +18,10 @@ on:
       - '.github/dependabot.yaml'
 
 jobs:
-  build-test-pr:
+  build-and-test:
     permissions:
       contents: read
-    name: Build & test application
-    uses: navikt/mob-gha-workflows/.github/workflows/gradle-run-test.yaml@main
+    uses: navikt/mob-gha-workflows/.github/workflows/gradle-build-test-app.yaml@main
     with:
       gradle-task: './gradlew build shadowJar --configuration-cache'
       java-version: '21'
-

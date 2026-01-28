@@ -39,14 +39,14 @@ repositories {
 }
 
 val ktorVersion = "3.3.3"
-val logbackVersion = "1.5.24"
+val logbackVersion = "1.5.25"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.16.2"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.0.7"
-val kotlinxSerializationVersion = "1.9.0"
+val kotestVersion = "6.1.0"
+val kotlinxSerializationVersion = "1.10.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.7"
 
@@ -56,7 +56,7 @@ val cxfVersion = "4.1.4"
 val ibmmqVersion = "9.4.4.1"
 val glassfishJaxbVersion = "4.0.6"
 val tjenestespesifikasjonVersion = "1.0_20251217153210_84e9478"
-val opentelemetryVersion = "2.23.0-alpha"
+val opentelemetryVersion = "2.24.0-alpha"
 
 dependencies {
 

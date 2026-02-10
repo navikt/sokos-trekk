@@ -11,7 +11,7 @@ plugins {
     kotlin("plugin.serialization") version "2.3.0"
     id("com.gradleup.shadow") version "9.3.1"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
-    id("org.jetbrains.kotlinx.kover") version "0.9.4"
+    id("org.jetbrains.kotlinx.kover") version "0.9.5"
 }
 
 group = "no.nav.sokos"
@@ -39,13 +39,13 @@ repositories {
 }
 
 val ktorVersion = "3.4.0"
-val logbackVersion = "1.5.26"
+val logbackVersion = "1.5.27"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.16.2"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.1.1"
+val kotestVersion = "6.1.2"
 val kotlinxSerializationVersion = "1.10.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.9"

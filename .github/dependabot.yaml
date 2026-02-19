@@ -11,6 +11,9 @@ updates:
         patterns:
           - "jvm"
           - "plugin.serialization"
+      apache-cfx:
+        patterns:
+          - "org.apache.cxf:*"
         update-types:
           - minor
           - patch
@@ -21,3 +24,4 @@ updates:
         exclude-patterns:
           - "jvm"
           - "plugin.serialization"
+          - "org.apache.cxf:*"

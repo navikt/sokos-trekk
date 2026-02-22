@@ -189,10 +189,6 @@ tasks {
         reports.forEach { report -> report.required.value(false) }
     }
 
-    withType<Wrapper> {
-        gradleVersion = "9.3.0"
-    }
-
     named("jar") {
         enabled = false
     }

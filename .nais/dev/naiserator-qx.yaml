@@ -35,8 +35,6 @@ spec:
   prometheus:
     enabled: true
     path: /internal/metrics
-  secureLogs:
-    enabled: true
   observability:
     autoInstrumentation:
       enabled: true
@@ -50,6 +48,10 @@ spec:
         - application: azure-token-generator
           namespace: nais
           cluster: dev-gcp
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
   webproxy: true
   envFrom:
     - secret: sokos-trekk-serviceuser-credentials

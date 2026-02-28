@@ -11,6 +11,7 @@ import ulid.ULID
 
 import no.nav.sokos.trekk.config.PropertiesConfig
 import no.nav.sokos.trekk.config.ServiceUserConfig
+import no.nav.sokos.trekk.config.TEAM_LOGS_MARKER
 import no.nav.sokos.trekk.config.wrapInStsClient
 import no.nav.sokos.trekk.util.JaxbUtils.toXml
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.YtelseVedtakV1
@@ -22,7 +23,6 @@ private const val WSDL_URL = "wsdl/no/nav/tjeneste/virksomhet/ytelseVedtak/v1/Yt
 private const val YTELSE_VEDTAK_SERVICE_NAME = "YtelseVedtak_v1"
 private const val YTELSE_VEDTAK_ENDPOINT_NAME = "YtelseVedtak_v1Port"
 
-private val secureLogger = KotlinLogging.logger("secureLogger")
 private val logger = KotlinLogging.logger {}
 
 class ArenaClientService(
@@ -57,10 +57,10 @@ class ArenaClientService(
             )
 
     fun finnYtelseVedtakListe(request: FinnYtelseVedtakListeRequest): FinnYtelseVedtakListeResponse {
-        secureLogger.info { "FinnYtelseVedtakListeRequest: ${request.toXml(NAMESPACE)}" }
+        logger.info(marker = TEAM_LOGS_MARKER) { "FinnYtelseVedtakListeRequest: ${request.toXml(NAMESPACE)}" }
 
         val response = ytelsesVedtakSoapClient.finnYtelseVedtakListe(request)
-        secureLogger.info { "FinnYtelseVedtakListeResponse: ${response.toXml(NAMESPACE)}" }
+        logger.info(marker = TEAM_LOGS_MARKER) { "FinnYtelseVedtakListeResponse: ${response.toXml(NAMESPACE)}" }
 
         return response
     }

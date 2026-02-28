@@ -35,8 +35,6 @@ spec:
   prometheus:
     enabled: true
     path: /internal/metrics
-  secureLogs:
-    enabled: true
   observability:
     autoInstrumentation:
       enabled: true
@@ -44,6 +42,11 @@ spec:
   azure:
     application:
       enabled: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: logging
+          namespace: nais-system
   webproxy: true
   envFrom:
     - secret: sokos-trekk-serviceuser-credentials

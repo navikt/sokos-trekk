@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.3.10"
     kotlin("plugin.serialization") version "2.3.10"
-    id("com.gradleup.shadow") version "9.3.1"
+    id("com.gradleup.shadow") version "9.3.2"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.jetbrains.kotlinx.kover") version "0.9.7"
 }
@@ -38,14 +38,14 @@ repositories {
     maven { url = uri("https://build.shibboleth.net/maven/releases/") }
 }
 
-val ktorVersion = "3.4.0"
+val ktorVersion = "3.4.1"
 val logbackVersion = "1.5.32"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.16.3"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.1.3"
+val kotestVersion = "6.1.4"
 val kotlinxSerializationVersion = "1.10.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.9"
@@ -53,7 +53,7 @@ val mockkVersion = "1.14.9"
 val aallamUlidVersion = "1.6.0"
 
 val cxfVersion = "4.1.4"
-val ibmmqVersion = "9.4.4.1"
+val ibmmqVersion = "9.4.5.0"
 val glassfishJaxbVersion = "4.0.6"
 val tjenestespesifikasjonVersion = "1.0_20251217153210_84e9478"
 val opentelemetryVersion = "2.25.0-alpha"

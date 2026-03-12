@@ -54,7 +54,7 @@ spec:
           namespace: nais-system
   webproxy: true
   envFrom:
-    - secret: sokos-trekk-serviceuser-credentials
+    - secret: sokos-trekk-secrets
 
   env:
     - name: USE_AUTHENTICATION

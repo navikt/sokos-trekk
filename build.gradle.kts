@@ -140,10 +140,6 @@ configurations.all {
                 useVersion("4.2.11.Final")
                 because("Netty HTTP/2 CONTINUATION Frame Flood DoS via Zero-Byte Frame Bypass. Affected version >= 4.2.0.Alpha1, < 4.2.10.Final")
             }
-            if (requested.group == "org.codehaus.plexus" && requested.name == "plexus-utils") {
-                useVersion("4.0.3")
-                because("Plexus-Utils has a Directory Traversal vulnerability in its extractFile method. Affected version <= 4.2.0")
-            }
         }
     }
 }

@@ -26,7 +26,7 @@ import org.slf4j.event.Level
 
 import no.nav.sokos.trekk.metrics.Metrics
 
-val TEAM_LOGS_MARKER: Marker? = MarkerFactory.getMarker("TEAM_LOGS")
+val TEAM_LOGS_MARKER: Marker = MarkerFactory.getMarker("TEAM_LOGS")
 
 fun Application.commonConfig() {
     install(CallLogging) {

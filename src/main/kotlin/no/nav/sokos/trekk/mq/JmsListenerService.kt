@@ -24,9 +24,9 @@ class JmsListenerService(
     connectionFactory: ConnectionFactory = MQConfig.connectionFactory(),
     trekkInnQueue: Queue = MQQueue(PropertiesConfig.MQProperties().trekkInnQueueName).apply { targetClient = WMQConstants.WMQ_CLIENT_NONJMS_MQ },
     private val trekkInnBoqQueue: Queue = MQQueue(PropertiesConfig.MQProperties().trekkInnBoqQueueName).apply { targetClient = WMQConstants.WMQ_CLIENT_NONJMS_MQ },
-    private val producer: JmsProducerService = JmsProducerService(),
+    private val producer: JmsProducer = JmsProducerService(),
     private val behandleTrekkvedtakService: BehandleTrekkvedtakService = BehandleTrekkvedtakService(),
-) {
+) : AutoCloseable {
     private val jmsContext: JMSContext = connectionFactory.createContext(JMSContext.CLIENT_ACKNOWLEDGE)
     private val trekkInnListener = jmsContext.createConsumer(trekkInnQueue)
 
@@ -56,5 +56,12 @@ class JmsListenerService(
                 producer.send(jmsMessage, trekkInnBoqQueue, mqTrekkInnBoqMetricCounter)
             }
         }
+    }
+
+    override fun close() {
+        runCatching { trekkInnListener.close() }
+            .onFailure { logger.warn(it) { "Failed to close JMS consumer" } }
+        runCatching { jmsContext.close() }
+            .onFailure { logger.warn(it) { "Failed to close JMS context" } }
     }
 }

@@ -18,6 +18,7 @@ object PropertiesConfig {
                 "USE_AUTHENTICATION" to "true",
                 "MQ_LISTENER_ENABLED" to "true",
                 "USE_ARENAMOCK" to "false",
+                "SOAP_DISABLE_CN_CHECK" to "false",
             ),
         )
 
@@ -57,9 +58,12 @@ object PropertiesConfig {
 
     fun getOrEmpty(key: String): String = config.getOrElse(Key(key, stringType), "")
 
+    private val profile: Profile by lazy {
+        Profile.valueOf(get("APPLICATION_PROFILE"))
+    }
+
     data class Configuration(
         val naisAppName: String = get("NAIS_APP_NAME"),
-        val profile: Profile = Profile.valueOf(get("APPLICATION_PROFILE")),
         val useAuthentication: Boolean = getOrEmpty("USE_AUTHENTICATION").toBoolean(),
         val azureAdProperties: AzureAdProperties = AzureAdProperties(),
         val useArenaMock: Boolean = getOrEmpty("USE_ARENAMOCK").toBoolean(),
@@ -92,6 +96,7 @@ object PropertiesConfig {
         val ytelsevedtakV1EndpointUrl: String = get("VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL"),
         val serviceUsername: String = getOrEmpty("SRVTREKK_USERNAME"),
         val servicePassword: String = getOrEmpty("SRVTREKK_PASSWORD"),
+        val disableCnCheck: Boolean = getOrEmpty("SOAP_DISABLE_CN_CHECK").toBoolean(),
     )
 
     enum class Profile {
@@ -100,7 +105,7 @@ object PropertiesConfig {
         PROD,
     }
 
-    fun isLocal() = Configuration().profile == Profile.LOCAL
+    fun isLocal() = profile == Profile.LOCAL
 
-    fun isDev() = Configuration().profile == Profile.DEV
+    fun isDev() = profile == Profile.DEV
 }

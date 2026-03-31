@@ -1,6 +1,7 @@
 package no.nav.sokos.trekk
 
 import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
@@ -24,7 +25,14 @@ private fun Application.module() {
     securityConfig(useAuthentication)
     routingConfig(useAuthentication, applicationState)
 
-    if (PropertiesConfig.MQProperties().mqListenerEnabled) {
-        JmsListenerService().start()
+    val jmsListener =
+        if (PropertiesConfig.MQProperties().mqListenerEnabled) {
+            JmsListenerService().also { it.start() }
+        } else {
+            null
+        }
+
+    monitor.subscribe(ApplicationStopped) {
+        jmsListener?.close()
     }
 }

@@ -5,6 +5,7 @@ import java.math.RoundingMode
 import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 import java.time.YearMonth
+import java.util.concurrent.atomic.AtomicReference
 
 import jakarta.xml.bind.JAXB
 import mu.KotlinLogging
@@ -18,21 +19,46 @@ import no.nav.sokos.trekk.util.Utils.toXMLGregorianCalendar
 
 private val logger = KotlinLogging.logger {}
 
+private data class ArenaMockSnapshot(
+    val mockDataXml: String?,
+    val kjoreDato: LocalDate?,
+    val arenaMockDataMap: Map<String, List<ArenaVedtak>>,
+)
+
 object ArenaMockService {
-    var mockDataXml: String? = null
-    var kjoreDato: LocalDate? = null
-    val areanaMockDataMap: MutableMap<String, List<ArenaVedtak>> = mutableMapOf()
+    private val snapshotRef =
+        AtomicReference(
+            ArenaMockSnapshot(
+                mockDataXml = null,
+                kjoreDato = null,
+                arenaMockDataMap = emptyMap(),
+            ),
+        )
+
+    // Keep read access with same property names
+    val mockDataXml: String?
+        get() = snapshotRef.get().mockDataXml
+
+    val kjoreDato: LocalDate?
+        get() = snapshotRef.get().kjoreDato
+
+    val arenaMockDataMap: Map<String, List<ArenaVedtak>>
+        get() = snapshotRef.get().arenaMockDataMap
 
     fun lagreArenaMockData(xmlContent: String) {
-        val arenaMockData = JAXB.unmarshal(ByteArrayInputStream(xmlContent.toByteArray(StandardCharsets.UTF_8)), ArenaMockData::class.java)
-        mockDataXml = xmlContent
-        kjoreDato =
+        val arenaMockData =
+            JAXB.unmarshal(
+                ByteArrayInputStream(xmlContent.toByteArray(StandardCharsets.UTF_8)),
+                ArenaMockData::class.java,
+            )
+
+        val nyKjoreDato =
             arenaMockData.kjoreDato
                 ?.toGregorianCalendar()
                 ?.toZonedDateTime()
                 ?.toLocalDate()
-        areanaMockDataMap.clear()
-        areanaMockDataMap.putAll(
+
+        val nyDataMap =
             arenaMockData.personYtelse
                 .flatMap { personYtelse ->
                     personYtelse.sak.flatMap { sak ->
@@ -50,7 +76,16 @@ object ArenaMockService {
                                 }
                         }
                     }
-                }.groupBy({ it.first }, { it.second }),
+                }.groupBy({ it.first }, { it.second })
+                .mapValues { (_, vedtakListe) -> vedtakListe.toList() }
+
+        // Single atomic publish to avoid readers seeing partial state
+        snapshotRef.set(
+            ArenaMockSnapshot(
+                mockDataXml = xmlContent,
+                kjoreDato = nyKjoreDato,
+                arenaMockDataMap = nyDataMap,
+            ),
         )
     }
 
@@ -60,19 +95,21 @@ object ArenaMockService {
         toDate: LocalDate,
     ): Map<String, List<ArenaVedtak>> {
         logger.info("[ARENA-MOCK]: Bruk ArenaMockService")
+        val snapshot = snapshotRef.get()
+
         val periode: Periode =
-            if (kjoreDato != null) {
-                logger.info("[ARENA-MOCK]: Kjøredato er satt til $kjoreDato")
+            if (snapshot.kjoreDato != null) {
+                logger.info("[ARENA-MOCK]: Kjøredato er satt til ${snapshot.kjoreDato}")
                 Periode().apply {
                     fom =
                         YearMonth
-                            .from(kjoreDato)
+                            .from(snapshot.kjoreDato)
                             .plusMonths(1)
                             .atDay(1)
                             .toXMLGregorianCalendar()
                     tom =
                         YearMonth
-                            .from(kjoreDato)
+                            .from(snapshot.kjoreDato)
                             .plusMonths(1)
                             .atEndOfMonth()
                             .toXMLGregorianCalendar()
@@ -83,18 +120,23 @@ object ArenaMockService {
                     tom = toDate.toXMLGregorianCalendar()
                 }
             }
-        if (areanaMockDataMap.isNotEmpty()) {
-            return fnrSet
-                .mapNotNull { fnr ->
-                    areanaMockDataMap[fnr]
-                        ?.filter { vedtak -> erInnenforPeriode(vedtak.vedtaksperiode, periode) }
-                        ?.takeIf { it.isNotEmpty() }
-                        ?.also { logger.info { "[ARENA-MOCK]: Hentet ${it.size} Arena-vedtak for bruker $fnr og periode ${periode.fom.toLocalDate()} til ${periode.tom.toLocalDate()}" } }
-                }.associateBy { it.first().rettighetType }
+
+        if (snapshot.arenaMockDataMap.isEmpty()) {
+            logger.warn("[ARENA-MOCK]: Mangler testdata!")
+            return emptyMap()
         }
 
-        logger.warn("[ARENA-MOCK]: Mangler testdata!")
-        return emptyMap()
+        return fnrSet
+            .mapNotNull { fnr ->
+                snapshot.arenaMockDataMap[fnr]
+                    ?.filter { vedtak -> erInnenforPeriode(vedtak.vedtaksperiode, periode) }
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.also {
+                        logger.info {
+                            "[ARENA-MOCK]: Hentet ${it.size} Arena-vedtak for bruker $fnr og periode ${periode.fom.toLocalDate()} til ${periode.tom.toLocalDate()}"
+                        }
+                    }?.let { fnr to it }
+            }.toMap()
     }
 
     private fun erInnenforPeriode(

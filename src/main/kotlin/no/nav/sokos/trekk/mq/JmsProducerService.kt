@@ -4,7 +4,6 @@ import com.ibm.msg.client.jakarta.jms.JmsConstants.SESSION_TRANSACTED
 import io.prometheus.metrics.core.metrics.Counter
 import jakarta.jms.ConnectionFactory
 import jakarta.jms.JMSContext
-import jakarta.jms.JMSProducer
 import jakarta.jms.Queue
 import mu.KotlinLogging
 
@@ -13,20 +12,19 @@ import no.nav.sokos.trekk.exception.TrekkException
 
 private val logger = KotlinLogging.logger {}
 
-open class JmsProducerService(
+class JmsProducerService(
     connectionFactory: ConnectionFactory = MQConfig.connectionFactory(),
-) {
+) : JmsProducer {
     private val jmsContext: JMSContext = connectionFactory.createContext()
-    private val producer: JMSProducer = jmsContext.createProducer()
 
-    open fun send(
+    override fun send(
         payload: String,
         senderQueue: Queue,
         metricCounter: Counter,
     ) {
         jmsContext.createContext(SESSION_TRANSACTED).use { context ->
             runCatching {
-                producer.send(senderQueue, payload)
+                context.createProducer().send(senderQueue, payload)
             }.onSuccess {
                 context.commit()
                 metricCounter.inc()
@@ -34,7 +32,7 @@ open class JmsProducerService(
             }.onFailure { exception ->
                 context.rollback()
                 logger.error(exception) { "MQ-transaksjon rolled back" }
-                throw TrekkException(exception.message ?: "Feil ved sending av melding til MQ")
+                throw TrekkException(exception.message ?: "Feil ved sending av melding til MQ", exception)
             }
         }
     }

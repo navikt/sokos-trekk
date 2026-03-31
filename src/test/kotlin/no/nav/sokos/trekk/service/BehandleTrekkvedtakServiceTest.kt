@@ -12,7 +12,7 @@ import io.mockk.verify
 import no.nav.maskinelletrekk.trekk.v1.Beslutning
 import no.nav.sokos.trekk.TestUtil.readFromResource
 import no.nav.sokos.trekk.TestUtil.unmarshalFinnYtelseVedtakListeResponse
-import no.nav.sokos.trekk.mq.JmsProducerService
+import no.nav.sokos.trekk.mq.JmsProducer
 import no.nav.sokos.trekk.soap.ArenaClientService
 
 private const val TREKK_V1_REQUEST_1_XML = "trekk_v1_request_1.xml"
@@ -23,7 +23,7 @@ class BehandleTrekkvedtakServiceTest :
     BehaviorSpec({
 
         val arenaClientService = mockk<ArenaClientService>()
-        val producer = mockk<JmsProducerService>()
+        val producer = mockk<JmsProducer>()
         val behandleTrekkvedtakService: BehandleTrekkvedtakService by lazy {
             BehandleTrekkvedtakService(arenaClientService, producer)
         }

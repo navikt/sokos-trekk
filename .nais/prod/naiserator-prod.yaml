@@ -80,3 +80,5 @@ spec:
       value: https://sts.adeo.no/SecurityTokenServiceProvider/
     - name: VIRKSOMHET_YTELSEVEDTAK_V1_ENDPOINTURL
       value: https://arena.adeo.no/ail_ws/YtelseVedtak_v1
+    - name: SOAP_DISABLE_CN_CHECK
+      value: "true"

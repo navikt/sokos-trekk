@@ -23,7 +23,7 @@ class VedtaksBeregningServiceTest :
     FunSpec({
         test("skal besluttLopendeOgSaldotrekk - TrekkRequest: trekkalt=LOPD, system=J, sumArena >= trekkSats, sumArena > 0 returnere TrekkResponse: beslutning=Abetal") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_1_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -44,9 +44,9 @@ class VedtaksBeregningServiceTest :
             response.vedtak.size shouldBe 3
         }
 
-        test("skal besluttLopendeOgSaldotrekk - TrekkRequest: trekkalt=LOPD, system=N, sumArena > sumOs, sumArena > 0 returnere TrekkResponse: beslutning=OS") {
+        test("skal besluttLopendeOgSaldotrekk - TrekkRequest: trekkalt=LOPD, system=N, sumArena > sumOs, sumArena > 0 returnere TrekkResponse: beslutning=ABETAL") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_2_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -69,7 +69,7 @@ class VedtaksBeregningServiceTest :
 
         test("skal besluttLopendeOgSaldotrekk - TrekkRequest: trekkalt=LOPD, system=J, sumOs > sumArena returnere TrekkResponse: beslutning=OS") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_2_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -92,7 +92,7 @@ class VedtaksBeregningServiceTest :
 
         test("skal besluttLopendeOgSaldotrekk - TrekkRequest: trekkalt=LOPD, system=null, sumOs > sumArena returnere TrekkResponse: beslutning=OS") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_2_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -115,7 +115,7 @@ class VedtaksBeregningServiceTest :
 
         test("skal besluttLopendeOgSaldotrekk - TrekkRequest: trekkalt=LOPD, system=N, sumOs < sumArena returnere TrekkResponse: beslutning=INGEN") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_3_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -137,7 +137,7 @@ class VedtaksBeregningServiceTest :
 
         test("skal besluttProsenttrekk - TrekkRequest: trekkalt=LOPP, system=N, sumArena > 0, sumOs > 0 returnere TrekkResponse: beslutning=BEGGE") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_2_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -159,7 +159,7 @@ class VedtaksBeregningServiceTest :
 
         test("skal besluttProsenttrekk - TrekkRequest: trekkalt=LOPP, system=J, sumOs = 0, sumArena > 0 returnere TrekkResponse: beslutning=ABETAL") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_2_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -181,7 +181,7 @@ class VedtaksBeregningServiceTest :
 
         test("skal besluttProsenttrekk - TrekkRequest: trekkalt=LOPP, system=J, sumOs > 0, sumArena = 0 returnere TrekkResponse: beslutning=OS") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_3_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {
@@ -203,7 +203,7 @@ class VedtaksBeregningServiceTest :
 
         test("skal besluttProsenttrekk - TrekkRequest: trekkalt=LOPP, system=J, sumOs = 0, sumArena = 0 returnere TrekkResponse: beslutning=INGEN") {
             val ytelseVedtakListeResponse = YTELSEVEDTAK_3_RESPONSE_XML.readFromResource().unmarshalFinnYtelseVedtakListeResponse()
-            val arenaVedtakMap = ytelseVedtakListeResponse.mapToAreanVedtak()
+            val arenaVedtakMap = ytelseVedtakListeResponse.mapToArenaVedtak()
 
             val request =
                 TrekkRequest().apply {

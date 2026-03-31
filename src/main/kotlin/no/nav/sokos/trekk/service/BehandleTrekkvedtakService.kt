@@ -16,6 +16,7 @@ import no.nav.sokos.trekk.arenamock.ArenaMockService
 import no.nav.sokos.trekk.config.PropertiesConfig
 import no.nav.sokos.trekk.metrics.Metrics
 import no.nav.sokos.trekk.metrics.TAG_EXCEPTION_NAME
+import no.nav.sokos.trekk.mq.JmsProducer
 import no.nav.sokos.trekk.mq.JmsProducerService
 import no.nav.sokos.trekk.soap.ArenaClientService
 import no.nav.sokos.trekk.util.JaxbUtils
@@ -28,14 +29,17 @@ import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakList
 import no.nav.tjeneste.virksomhet.ytelsevedtak.v1.meldinger.FinnYtelseVedtakListeResponse
 
 private val logger = KotlinLogging.logger { }
-val TEMA_CODE = listOf("AAP", "DAG", "IND")
 
 class BehandleTrekkvedtakService(
     private val arenaClientService: ArenaClientService = ArenaClientService(),
-    private val producer: JmsProducerService = JmsProducerService(),
+    private val producer: JmsProducer = JmsProducerService(),
     private val replyQueue: Queue = MQQueue(PropertiesConfig.MQProperties().trekkReplyQueueName).apply { targetClient = WMQConstants.WMQ_CLIENT_NONJMS_MQ },
     private val replyBatchQueue: Queue = MQQueue(PropertiesConfig.MQProperties().trekkReplyBatchQueueName).apply { targetClient = WMQConstants.WMQ_CLIENT_NONJMS_MQ },
 ) {
+    companion object {
+        private val TEMA_CODE = listOf("AAP", "DAG", "IND")
+    }
+
     fun behandleTrekkvedtak(
         xmlContent: String,
         fromDate: LocalDate,
@@ -112,14 +116,14 @@ class BehandleTrekkvedtakService(
             val response = arenaClientService.finnYtelseVedtakListe(request)
             Metrics.soapArenaResponseCounter.inc()
 
-            response.mapToAreanVedtak()
+            response.mapToArenaVedtak()
         }.onFailure { exception ->
             Metrics.soapArenaErrorCounter.labelValues(TAG_EXCEPTION_NAME).inc()
             throw exception
         }.getOrThrow()
 }
 
-fun FinnYtelseVedtakListeResponse.mapToAreanVedtak(): Map<String, List<ArenaVedtak>> =
+fun FinnYtelseVedtakListeResponse.mapToArenaVedtak(): Map<String, List<ArenaVedtak>> =
     this.personYtelseListe
         .flatMap { personYtelse ->
             personYtelse.sakListe.flatMap { sak ->

@@ -11,7 +11,7 @@ plugins {
     kotlin("plugin.serialization") version "2.3.10"
     id("com.gradleup.shadow") version "9.4.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.7"
+    id("org.jetbrains.kotlinx.kover") version "0.9.8"
 }
 
 group = "no.nav.sokos"
@@ -45,7 +45,7 @@ val micrometerVersion = "1.16.4"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.1.8"
+val kotestVersion = "6.1.9"
 val kotlinxSerializationVersion = "1.10.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.9"

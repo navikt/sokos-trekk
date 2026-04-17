@@ -9,9 +9,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.3.20"
     kotlin("plugin.serialization") version "2.3.20"
-    id("com.gradleup.shadow") version "9.4.0"
+    id("com.gradleup.shadow") version "9.4.1"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    id("org.jetbrains.kotlinx.kover") version "0.9.7"
+    id("org.jetbrains.kotlinx.kover") version "0.9.8"
 }
 
 group = "no.nav.sokos"
@@ -38,15 +38,15 @@ repositories {
     maven { url = uri("https://build.shibboleth.net/maven/releases/") }
 }
 
-val ktorVersion = "3.4.1"
+val ktorVersion = "3.4.2"
 val logbackVersion = "1.5.32"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.16.4"
 val kotlinLoggingVersion = "3.0.5"
 val janinoVersion = "3.1.12"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.1.8"
-val kotlinxSerializationVersion = "1.10.0"
+val kotestVersion = "6.1.11"
+val kotlinxSerializationVersion = "1.11.0"
 val kotlinxDatetimeVersion = "0.7.1-0.6.x-compat"
 val mockkVersion = "1.14.9"
 

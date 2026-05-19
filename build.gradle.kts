@@ -156,6 +156,12 @@ configurations.all {
                     "CVE-2026-42402: Apache Neethi is vulnerable to a Denial of Service attack through algorithmic complexity in policy normalization. Affected version < 3.2.2, patched in >= 3.2.2",
                 )
             }
+            if (requested.group == "org.apache.commons" && requested.name == "commons-lang3") {
+                useVersion("3.18.0")
+                because(
+                    "CVE-2025-48924: Uncontrolled Recursion vulnerability in Apache Commons Lang. >= 3.0 < 3.18.0",
+                )
+            }
             if (requested.group == "org.bouncycastle" && requested.name == "bcprov-jdk18on") {
                 useVersion("1.84")
                 because("Bouncy Castle Has Covert Timing Channel Vulnerability. Affected version >= 1.71, < 1.84")

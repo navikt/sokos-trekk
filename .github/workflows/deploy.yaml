@@ -26,14 +26,19 @@ env:
 jobs:
   build-and-test:
     permissions:
-      contents: write
+      contents: read
     name: Build and test
     uses: navikt/mob-gha-workflows/.github/workflows/gradle-build-test-app.yaml@main
     with:
       gradle-task: './gradlew build shadowJar --configuration-cache'
       upload-artifact: true
-      generate-dependency-graph: true
       java-version: '21'
+
+  dependency-submission:
+    permissions:
+      contents: write
+    name: Submit dependency graph
+    uses: navikt/mob-gha-workflows/.github/workflows/gradle-dependency-submission.yaml@main
 
   build-push-image-dev:
     permissions:

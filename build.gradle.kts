@@ -6,13 +6,56 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+buildscript {
+    repositories {
+        mavenCentral()
+
+        val githubToken = System.getenv("GITHUB_TOKEN")
+        if (githubToken.isNullOrEmpty()) {
+            maven {
+                name = "external-mirror-github-navikt"
+                url = uri("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
+            }
+        } else {
+            maven {
+                name = "github-package-registry-navikt"
+                url = uri("https://maven.pkg.github.com/navikt/maven-release")
+                credentials {
+                    username = "token"
+                    password = githubToken
+                }
+            }
+        }
+        maven { url = uri("https://build.shibboleth.net/maven/releases/") }
+    }
+
+    configurations.classpath {
+        resolutionStrategy {
+            eachDependency {
+                if (requested.group == "org.codehaus.plexus" && requested.name == "plexus-utils") {
+                    useVersion("4.0.3")
+                    because(
+                        "Plexus-Utils has a Directory Traversal vulnerability in its extractFile method. " +
+                            "Affected version >= 4.0.0, < 4.0.3",
+                    )
+                }
+            }
+        }
+    }
+
+    dependencies {
+        classpath("com.gradleup.shadow:shadow-gradle-plugin:9.4.1")
+    }
+}
+
 plugins {
     kotlin("jvm") version "2.3.20"
     kotlin("plugin.serialization") version "2.3.20"
-    id("com.gradleup.shadow") version "9.4.1"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.8"
 }
+
+apply(plugin = "com.gradleup.shadow")
 
 group = "no.nav.sokos"
 

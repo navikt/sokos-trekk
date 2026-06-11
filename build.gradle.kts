@@ -132,19 +132,7 @@ configurations.all {
                 useVersion("2.21.1")
                 because("jackson-core: Number Length Constraint Bypass in Async Parser Leads to Potential DoS Condition. Affected version >= 2.19.0, < 2.21.1")
             }
-            if (requested.group == "io.netty" && requested.name == "netty-codec-http") {
-                useVersion("4.2.15.Final")
-                because(
-                    "CVE-2026-44249, CVE-2026-45416: Netty HttpContentDecompressor maxAllocation bypass with br/zstd/snappy leads to decompression bomb DoS. Affected version = 4.2.11.Final, patched in >= 4.2.15.Final",
-                )
-            }
-            if (requested.group == "io.netty" && requested.name == "netty-codec-http2") {
-                useVersion("4.2.15.Final")
-                because(
-                    "CVE-2026-44249, CVE-2026-45416: Netty HttpContentDecompressor maxAllocation bypass with br/zstd/snappy leads to decompression bomb DoS. Affected version = 4.2.11.Final, patched in >= 4.2.15.Final",
-                )
-            }
-            if (requested.group == "io.netty" && requested.name == "netty-handler") {
+            if (requested.group == "io.netty" && requested.name in setOf("netty-codec-http", "netty-codec-http2", "netty-handler")) {
                 useVersion("4.2.15.Final")
                 because(
                     "CVE-2026-44249, CVE-2026-45416: Netty HttpContentDecompressor maxAllocation bypass with br/zstd/snappy leads to decompression bomb DoS. Affected version = 4.2.11.Final, patched in >= 4.2.15.Final",

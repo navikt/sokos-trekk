@@ -14,6 +14,9 @@ updates:
         patterns:
           - "jvm"
           - "plugin.serialization"
+      apache-cxf:
+        patterns:
+          - "org.apache.cxf:*"
       ktor:
         patterns:
           - "io.ktor:*"
@@ -27,4 +30,5 @@ updates:
         exclude-patterns:
           - "jvm"
           - "plugin.serialization"
+          - "org.apache.cxf:*"
           - "io.ktor:*"

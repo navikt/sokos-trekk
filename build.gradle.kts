@@ -144,6 +144,12 @@ configurations.all {
                     "CVE-2026-44249, CVE-2026-45416: Affected version = 4.2.0.Final, patched in >= 4.2.15.Final",
                 )
             }
+            if (requested.group == "io.netty" && requested.name == "netty-transport-native-kqueue") {
+                useVersion("4.2.15.Final")
+                because(
+                    "CVE-2026-45536 Unix-socket fd receive leaks descriptors when peer sends two at once: Affected version = >= 4.2.0.Final, <= 4.2.14.Final, patched in >= 4.2.15.Final",
+                )
+            }
             if (requested.group == "org.apache.neethi" && requested.name == "neethi") {
                 useVersion("3.2.2")
                 because(

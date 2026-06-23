@@ -38,7 +38,7 @@ repositories {
     maven { url = uri("https://build.shibboleth.net/maven/releases/") }
 }
 
-val ktorVersion = "3.4.3"
+val ktorVersion = "3.5.0"
 val logbackVersion = "1.5.34"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.17.0"

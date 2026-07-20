@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.4.0"
     kotlin("plugin.serialization") version "2.4.0"
-    id("com.gradleup.shadow") version "9.4.2"
+    id("com.gradleup.shadow") version "9.5.1"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.8"
 }
@@ -39,12 +39,12 @@ repositories {
 }
 
 val ktorVersion = "3.5.1"
-val logbackVersion = "1.5.34"
+val logbackVersion = "1.5.38"
 val logstashVersion = "9.0"
 val micrometerVersion = "1.17.0"
 val kotlinLoggingVersion = "3.0.5"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.1.11"
+val kotestVersion = "6.2.2"
 val kotlinxSerializationVersion = "1.11.0"
 val kotlinxDatetimeVersion = "0.8.0-0.6.x-compat"
 val mockkVersion = "1.14.11"
@@ -55,7 +55,7 @@ val cxfVersion = "4.2.0"
 val ibmmqVersion = "10.0.0.0"
 val glassfishJaxbVersion = "4.0.9"
 val tjenestespesifikasjonVersion = "1.0_20260311085905_5544925"
-val opentelemetryVersion = "2.28.1-alpha"
+val opentelemetryVersion = "2.29.0-alpha"
 
 dependencies {
 

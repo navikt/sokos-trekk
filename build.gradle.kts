@@ -51,7 +51,7 @@ val mockkVersion = "1.14.11"
 
 val aallamUlidVersion = "1.6.0"
 
-val cxfVersion = "4.2.0"
+val cxfVersion = "4.2.2"
 val ibmmqVersion = "10.0.0.0"
 val glassfishJaxbVersion = "4.0.9"
 val tjenestespesifikasjonVersion = "1.0_20260628105133_e9177d7"
@@ -123,11 +123,11 @@ configurations.all {
     resolutionStrategy {
         eachDependency {
             if (requested.group == "tools.jackson.core" && requested.name == "jackson-core") {
-                useVersion("3.1.1")
+                useVersion("3.1.4")
                 because("Jackson Core: Document length constraint bypass in blocking, async, and DataInput parsers. Affected version >= 3.0.0, <= 3.1.0")
             }
             if (requested.group == "com.fasterxml.jackson.core" && requested.name == "jackson-core") {
-                useVersion("2.21.1")
+                useVersion("2.21.4")
                 because("jackson-core: Number Length Constraint Bypass in Async Parser Leads to Potential DoS Condition. Affected version >= 2.19.0, < 2.21.1")
             }
             if (requested.group == "io.netty" && requested.name in setOf("netty-codec-http", "netty-codec-http2", "netty-handler")) {

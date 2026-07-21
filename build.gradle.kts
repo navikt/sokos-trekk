@@ -160,10 +160,6 @@ configurations.all {
                     "CVE-2025-48924: Uncontrolled Recursion vulnerability in Apache Commons Lang. >= 3.0 < 3.18.0",
                 )
             }
-            if (requested.group == "commons-io" && requested.name == "commons-io") {
-                useVersion("2.22.0")
-                because("CVE-2024-47554: commons-io 2.8.0 is vulnerable; fixed in newer releases")
-            }
             if (requested.group == "org.bouncycastle" && requested.name == "bcprov-jdk18on") {
                 useVersion("1.84")
                 because("Bouncy Castle Has Covert Timing Channel Vulnerability. Affected version >= 1.71, < 1.84")

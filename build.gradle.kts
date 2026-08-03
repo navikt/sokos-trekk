@@ -122,6 +122,10 @@ dependencies {
 configurations.all {
     resolutionStrategy {
         eachDependency {
+            if (requested.group == "io.netty") {
+                useVersion("4.2.16.Final")
+                because("Multiple versions of netty has vulnerable dependencies. Affected version < 4.2.15.Final")
+            }
             if (requested.group == "tools.jackson.core" && requested.name == "jackson-core") {
                 useVersion("3.2.1")
                 because("Jackson Core: Document length constraint bypass in blocking, async, and DataInput parsers. Affected version >= 3.0.0, <= 3.1.0")
@@ -129,24 +133,6 @@ configurations.all {
             if (requested.group == "com.fasterxml.jackson.core" && requested.name == "jackson-core") {
                 useVersion("2.22.1")
                 because("jackson-core: Number Length Constraint Bypass in Async Parser Leads to Potential DoS Condition. Affected version >= 2.19.0, < 2.21.1")
-            }
-            if (requested.group == "io.netty" && requested.name in setOf("netty-codec-http", "netty-codec-http2", "netty-handler")) {
-                useVersion("4.2.15.Final")
-                because(
-                    "CVE-2026-44249, CVE-2026-45416: Netty HttpContentDecompressor maxAllocation bypass with br/zstd/snappy leads to decompression bomb DoS. Affected version = 4.2.11.Final, patched in >= 4.2.15.Final",
-                )
-            }
-            if (requested.group == "io.netty" && requested.name == "netty-transport-native-epoll") {
-                useVersion("4.2.15.Final")
-                because(
-                    "CVE-2026-44249, CVE-2026-45416: Affected version = 4.2.0.Final, patched in >= 4.2.15.Final",
-                )
-            }
-            if (requested.group == "io.netty" && requested.name == "netty-transport-native-kqueue") {
-                useVersion("4.2.15.Final")
-                because(
-                    "CVE-2026-45536 Unix-socket fd receive leaks descriptors when peer sends two at once: Affected version = >= 4.2.0.Final, <= 4.2.14.Final, patched in >= 4.2.15.Final",
-                )
             }
             if (requested.group == "org.apache.neethi" && requested.name == "neethi") {
                 useVersion("3.2.2")

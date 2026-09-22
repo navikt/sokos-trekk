@@ -5,6 +5,7 @@ import java.time.temporal.TemporalAdjusters
 
 import com.ibm.mq.jakarta.jms.MQQueue
 import com.ibm.msg.client.jakarta.wmq.WMQConstants
+import io.opentelemetry.instrumentation.annotations.WithSpan
 import jakarta.jms.ConnectionFactory
 import jakarta.jms.JMSContext
 import jakarta.jms.Message
@@ -16,7 +17,6 @@ import no.nav.sokos.trekk.config.PropertiesConfig
 import no.nav.sokos.trekk.metrics.Metrics.mqTrekkInnBoqMetricCounter
 import no.nav.sokos.trekk.metrics.Metrics.mqTrekkInnMetricCounter
 import no.nav.sokos.trekk.service.BehandleTrekkvedtakService
-import no.nav.sokos.trekk.util.TraceUtils
 
 private val logger = KotlinLogging.logger {}
 
@@ -39,22 +39,21 @@ class JmsListenerService(
         jmsContext.start()
     }
 
+    @WithSpan
     private fun onTrekkInnMessage(message: Message) {
         val jmsMessage = message.getBody(String::class.java)
-        TraceUtils.withTracerId {
-            runCatching {
-                logger.debug { "Mottatt Trekk fra OppdragZ. Meldingsinnhold: $jmsMessage" }
-                behandleTrekkvedtakService.behandleTrekkvedtak(
-                    xmlContent = jmsMessage,
-                    fromDate = LocalDate.now(),
-                    toDate = LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()),
-                )
-                message.acknowledge()
-                mqTrekkInnMetricCounter.inc()
-            }.onFailure { exception ->
-                logger.error(exception) { "Prosessering av utbetalingsmeldingretur feilet. ${message.jmsMessageID}" }
-                producer.send(jmsMessage, trekkInnBoqQueue, mqTrekkInnBoqMetricCounter)
-            }
+        runCatching {
+            logger.debug { "Mottatt Trekk fra OppdragZ. Meldingsinnhold: $jmsMessage" }
+            behandleTrekkvedtakService.behandleTrekkvedtak(
+                xmlContent = jmsMessage,
+                fromDate = LocalDate.now(),
+                toDate = LocalDate.now().plusMonths(1).with(TemporalAdjusters.lastDayOfMonth()),
+            )
+            message.acknowledge()
+            mqTrekkInnMetricCounter.inc()
+        }.onFailure { exception ->
+            logger.error(exception) { "Prosessering av utbetalingsmeldingretur feilet. ${message.jmsMessageID}" }
+            producer.send(jmsMessage, trekkInnBoqQueue, mqTrekkInnBoqMetricCounter)
         }
     }
 

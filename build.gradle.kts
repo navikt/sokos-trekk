@@ -55,7 +55,7 @@ val cxfVersion = "4.2.3"
 val ibmmqVersion = "10.0.0.0"
 val glassfishJaxbVersion = "4.0.9"
 val tjenestespesifikasjonVersion = "1.0_20260824090107_516d013"
-val opentelemetryVersion = "2.31.1-alpha"
+val opentelemetryVersion = "2.31.1"
 
 dependencies {
 
@@ -110,7 +110,7 @@ dependencies {
     implementation("com.aallam.ulid:ulid-kotlin:$aallamUlidVersion")
 
     // Opentelemetry
-    implementation("io.opentelemetry.instrumentation:opentelemetry-ktor-3.0:$opentelemetryVersion")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:$opentelemetryVersion")
 
     // Test
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")

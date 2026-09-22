@@ -42,3 +42,4 @@ out/
 mqjms.log.0
 defaults.properties
 .kotlin
+mise.toml

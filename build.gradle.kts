@@ -41,10 +41,10 @@ repositories {
 val ktorVersion = "3.5.2"
 val logbackVersion = "1.6.3"
 val logstashVersion = "9.0"
-val micrometerVersion = "1.17.0"
+val micrometerVersion = "1.17.1"
 val kotlinLoggingVersion = "3.0.5"
 val natpryceVersion = "1.6.10.0"
-val kotestVersion = "6.2.4"
+val kotestVersion = "6.2.5"
 val kotlinxSerializationVersion = "1.11.0"
 val kotlinxDatetimeVersion = "0.8.0-0.6.x-compat"
 val mockkVersion = "1.14.11"
@@ -55,7 +55,7 @@ val cxfVersion = "4.2.3"
 val ibmmqVersion = "10.0.0.0"
 val glassfishJaxbVersion = "4.0.9"
 val tjenestespesifikasjonVersion = "1.0_20260824090107_516d013"
-val opentelemetryVersion = "2.30.0-alpha"
+val opentelemetryVersion = "2.31.1"
 
 dependencies {
 
@@ -110,7 +110,7 @@ dependencies {
     implementation("com.aallam.ulid:ulid-kotlin:$aallamUlidVersion")
 
     // Opentelemetry
-    implementation("io.opentelemetry.instrumentation:opentelemetry-ktor-3.0:$opentelemetryVersion")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:$opentelemetryVersion")
 
     // Test
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")

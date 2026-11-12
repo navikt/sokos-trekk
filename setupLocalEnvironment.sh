@@ -6,7 +6,7 @@ if [ $? -gt 0 ]; then
     gcloud auth login
 fi
 kubectl config use-context dev-fss
-kubectl config set-context --current --namespace=okonomi
+kubectl config set-context --current --namespace=skatt-og-trekk
 
 # Get AZURE system variables
 envValue=$(kubectl exec -it $(kubectl get pods | grep sokos-trekk | cut -f1 -d' ') -c sokos-trekk -- env | egrep "^AZURE|^MQ_|^TREKK|^SRVTREKK" | sort)

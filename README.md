@@ -525,8 +525,8 @@ For dev-fss:
 
 ```shell script
 kubectl config use-context dev-fss
-kubectl get pods -n okonomi | grep sokos-trekk
-kubectl logs -f sokos-trekk-<POD-ID> --namespace okonomi -c sokos-trekk
+kubectl get pods -n skatt-og-trekk | grep sokos-trekk
+kubectl logs -f sokos-trekk-<POD-ID> --namespace skatt-og-trekk -c sokos-trekk
 ```
 
 For prod-fss:

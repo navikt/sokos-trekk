@@ -14,7 +14,7 @@ object PropertiesConfig {
         ConfigurationMap(
             mapOf(
                 "NAIS_APP_NAME" to "sokos-trekk",
-                "NAIS_NAMESPACE" to "okonomi",
+                "NAIS_NAMESPACE" to "skatt-og-trekk",
                 "USE_AUTHENTICATION" to "true",
                 "MQ_LISTENER_ENABLED" to "true",
                 "USE_ARENAMOCK" to "false",

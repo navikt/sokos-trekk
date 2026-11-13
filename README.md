@@ -26,15 +26,24 @@ Ut fra denne sammenligningen gjøres en beslutning på hvor et trekk skal effekt
 
 ### Forutsetninger
 
-* Java 21
+* Java 25
 * [Gradle](https://gradle.org/)
 * [Kotest IntelliJ Plugin](https://plugins.jetbrains.com/plugin/14080-kotest)
 
 ### Bygge prosjekt
 
 ```
-./gradlew clean build shadowJar
+./gradlew clean build installDist
 ```
+
+Applikasjonen pakkes med Gradles `application`-plugin. Distribusjonen ligger i
+`build/install/sokos-trekk/`, med applikasjonen og alle runtime-avhengigheter som
+separate JAR-er i `lib/`. CXFs `META-INF/cxf`- og `META-INF/services`-ressurser
+beholdes i original-JAR-ene og skal ikke flettes eller fjernes.
+
+Docker-imagene starter distribusjonen med Java 25 og classpath `/app/lib/*`,
+ikke med `java -jar`. Java 25-baseimagene bruker foreløpig tag uten digest;
+digest-pinning må oppdateres når registry-tilgang er tilgjengelig.
 
 ### Lokal utvikling
 

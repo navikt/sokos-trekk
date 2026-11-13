@@ -1,7 +1,5 @@
 import kotlinx.kover.gradle.plugin.dsl.tasks.KoverReport
 
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -9,9 +7,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.4.20"
     kotlin("plugin.serialization") version "2.4.20"
-    id("com.gradleup.shadow") version "9.6.1"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     id("org.jetbrains.kotlinx.kover") version "0.9.9"
+    application
 }
 
 group = "no.nav.sokos"
@@ -168,8 +166,12 @@ sourceSets {
 
 kotlin {
     jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
+}
+
+application {
+    mainClass.set("no.nav.sokos.trekk.ApplicationKt")
 }
 
 tasks {
@@ -196,21 +198,8 @@ tasks {
         }
     }
 
-    withType<ShadowJar>().configureEach {
-        enabled = true
-        archiveFileName.set("app.jar")
-        manifest {
-            attributes["Main-Class"] = "no.nav.sokos.trekk.ApplicationKt"
-        }
+    named("installDist") {
         finalizedBy(koverHtmlReport)
-
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        mergeServiceFiles()
-        // Make sure the cxf service files are handled correctly so that the SOAP services work.
-        transform(ServiceFileTransformer::class.java) {
-            path = "META-INF/cxf"
-            include("bus-extensions.txt")
-        }
     }
 
     withType<Test>().configureEach {
@@ -224,10 +213,6 @@ tasks {
         }
 
         reports.forEach { report -> report.required.value(false) }
-    }
-
-    named("jar") {
-        enabled = false
     }
 
     named("build") {

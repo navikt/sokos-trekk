@@ -30,9 +30,9 @@ jobs:
     name: Build and test
     uses: navikt/skatt-og-trekk-gha-workflows/.github/workflows/gradle-build-test-app.yaml@f6a6b44d0edd525d7cc0614394a4af5a2b7ea04d # ratchet:navikt/skatt-og-trekk-gha-workflows/.github/workflows/gradle-build-test-app.yaml@v1.1.2
     with:
-      gradle-task: './gradlew build shadowJar --configuration-cache'
+      gradle-task: './gradlew build installDist --configuration-cache'
       upload-artifact: true
-      java-version: '21'
+      java-version: '25'
 
   dependency-submission:
     permissions:

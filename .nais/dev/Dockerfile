@@ -1,8 +1,8 @@
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-21-dev@sha256:4909e4a5734e46bd4cdef7c21992a3232d03c38e69b9e6c07564c705ec31d0c3
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-25-dev
 
-COPY build/libs/*.jar app.jar
+COPY build/install/sokos-trekk/lib /app/lib
 
 ENV TZ="Europe/Oslo"
 ENV JDK_JAVA_OPTIONS="-XX:MaxRAMPercentage=75"
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-cp", "/app/lib/*", "no.nav.sokos.trekk.ApplicationKt"]
